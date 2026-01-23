@@ -5,6 +5,10 @@ public class Personne {
     protected String nom;
     protected String prenom;
 
+    public Personne() {
+
+    }
+
     public Personne(int idPersonne, String nom, String prenom) {
         this.idPersonne = idPersonne;
         this.nom = nom;
