@@ -30,7 +30,7 @@ public class ServiceActivite implements IService<Activite> {
                 + a.getDureeEnHeure() + ", '"
                 + a.getCategorie() + "', '"
                 + a.getHoraire() + "', "
-                + a.getIdVoyage() + ");";
+                ;
         res = st.executeUpdate(req);
         if (res > 0)
             test = true;
@@ -58,7 +58,6 @@ public class ServiceActivite implements IService<Activite> {
                 + "dureeEnHeure = " + a.getDureeEnHeure() + ", "
                 + "categorie = '" + a.getCategorie() + "', "
                 + "horaire = '" + a.getHoraire() + "', "
-                + "id_voyage = " + a.getIdVoyage()
                 + " WHERE id_activite = " + a.getIdActivite();
 
         int res = st.executeUpdate(req);
@@ -83,7 +82,6 @@ public class ServiceActivite implements IService<Activite> {
             activite.setDureeEnHeure(rs.getInt("dureeEnHeure"));
             activite.setCategorie(rs.getString("categorie"));
             activite.setHoraire(rs.getString("horaire"));
-            activite.setIdVoyage(rs.getInt("id_voyage"));
         }
         return activite;
     }

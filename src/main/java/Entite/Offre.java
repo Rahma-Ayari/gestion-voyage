@@ -66,5 +66,15 @@ public class Offre {
         this.idVoyage = idVoyage;
     }
 
-
+    @Override
+    public String toString() {
+        return "Offre{" +
+                "id_offre=" + id_offre +
+                ", type='" + type + '\'' +
+                ", prix=" + prix +
+                ", description='" + description + '\'' +
+                ", disponibilite=" + disponibilite +
+                ", idVoyage=" + idVoyage +
+                '}';
+    }
 }

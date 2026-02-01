@@ -81,5 +81,11 @@ public class Vol {
     public void setDestination(Destination destination) {
         this.destination = destination;
     }
+
+    @Override
+    public String toString() {
+        return "Vol{id=" + idVol + ", numeroVol='" + numeroVol + "', compagnie='" + compagnie + "', prix=" + prix + "}";
+    }
+
 }
 
