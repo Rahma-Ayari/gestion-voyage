@@ -87,15 +87,16 @@ public class Test {
 
 
         System.out.println("\n--- Test Voyage ---");
+        ServiceVoyage svy = new ServiceVoyage();  // <- initialisation correcte
+
         Vol volForVoyage = null;
         try {
-            vols = sv.readAll();
+            List<Vol> vols = sv.readAll();
             if (!vols.isEmpty()) volForVoyage = vols.get(0);
         } catch (SQLException e) {
             System.out.println(e);
         }
 
-        ServiceVoyage svy = new ServiceVoyage();
         Voyage voyage = new Voyage();
         voyage.setDuree(5);
         voyage.setDateDebut(LocalDate.now());
@@ -105,62 +106,22 @@ public class Test {
         if (volForVoyage != null) voyage.setVol(volForVoyage);
 
         try {
-            boolean res = svy.ajouter(voyage);
-            System.out.println("Voyage ajouté ? " + res);
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
+            boolean resVoyage = svy.ajouter(voyage);
+            System.out.println("Voyage ajouté ? " + resVoyage);
 
-        try {
-            ResultSet rs = stmt.executeQuery("SELECT * FROM `voyage`");
-            while (rs.next()) {
-                int id = rs.getInt(1);
-                int duree = rs.getInt("duree");
-                String rythme = rs.getString("rythme");
-                System.out.println("id: " + id + " duree: " + duree + " rythme: " + rythme);
-            }
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-
-        System.out.println("\n--- Test Activite ---");
-
-// Récupérer un voyage existant pour lier l'activité
-        Voyage voyageForActivite = null;
-        try {
             List<Voyage> voyages = svy.readAll();
-            if (!voyages.isEmpty()) voyageForActivite = voyages.get(0);
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-
-// Création de l'activité
-        ServiceActivite sact = new ServiceActivite();
-        Activite act = new Activite();
-        act.setNom("Plongée");
-        act.setDescription("Activité sous-marine");
-        act.setPrix(50);
-        act.setDureeEnHeure(2);
-        act.setCategorie("Sport");
-        act.setHoraire("10:00-12:00");
-        //if (voyageForActivite != null) act.setVoyage(voyageForActivite);
-
-        try {
-            boolean res = sact.ajouter(act);
-            System.out.println("Activité ajoutée ? " + res);
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-
-// Affichage via service (PAS DE SQL)
-        try {
-            List<Activite> activites = sact.readAll();
-            for (Activite a : activites) {
-                System.out.println(a);
+            for (Voyage v : voyages) {
+                System.out.println(v);
             }
         } catch (SQLException e) {
             System.out.println(e);
         }
+
+// Test réservation
+        System.out.println("\n--- Test Reservation ---");
+        ServiceStatutReservation ssr = new ServiceStatutReservation(); // <- initialisation
+        ServiceReservation sres = new ServiceReservation();
+        ServicePersonne sp = new ServicePersonne();
 
 
         System.out.println("\n--- Test Hotel ---");
@@ -186,87 +147,11 @@ public class Test {
         }
 
 
-        System.out.println("\n--- Test Voyage ---");
-
-// Récupérer un vol existant pour lier au voyage
-        volForVoyage = null;
-        try {
-            List<Vol> vols = sv.readAll();
-            if (!vols.isEmpty()) volForVoyage = vols.get(0);
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-
-        voyage = new Voyage();
-        voyage.setDuree(5);
-        voyage.setDateDebut(LocalDate.now());
-        voyage.setDateFin(LocalDate.now().plusDays(5));
-        voyage.setRythme("Calme");
-        if (destForVol != null) voyage.setDestination(destForVol);
-        if (volForVoyage != null) voyage.setVol(volForVoyage);
-
-        try {
-            boolean resVoyage = svy.ajouter(voyage);
-            System.out.println("Voyage ajouté ? " + resVoyage);
-
-            // Affichage via service
-            List<Voyage> voyages = svy.readAll();
-            for (Voyage v : voyages) {
-                System.out.println(v);
-            }
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-
-
-        System.out.println("\n--- Test Offre pour voyage id 1 ---");
-        ServiceOffre so = new ServiceOffre();
-        Offre o = new Offre();
-        o.setType("Promo spéciale");
-        o.setPrix(200);
-        o.setDescription("Réduction sur le voyage");
-        o.setDisponibilite(true);
-
-        svy = new ServiceVoyage();
-        voyage = null;
-        try {
-            voyage = svy.findbyId(1);
-        } catch (SQLException e) {
-            System.out.println("Erreur lors de la récupération du voyage : " + e.getMessage());
-        }
-        if (voyage != null) {
-            o.setvoyage(voyage);
-
-            try {
-                boolean resultat = so.ajouter(o);
-                if (resultat) {
-                    System.out.println("Offre ajoutée avec succès pour le voyage id 1 !");
-                } else {
-                    System.out.println("Échec lors de l'ajout de l'offre.");
-                }
-            } catch (SQLException e) {
-                System.out.println("Erreur SQL: " + e.getMessage());
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("Impossible d'ajouter l'offre : le voyage avec id 1 n'existe pas.");
-        }
-
-        System.out.println("\n--- Test StatutReservation ---");
-        ServiceStatutReservation ssr = new ServiceStatutReservation();
-        StatutReservation s = new StatutReservation();
-        s.setLibelle("En attente");
-        try {
-            boolean res = ssr.ajouter(s);
-            System.out.println("Statut ajouté : " + res);
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
 
         System.out.println("\n--- Test Reservation ---");
 
-        ServiceReservation sres = new ServiceReservation();
-        ServicePersonne sp = new ServicePersonne();
+        sres = new ServiceReservation();
+        sp = new ServicePersonne();
 
         Reservation resv = new Reservation();
         resv.setDate_reservation(Date.valueOf(LocalDate.now()));
