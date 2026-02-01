@@ -11,9 +11,6 @@ public class Voyage {
     private String rythme;
     private Destination destination;
     private Vol vol;
-    private List<Activite> activites;
-    private List<Hotel> hotels;
-
     public Voyage() {}
 
     public Voyage(int idVoyage, int duree, LocalDate dateDebut,
@@ -82,22 +79,6 @@ public class Voyage {
 
     public void setVol(Vol vol) {
         this.vol = vol;
-    }
-
-    public List<Activite> getActivites() {
-        return activites;
-    }
-
-    public void setActivites(List<Activite> activites) {
-        this.activites = activites;
-    }
-
-    public List<Hotel> getHotels() {
-        return hotels;
-    }
-
-    public void setHotels(List<Hotel> hotels) {
-        this.hotels = hotels;
     }
 
 }
