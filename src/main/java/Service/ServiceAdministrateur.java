@@ -7,95 +7,83 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceAdministrateur implements IService<Administrateur> {
-
     private Connection con = DataSource.getInstance().getCon();
 
     @Override
     public boolean ajouter(Administrateur admin) throws SQLException {
-        String req1 = "INSERT INTO personne (nom, prenom) VALUES (?, ?)";
-        PreparedStatement ps1 = con.prepareStatement(req1, Statement.RETURN_GENERATED_KEYS);
-        ps1.setString(1, admin.getNom());
-        ps1.setString(2, admin.getPrenom());
-        ps1.executeUpdate();
+        String req1 = "INSERT INTO utilisateur (email, motDePasse, dateInscription) VALUES (?, ?, ?)";
+        try (PreparedStatement ps1 = con.prepareStatement(req1, Statement.RETURN_GENERATED_KEYS)) {
+            ps1.setString(1, admin.getEmail());
+            ps1.setString(2, admin.getMotDePasse());
+            ps1.setDate(3, new java.sql.Date(admin.getDateInscription().getTime()));
+            ps1.executeUpdate();
 
-        ResultSet rs = ps1.getGeneratedKeys();
-        if (rs.next()) {
-            int idGenere = rs.getInt(1);
-            admin.setIdPersonne(idGenere);
+            try (ResultSet rs = ps1.getGeneratedKeys()) {
+                if (rs.next()) {
+                    int id = rs.getInt(1);
+                    admin.setIdUtilisateur(id);
 
-            String req2 = "INSERT INTO administrateur (id_admin, id_role) VALUES (?, ?)";
-            PreparedStatement ps2 = con.prepareStatement(req2);
-            ps2.setInt(1, idGenere);
-            ps2.setInt(2, admin.getIdRole());
-            return ps2.executeUpdate() > 0;
+                    String req2 = "INSERT INTO administrateur (id_admin) VALUES (?)";
+                    try (PreparedStatement ps2 = con.prepareStatement(req2)) {
+                        ps2.setInt(1, id);
+                        return ps2.executeUpdate() > 0;
+                    }
+                }
+            }
         }
         return false;
     }
 
     @Override
-    public boolean supprimer(Administrateur admin) throws SQLException {
-        String req = "DELETE FROM personne WHERE id_personne = ?";
-        PreparedStatement ps = con.prepareStatement(req);
-        ps.setInt(1, admin.getIdPersonne());
-        return ps.executeUpdate() > 0;
-    }
-
-    @Override
-    public boolean modifier(Administrateur admin) throws SQLException {
-        String req1 = "UPDATE personne SET nom = ?, prenom = ? WHERE id_personne = ?";
-        PreparedStatement ps1 = con.prepareStatement(req1);
-        ps1.setString(1, admin.getNom());
-        ps1.setString(2, admin.getPrenom());
-        ps1.setInt(3, admin.getIdPersonne());
-        ps1.executeUpdate();
-
-        String req2 = "UPDATE administrateur SET id_role = ? WHERE id_admin = ?";
-        PreparedStatement ps2 = con.prepareStatement(req2);
-        ps2.setInt(1, admin.getIdRole());
-        ps2.setInt(2, admin.getIdPersonne());
-
-        return ps2.executeUpdate() > 0;
-    }
-
-    @Override
     public List<Administrateur> readAll() throws SQLException {
         List<Administrateur> liste = new ArrayList<>();
-        String req = "SELECT p.id_personne, p.nom, p.prenom, a.id_role " +
-                "FROM personne p " +
-                "INNER JOIN administrateur a ON p.id_personne = a.id_admin";
-
-        Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery(req);
-
-        while (rs.next()) {
-            Administrateur admin = new Administrateur(
-                    rs.getInt("id_personne"),
-                    rs.getString("nom"),
-                    rs.getString("prenom"),
-                    rs.getInt("id_role")
-            );
-            liste.add(admin);
+        String req = "SELECT u.* FROM utilisateur u JOIN administrateur a ON u.id_utilisateur = a.id_admin";
+        try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(req)) {
+            while (rs.next()) {
+                liste.add(new Administrateur(
+                        rs.getInt("id_utilisateur"),
+                        rs.getString("email"),
+                        rs.getString("motDePasse"),
+                        rs.getDate("dateInscription")
+                ));
+            }
         }
         return liste;
     }
 
     @Override
-    public Administrateur findbyId(int id) throws SQLException {
-        String req = "SELECT p.id_personne, p.nom, p.prenom, a.id_role " +
-                "FROM personne p " +
-                "JOIN administrateur a ON p.id_personne = a.id_admin " +
-                "WHERE p.id_personne = ?";
-        PreparedStatement ps = con.prepareStatement(req);
-        ps.setInt(1, id);
-        ResultSet rs = ps.executeQuery();
+    public boolean modifier(Administrateur admin) throws SQLException {
+        String req = "UPDATE utilisateur SET email=?, motDePasse=? WHERE id_utilisateur=?";
+        try (PreparedStatement ps = con.prepareStatement(req)) {
+            ps.setString(1, admin.getEmail());
+            ps.setString(2, admin.getMotDePasse());
+            ps.setInt(3, admin.getIdUtilisateur());
+            return ps.executeUpdate() > 0;
+        }
+    }
 
-        if (rs.next()) {
-            return new Administrateur(
-                    rs.getInt("id_personne"),
-                    rs.getString("nom"),
-                    rs.getString("prenom"),
-                    rs.getInt("id_role")
-            );
+    @Override
+    public boolean supprimer(Administrateur admin) throws SQLException {
+        String req = "DELETE FROM utilisateur WHERE id_utilisateur = ?";
+        try (PreparedStatement ps = con.prepareStatement(req)) {
+            ps.setInt(1, admin.getIdUtilisateur());
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    @Override
+    public Administrateur findbyId(int id) throws SQLException {
+        String req = "SELECT u.* FROM utilisateur u JOIN administrateur a ON u.id_utilisateur = a.id_admin WHERE u.id_utilisateur = ?";
+        try (PreparedStatement ps = con.prepareStatement(req)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return new Administrateur(
+                        rs.getInt("id_utilisateur"),
+                        rs.getString("email"),
+                        rs.getString("motDePasse"),
+                        rs.getDate("dateInscription")
+                );
+            }
         }
         return null;
     }
