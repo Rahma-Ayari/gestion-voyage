@@ -47,4 +47,10 @@ public class Hotel {
     public void setNom(String nom) {
         this.nom = nom;
     }
+
+    @Override
+    public String toString() {
+        return "Hotel{id=" + idHotel + ", nom='" + nom + "', ville='" + ville + "', adresse='" + adresse + "'}";
+    }
+
 }

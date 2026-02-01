@@ -26,5 +26,15 @@ public class Destination {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
+    @Override
+    public String toString() {
+        return "Destination{" +
+                "idDestination=" + idDestination +
+                ", pays='" + pays + '\'' +
+                ", ville='" + ville + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }
 

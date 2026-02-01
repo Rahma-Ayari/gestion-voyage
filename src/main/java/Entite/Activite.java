@@ -80,6 +80,18 @@ public class Activite {
         this.horaire = horaire;
     }
 
-
+    @Override
+    public String toString() {
+        return "Activite{" +
+                "idActivite=" + idActivite +
+                ", nom='" + nom + '\'' +
+                ", description='" + description + '\'' +
+                ", prix=" + prix +
+                ", dureeEnHeure=" + dureeEnHeure +
+                ", categorie='" + categorie + '\'' +
+                ", horaire='" + horaire + '\'' +
+                ", TypeAct=" + TypeAct +
+                '}';
+    }
 }
 

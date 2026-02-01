@@ -81,4 +81,16 @@ public class Voyage {
         this.vol = vol;
     }
 
+    @Override
+    public String toString() {
+        return "Voyage{" +
+                "idVoyage=" + idVoyage +
+                ", duree=" + duree +
+                ", dateDebut=" + dateDebut +
+                ", dateFin=" + dateFin +
+                ", rythme='" + rythme + '\'' +
+                ", destination=" + destination +
+                ", vol=" + vol +
+                '}';
+    }
 }

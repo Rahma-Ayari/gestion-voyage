@@ -77,5 +77,18 @@ public class Reservation {
     public void setId_statut(StatutReservation id_statut) {
         this.id_statut = id_statut;
     }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "id_reservation=" + id_reservation +
+                ", date_reservation=" + date_reservation +
+                ", prix_reservation=" + prix_reservation +
+                ", etat='" + etat + '\'' +
+                ", id_personne=" + id_personne +
+                ", id_voyage=" + id_voyage +
+                ", id_statut=" + id_statut +
+                '}';
+    }
 }
 

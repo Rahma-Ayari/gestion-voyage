@@ -10,8 +10,9 @@ public class Test {
 
     private static Connection con;
     private static Statement stmt;
+    private static List<Vol> vols;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         try {
             System.out.println("=== TEST CONNEXION ===");
             con = DataSource.getInstance().getCon();
@@ -46,41 +47,24 @@ public class Test {
 
         System.out.println("\n--- Test Destination ---");
         ServiceDestination sd = new ServiceDestination();
+
         Destination d = new Destination();
-        d.setPays("Tunisie");
+        d.setPays("Tunisie11111");
         d.setVille("Tunis");
-        d.setDescription("Destination test");
-        try {
-            boolean resultat = sd.ajouter(d);
-            System.out.println("Destination ajoutée ? " + resultat);
-        } catch (SQLException e) {
-            System.out.println(e);
+        d.setDescription("Destination test11111");
+
+        sd.ajouter(d);
+
+        List<Destination> destinations = sd.readAll();
+        for (Destination dest : destinations) {
+            System.out.println(dest);
         }
 
-        try {
-            ResultSet rs = stmt.executeQuery("SELECT * FROM `destination`");
-            while (rs.next()) {
-                int id = rs.getInt(1);
-                String pays = rs.getString("pays");
-                String ville = rs.getString("ville");
-                String desc = rs.getString("description");
-                System.out.println("id: " + id + " pays: " + pays + " ville: " + ville + " description: " + desc);
-            }
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
 
 
         System.out.println("\n--- Test Vol ---");
-        Destination destForVol = null;
-        try {
-            java.util.List<Destination> destinations = sd.readAll();
-            if (!destinations.isEmpty()) {
-                destForVol = destinations.get(0);
-            }
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
+
+        Destination destForVol = sd.readAll().stream().findFirst().orElse(null);
 
         ServiceVol sv = new ServiceVol();
         Vol vol = new Vol();
@@ -91,30 +75,21 @@ public class Test {
         vol.setPrix(250.5);
         if (destForVol != null) vol.setDestination(destForVol);
 
-        try {
-            boolean res = sv.ajouter(vol);
-            System.out.println("Vol ajouté ? " + res);
-        } catch (SQLException e) {
-            System.out.println(e);
+        boolean resVol = sv.ajouter(vol);
+        System.out.println("Vol ajouté ? " + resVol);
+
+// Affichage propre
+        for (Vol v : sv.readAll()) {
+            System.out.println(v);
         }
 
-        try {
-            ResultSet rs = stmt.executeQuery("SELECT * FROM `vol`");
-            while (rs.next()) {
-                int id = rs.getInt(1);
-                String numero = rs.getString("numero_vol");
-                String compagnie = rs.getString("compagnie");
-                System.out.println("id: " + id + " numeroVol: " + numero + " compagnie: " + compagnie);
-            }
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
+
 
 
         System.out.println("\n--- Test Voyage ---");
         Vol volForVoyage = null;
         try {
-            java.util.List<Vol> vols = sv.readAll();
+            vols = sv.readAll();
             if (!vols.isEmpty()) volForVoyage = vols.get(0);
         } catch (SQLException e) {
             System.out.println(e);
@@ -149,14 +124,17 @@ public class Test {
         }
 
         System.out.println("\n--- Test Activite ---");
+
+// Récupérer un voyage existant pour lier l'activité
         Voyage voyageForActivite = null;
         try {
-            java.util.List<Voyage> voyages = svy.readAll();
+            List<Voyage> voyages = svy.readAll();
             if (!voyages.isEmpty()) voyageForActivite = voyages.get(0);
         } catch (SQLException e) {
             System.out.println(e);
         }
 
+// Création de l'activité
         ServiceActivite sact = new ServiceActivite();
         Activite act = new Activite();
         act.setNom("Plongée");
@@ -165,6 +143,7 @@ public class Test {
         act.setDureeEnHeure(2);
         act.setCategorie("Sport");
         act.setHoraire("10:00-12:00");
+        //if (voyageForActivite != null) act.setVoyage(voyageForActivite);
 
         try {
             boolean res = sact.ajouter(act);
@@ -173,74 +152,72 @@ public class Test {
             System.out.println(e);
         }
 
+// Affichage via service (PAS DE SQL)
         try {
-            ResultSet rs = stmt.executeQuery("SELECT * FROM `activite`");
-            while (rs.next()) {
-                int id = rs.getInt(1);
-                String nom = rs.getString("nom");
-                double prix = rs.getDouble("prix");
-                System.out.println("id: " + id + " nom: " + nom + " prix: " + prix);
+            List<Activite> activites = sact.readAll();
+            for (Activite a : activites) {
+                System.out.println(a);
             }
         } catch (SQLException e) {
             System.out.println(e);
         }
 
+
         System.out.println("\n--- Test Hotel ---");
+
         ServiceHotel sh = new ServiceHotel();
+
         Hotel h = new Hotel();
         h.setNom("Hotel Test");
         h.setVille("Tunis");
         h.setAdresse("Rue Test");
-        try {
-            boolean res = sh.ajouter(h);
-            System.out.println("Hotel ajouté ? " + res);
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
 
         try {
-            ResultSet rs = stmt.executeQuery("SELECT * FROM `hotel`");
-            while (rs.next()) {
-                int id = rs.getInt(1);
-                String nom = rs.getString("nom");
-                String ville = rs.getString("ville");
-                System.out.println("id: " + id + " nom: " + nom + " ville: " + ville);
+            boolean resHotel = sh.ajouter(h);
+            System.out.println("Hotel ajouté ? " + resHotel);
+
+            // Affichage via service
+            List<Hotel> hotels = sh.readAll();
+            for (Hotel hotel : hotels) {
+                System.out.println(hotel);
             }
         } catch (SQLException e) {
             System.out.println(e);
         }
 
 
-        ServiceTypePaiement stp = new ServiceTypePaiement();
-        TypePaiement t1 = new TypePaiement();
-        t1.setLibelle("Carte bancaire");
-        t1.setDescription("Paiement par CB");
-        try {
-            stp.ajouter(t1);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println("TypePaiement ajouté : " + t1);
+        System.out.println("\n--- Test Voyage ---");
 
-        List<TypePaiement> types = null;
+// Récupérer un vol existant pour lier au voyage
+        volForVoyage = null;
         try {
-            types = stp.readAll();
+            List<Vol> vols = sv.readAll();
+            if (!vols.isEmpty()) volForVoyage = vols.get(0);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(e);
         }
-        System.out.println("Tous les TypePaiements : " + types);
 
-        t1.setDescription("Paiement par carte bancaire classique");
+        voyage = new Voyage();
+        voyage.setDuree(5);
+        voyage.setDateDebut(LocalDate.now());
+        voyage.setDateFin(LocalDate.now().plusDays(5));
+        voyage.setRythme("Calme");
+        if (destForVol != null) voyage.setDestination(destForVol);
+        if (volForVoyage != null) voyage.setVol(volForVoyage);
+
         try {
-            stp.modifier(t1);
+            boolean resVoyage = svy.ajouter(voyage);
+            System.out.println("Voyage ajouté ? " + resVoyage);
+
+            // Affichage via service
+            List<Voyage> voyages = svy.readAll();
+            for (Voyage v : voyages) {
+                System.out.println(v);
+            }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(e);
         }
-        try {
-            System.out.println("TypePaiement modifié : " + stp.findbyId(t1.getIdTypePaiement()));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+
 
         System.out.println("\n--- Test Offre pour voyage id 1 ---");
         ServiceOffre so = new ServiceOffre();
