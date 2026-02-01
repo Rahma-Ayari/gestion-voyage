@@ -20,21 +20,19 @@ public class Test {
                 stmt = con.createStatement();
             }
 
-            // ------------------ TEST ROLE ------------------
+
             System.out.println("\n=== TEST ROLE ===");
             ServiceRole sr = new ServiceRole();
-            Role r = new Role("Client");
+            Role r = new Role("Administrateur");
             sr.ajouter(r);
             System.out.println("Rôle créé : " + r);
 
-            // ------------------ TEST UTILISATEUR ------------------
             System.out.println("\n=== TEST UTILISATEUR ===");
             ServiceUtilisateur su = new ServiceUtilisateur();
             String email = "test" + System.currentTimeMillis() + "@mail.com";
             Utilisateur u = new Utilisateur("Nom", "Prenom", email, "azerty", new Date(System.currentTimeMillis()));
             if (su.ajouter(u)) System.out.println("Utilisateur ajouté : " + u.getIdUtilisateur());
 
-            // ------------------ TEST AVIS ------------------
             System.out.println("\n=== TEST AVIS ===");
             ServiceAvis sa = new ServiceAvis();
             Avis av = new Avis(5, "Top !", new Date(System.currentTimeMillis()), u.getIdUtilisateur());
@@ -45,7 +43,7 @@ public class Test {
             e.printStackTrace();
         }
 
-        // ------------------ TEST DESTINATION ------------------
+
         System.out.println("\n--- Test Destination ---");
         ServiceDestination sd = new ServiceDestination();
         Destination d = new Destination();
@@ -72,7 +70,7 @@ public class Test {
             System.out.println(e);
         }
 
-        // ------------------ TEST VOL ------------------
+
         System.out.println("\n--- Test Vol ---");
         Destination destForVol = null;
         try {
@@ -112,7 +110,7 @@ public class Test {
             System.out.println(e);
         }
 
-        // ------------------ TEST VOYAGE ------------------
+
         System.out.println("\n--- Test Voyage ---");
         Vol volForVoyage = null;
         try {
@@ -150,7 +148,6 @@ public class Test {
             System.out.println(e);
         }
 
-        // ------------------ TEST ACTIVITE ------------------
         System.out.println("\n--- Test Activite ---");
         Voyage voyageForActivite = null;
         try {
@@ -168,7 +165,6 @@ public class Test {
         act.setDureeEnHeure(2);
         act.setCategorie("Sport");
         act.setHoraire("10:00-12:00");
-        if (voyageForActivite != null) act.setIdVoyage(voyageForActivite.getIdVoyage());
 
         try {
             boolean res = sact.ajouter(act);
@@ -189,7 +185,6 @@ public class Test {
             System.out.println(e);
         }
 
-        // ------------------ TEST HOTEL ------------------
         System.out.println("\n--- Test Hotel ---");
         ServiceHotel sh = new ServiceHotel();
         Hotel h = new Hotel();
@@ -214,10 +209,6 @@ public class Test {
         } catch (SQLException e) {
             System.out.println(e);
         }
-
-
-
-
 
 
         ServiceTypePaiement stp = new ServiceTypePaiement();
@@ -254,23 +245,23 @@ public class Test {
         System.out.println("\n--- Test Offre pour voyage id 1 ---");
         ServiceOffre so = new ServiceOffre();
         Offre o = new Offre();
-        o.setType("Promo spéciale");               // Type d'offre
-        o.setPrix(200);                             // Prix de l'offre
-        o.setDescription("Réduction sur le voyage"); // Description
+        o.setType("Promo spéciale");
+        o.setPrix(200);
+        o.setDescription("Réduction sur le voyage");
         o.setDisponibilite(true);
 
         svy = new ServiceVoyage();
         voyage = null;
         try {
-            voyage = svy.findbyId(1); // voyage avec id 1
+            voyage = svy.findbyId(1);
         } catch (SQLException e) {
             System.out.println("Erreur lors de la récupération du voyage : " + e.getMessage());
         }
         if (voyage != null) {
-            o.setvoyage(voyage); // Associer le voyage à l'offre
+            o.setvoyage(voyage);
 
             try {
-                boolean resultat = so.ajouter(o); // Ajouter l'offre dans la base
+                boolean resultat = so.ajouter(o);
                 if (resultat) {
                     System.out.println("Offre ajoutée avec succès pour le voyage id 1 !");
                 } else {
@@ -325,78 +316,6 @@ public class Test {
             System.out.println("Erreur réservation : " + e.getMessage());
         }
 
-
-
-
-        /* ServicePaiement sp = new ServicePaiement();
-        Paiement p1 = new Paiement();
-        p1.setMontant(250.0);
-        p1.setDatePaiement(LocalDateTime.now());
-        p1.setStatut("EN_ATTENTE");
-        p1.setIdReservation(1);
-        p1.setTypePaiement(t1);
-        try {
-            sp.ajouter(p1);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println("Paiement ajouté : " + p1);
-
-        List<Paiement> paiements = null;
-        try {
-            paiements = sp.readAll();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println("Tous les paiements : " + paiements);
-
-        p1.setStatut("PAYE");
-        try {
-            sp.modifier(p1);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            System.out.println("Paiement modifié : " + sp.findbyId(p1.getIdPaiement()));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        ServiceFacture sf = new ServiceFacture();
-        Facture f1 = new Facture();
-        f1.setNumeroFacture("FAC-1001");
-        f1.setDateFacture(LocalDate.now());
-        f1.setMontantTotal(250.0);
-        f1.setPaiement(p1);
-        try {
-            sf.ajouter(f1);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println("Facture ajoutée : " + f1);
-
-        List<Facture> factures = null;
-        try {
-            factures = sf.readAll();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println("Toutes les factures : " + factures);
-
-        f1.setMontantTotal(300.0);
-        try {
-            sf.modifier(f1);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            System.out.println("Facture modifiée : " + sf.findbyId(f1.getIdFacture()));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-  */
-
-
-        // ------------------ Fermeture connexion ------------------
         try {
             stmt.close();
             con.close();

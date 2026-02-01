@@ -8,14 +8,13 @@ public class Activite {
     private int dureeEnHeure;
     private String categorie;
     private String horaire;
-    private Voyage voyage;
-    private int idVoyage;
+    private TypeActivite TypeAct;
 
     public Activite() {}
 
     public Activite(int idActivite, String nom, String description,
                     double prix, int dureeEnHeure,
-                    String categorie, String horaire, Voyage voyage) {
+                    String categorie, String horaire) {
         this.idActivite = idActivite;
         this.nom = nom;
         this.description = description;
@@ -23,7 +22,6 @@ public class Activite {
         this.dureeEnHeure = dureeEnHeure;
         this.categorie = categorie;
         this.horaire = horaire;
-        this.voyage = voyage;
     }
 
     public int getIdActivite() {
@@ -82,21 +80,6 @@ public class Activite {
         this.horaire = horaire;
     }
 
-    public Voyage getVoyage() {
-        return voyage;
-    }
-
-    public void setVoyage(Voyage voyage) {
-        this.voyage = voyage;
-    }
-
-    public int getIdVoyage() {
-        return idVoyage;
-    }
-
-    public void setIdVoyage(int idVoyage) {
-        this.idVoyage = idVoyage;
-    }
 
 }
 
