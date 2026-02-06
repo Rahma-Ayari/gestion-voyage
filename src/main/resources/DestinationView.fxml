@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controller.DestinationController"
+            style="-fx-background-color: linear-gradient(to bottom, #f5f7fa, #c3cfe2);">
+
+    <!-- Header -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="15"
+              style="-fx-background-color: linear-gradient(to right, #FF9800, #FFA726);
+                     -fx-background-radius: 0 0 15 15;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 5);">
+            <padding>
+                <Insets top="20" right="30" bottom="20" left="30"/>
+            </padding>
+
+            <Label text="TripEase" textFill="WHITE">
+                <font>
+                    <Font name="Segoe UI Bold" size="32"/>
+                </font>
+            </Label>
+
+            <Label text="Gestion des Destinations" textFill="WHITE">
+                <font>
+                    <Font name="Segoe UI" size="28"/>
+                </font>
+            </Label>
+        </HBox>
+    </top>
+
+    <!-- Left Panel - Form -->
+    <left>
+        <VBox spacing="15" maxWidth="350" alignment="TOP_CENTER"
+              style="-fx-background-color: white;
+                     -fx-background-radius: 15;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 5);">
+
+            <padding>
+                <Insets top="30" right="20" bottom="30" left="20"/>
+            </padding>
+
+            <VBox.margin>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </VBox.margin>
+
+            <Label text="📝 Ajouter une Destination">
+                <font>
+                    <Font name="Segoe UI Bold" size="20"/>
+                </font>
+            </Label>
+
+            <Separator/>
+
+            <!-- Pays -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="🌍" style="-fx-font-size: 18px;"/>
+                <TextField fx:id="paysField"
+                           promptText="Pays"
+                           prefWidth="280"
+                           style="-fx-background-radius: 8;
+                                  -fx-border-color: #ddd;
+                                  -fx-border-radius: 8;
+                                  -fx-padding: 10;
+                                  -fx-font-size: 13px;"/>
+            </HBox>
+
+            <!-- Ville -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="🌆" style="-fx-font-size: 18px;"/>
+                <TextField fx:id="villeField"
+                           promptText="Ville"
+                           prefWidth="280"
+                           style="-fx-background-radius: 8;
+                                  -fx-border-color: #ddd;
+                                  -fx-border-radius: 8;
+                                  -fx-padding: 10;
+                                  -fx-font-size: 13px;"/>
+            </HBox>
+
+            <!-- Description -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="📝" style="-fx-font-size: 18px;"/>
+                <TextArea fx:id="descriptionField"
+                          promptText="Description"
+                          prefWidth="280"
+                          prefRowCount="3"
+                          wrapText="true"
+                          style="-fx-background-radius: 8;
+                                 -fx-border-color: #ddd;
+                                 -fx-border-radius: 8;
+                                 -fx-padding: 10;
+                                 -fx-font-size: 13px;"/>
+            </HBox>
+
+            <!-- Buttons -->
+            <HBox spacing="10" alignment="CENTER">
+                <VBox spacing="10">
+                    <Button fx:id="ajouterBtn"
+                            text="Ajouter"
+                            prefWidth="130"
+                            prefHeight="40"
+                            onAction="#ajouterDestination"
+                            style="-fx-background-color: #4CAF50;
+                                   -fx-text-fill: white;
+                                   -fx-font-weight: bold;
+                                   -fx-font-size: 13px;
+                                   -fx-background-radius: 8;"/>
+                    <Button fx:id="modifierBtn"
+                            text="Modifier"
+                            prefWidth="130"
+                            prefHeight="40"
+                            onAction="#modifierDestination"
+                            style="-fx-background-color: #2196F3;
+                                   -fx-text-fill: white;
+                                   -fx-font-weight: bold;
+                                   -fx-font-size: 13px;
+                                   -fx-background-radius: 8;"/>
+                </VBox>
+
+                <VBox spacing="10">
+                    <Button fx:id="supprimerBtn"
+                            text="Supprimer"
+                            prefWidth="130"
+                            prefHeight="40"
+                            onAction="#supprimerDestination"
+                            style="-fx-background-color: #f44336;
+                                   -fx-text-fill: white;
+                                   -fx-font-weight: bold;
+                                   -fx-font-size: 13px;
+                                   -fx-background-radius: 8;"/>
+                    <Button fx:id="clearBtn"
+                            text="Effacer"
+                            prefWidth="130"
+                            prefHeight="40"
+                            onAction="#clearFields"
+                            style="-fx-background-color: #9E9E9E;
+                                   -fx-text-fill: white;
+                                   -fx-font-weight: bold;
+                                   -fx-font-size: 13px;
+                                   -fx-background-radius: 8;"/>
+                </VBox>
+            </HBox>
+
+            <!-- Info Panel -->
+            <VBox spacing="10"
+                  style="-fx-background-color: #E3F2FD;
+                         -fx-background-radius: 10;
+                         -fx-border-color: #2196F3;
+                         -fx-border-radius: 10;
+                         -fx-border-width: 2;">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="15"/>
+                </padding>
+
+                <Label text="💡 Conseils">
+                    <font>
+                        <Font name="Segoe UI Bold" size="14"/>
+                    </font>
+                </Label>
+
+                <Label text="• Remplissez tous les champs&#10;• Double-cliquez pour modifier&#10;• Sélectionnez pour supprimer">
+                    <font>
+                        <Font name="Segoe UI" size="12"/>
+                    </font>
+                </Label>
+            </VBox>
+
+        </VBox>
+    </left>
+
+    <!-- Center Panel - Table -->
+    <center>
+        <VBox spacing="15">
+            <padding>
+                <Insets top="30" right="30" bottom="30" left="20"/>
+            </padding>
+
+            <!-- Search Bar -->
+            <HBox spacing="10" alignment="CENTER_LEFT"
+                  style="-fx-background-color: white;
+                         -fx-background-radius: 10;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+
+                <Label text="🔍" style="-fx-font-size: 18px;"/>
+                <TextField fx:id="searchField"
+                           promptText="Rechercher une destination..."
+                           prefWidth="300"
+                           style="-fx-background-radius: 8;
+                                  -fx-border-color: #ddd;
+                                  -fx-border-radius: 8;
+                                  -fx-padding: 10;
+                                  -fx-font-size: 13px;"/>
+                <Button fx:id="refreshBtn"
+                        text="🔄"
+                        onAction="#refreshTable"
+                        style="-fx-background-color: #2196F3;
+                               -fx-text-fill: white;
+                               -fx-font-size: 16px;
+                               -fx-background-radius: 50%;
+                               -fx-padding: 8 12;"/>
+            </HBox>
+
+            <!-- Table -->
+            <TableView fx:id="tableView"
+                       VBox.vgrow="ALWAYS"
+                       style="-fx-background-color: white;
+                              -fx-background-radius: 10;
+                              -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 5);">
+                <columns>
+                    <TableColumn fx:id="idCol" text="ID" prefWidth="80" style="-fx-alignment: CENTER;"/>
+                    <TableColumn fx:id="paysCol" text="Pays" prefWidth="220"/>
+                    <TableColumn fx:id="villeCol" text="Ville" prefWidth="220"/>
+                    <TableColumn fx:id="descriptionCol" text="Description" prefWidth="320"/>
+                </columns>
+
+                <placeholder>
+                    <Label text="Aucun contenu dans la table"/>
+                </placeholder>
+            </TableView>
+
+            <!-- Stats Panel -->
+            <HBox spacing="20" alignment="CENTER"
+                  style="-fx-background-color: white;
+                         -fx-background-radius: 10;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="15"/>
+                </padding>
+
+                <Label text="📊 Total des destinations: ">
+                    <font>
+                        <Font name="Segoe UI Bold" size="14"/>
+                    </font>
+                </Label>
+
+                <Label fx:id="countLabel" text="0" textFill="#FF9800">
+                    <font>
+                        <Font name="Segoe UI Bold" size="18"/>
+                    </font>
+                </Label>
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane>
