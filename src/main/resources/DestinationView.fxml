@@ -57,7 +57,7 @@
 
             <Separator/>
 
-            <!-- Pays -->
+            <!-- Pays  -->
             <HBox spacing="10" alignment="CENTER_LEFT">
                 <Label text="🌍" style="-fx-font-size: 18px;"/>
                 <TextField fx:id="paysField"
