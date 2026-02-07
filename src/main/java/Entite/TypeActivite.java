@@ -31,4 +31,5 @@ public class TypeActivite {
     public String toString() {
         return libelle;
     }
+
 }

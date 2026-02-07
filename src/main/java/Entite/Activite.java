@@ -101,5 +101,6 @@ public class Activite {
     public void setTypeAct(TypeActivite typeAct) {
         TypeAct = typeAct;
     }
+
 }
 

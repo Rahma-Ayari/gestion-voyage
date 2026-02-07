@@ -60,7 +60,6 @@ public class ActiviteController {
             return new javafx.beans.property.SimpleStringProperty(libelle);
         });
 
-
         loadTypeActivites();
         loadActivites();
 
