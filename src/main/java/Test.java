@@ -11,6 +11,7 @@ public class Test {
     private static Connection con;
     private static Statement stmt;
     private static List<Vol> vols;
+    private static Utilisateur u;
 
     public static void main(String[] args) throws SQLException {
         try {
@@ -20,29 +21,8 @@ public class Test {
                 System.out.println("Connexion OK !");
                 stmt = con.createStatement();
             }
+            
 
-
-            System.out.println("\n=== TEST ROLE ===");
-            ServiceRole sr = new ServiceRole();
-            Role r = new Role("Administrateur");
-            sr.ajouter(r);
-            System.out.println("Rôle créé : " + r);
-
-            System.out.println("\n=== TEST UTILISATEUR ===");
-            ServiceUtilisateur su = new ServiceUtilisateur();
-            String email = "test" + System.currentTimeMillis() + "@mail.com";
-            Utilisateur u = new Utilisateur("Nom", "Prenom", email, "azerty", new Date(System.currentTimeMillis()));
-            if (su.ajouter(u)) System.out.println("Utilisateur ajouté : " + u.getIdUtilisateur());
-
-            System.out.println("\n=== TEST AVIS ===");
-            ServiceAvis sa = new ServiceAvis();
-            Avis av = new Avis(5, "Top !", new Date(System.currentTimeMillis()), u.getIdUtilisateur());
-            if (sa.ajouter(av)) System.out.println("Avis ajouté avec succès !");
-
-        } catch (SQLException e) {
-            System.err.println("ERREUR SQL : " + e.getMessage());
-            e.printStackTrace();
-        }
 
 
         System.out.println("\n--- Test Destination ---");
@@ -186,7 +166,9 @@ public class Test {
             System.out.println(e);
         }
 
-
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

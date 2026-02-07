@@ -22,6 +22,7 @@ public class Personne extends Utilisateur {
     public String getPrenom() { return prenom; }
     public void setPrenom(String prenom) { this.prenom = prenom; }
 
+
     @Override
     public String toString() {
         return "Personne [ID=" + idUtilisateur + ", Nom=" + nom + ", Prenom=" + prenom + ", Email=" + email + "]";
