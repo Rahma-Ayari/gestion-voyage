@@ -93,5 +93,13 @@ public class Activite {
                 ", TypeAct=" + TypeAct +
                 '}';
     }
+
+    public TypeActivite getTypeAct() {
+        return TypeAct;
+    }
+
+    public void setTypeAct(TypeActivite typeAct) {
+        TypeAct = typeAct;
+    }
 }
 

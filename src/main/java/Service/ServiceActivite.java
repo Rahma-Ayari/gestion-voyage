@@ -1,6 +1,7 @@
 package Service;
 
 import Entite.Activite;
+import Entite.TypeActivite;
 import Utils.DataSource;
 
 import java.sql.*;
@@ -23,14 +24,17 @@ public class ServiceActivite implements IService<Activite> {
     public boolean ajouter(Activite a) throws SQLException {
         boolean test = false;
         int res = -1;
-        String req = "INSERT INTO `activite` (`nom`, `description`, `prix`, `dureeEnHeure`, `categorie`, `horaire`, `id_voyage`) VALUES ('"
+
+        // ✅ Requête corrigée avec id_type_activite
+        String req = "INSERT INTO `activite` (`nom`, `description`, `prix`, `dureeEnHeure`, `categorie`, `horaire`, `id_type_activite`) VALUES ('"
                 + a.getNom() + "', '"
                 + a.getDescription() + "', "
                 + a.getPrix() + ", "
                 + a.getDureeEnHeure() + ", '"
                 + a.getCategorie() + "', '"
                 + a.getHoraire() + "', "
-                ;
+                + (a.getTypeAct() != null ? a.getTypeAct().getIdType() : "NULL") + ")";
+
         res = st.executeUpdate(req);
         if (res > 0)
             test = true;
@@ -51,6 +55,9 @@ public class ServiceActivite implements IService<Activite> {
     @Override
     public boolean modifier(Activite a) throws SQLException {
         boolean test = false;
+
+        // ❌ ERREUR : virgule avant WHERE !
+        // ✅ Requête corrigée
         String req = "UPDATE activite SET "
                 + "nom = '" + a.getNom() + "', "
                 + "description = '" + a.getDescription() + "', "
@@ -58,6 +65,7 @@ public class ServiceActivite implements IService<Activite> {
                 + "dureeEnHeure = " + a.getDureeEnHeure() + ", "
                 + "categorie = '" + a.getCategorie() + "', "
                 + "horaire = '" + a.getHoraire() + "', "
+                + "id_type_activite = " + (a.getTypeAct() != null ? a.getTypeAct().getIdType() : "NULL")
                 + " WHERE id_activite = " + a.getIdActivite();
 
         int res = st.executeUpdate(req);
@@ -90,24 +98,32 @@ public class ServiceActivite implements IService<Activite> {
     @Override
     public List<Activite> readAll() throws SQLException {
         List<Activite> list = new ArrayList<>();
-        String query = "SELECT * FROM `activite`";
+
+        // ✅ Jointure avec type_activite
+        String query = "SELECT a.*, t.id_type, t.libelle " +
+                "FROM `activite` a " +
+                "LEFT JOIN `type_activite` t ON a.id_type_activite = t.id_type";
+
         ResultSet rest = st.executeQuery(query);
+
         while (rest.next()) {
-            int id = rest.getInt(1);
-            String nom = rest.getString("nom");
-            String description = rest.getString(3);
-            double prix = rest.getDouble("prix");
-            int dureeEnHeure = rest.getInt("dureeEnHeure");
-            String categorie = rest.getString("categorie");
-            String horaire = rest.getString("horaire");
             Activite activite = new Activite();
-            activite.setIdActivite(id);
-            activite.setNom(nom);
-            activite.setDescription(description);
-            activite.setPrix(prix);
-            activite.setDureeEnHeure(dureeEnHeure);
-            activite.setCategorie(categorie);
-            activite.setHoraire(horaire);
+            activite.setIdActivite(rest.getInt("id_activite"));
+            activite.setNom(rest.getString("nom"));
+            activite.setDescription(rest.getString("description"));
+            activite.setPrix(rest.getDouble("prix"));
+            activite.setDureeEnHeure(rest.getInt("dureeEnHeure"));
+            activite.setCategorie(rest.getString("categorie"));
+            activite.setHoraire(rest.getString("horaire"));
+
+            // ✅ Charger le type d'activité
+            if (rest.getObject("id_type") != null) {
+                TypeActivite type = new TypeActivite();
+                type.setIdType(rest.getInt("id_type"));
+                type.setLibelle(rest.getString("libelle"));
+                activite.setTypeAct(type);
+            }
+
             list.add(activite);
         }
         return list;
