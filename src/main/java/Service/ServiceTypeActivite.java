@@ -29,7 +29,7 @@ public class ServiceTypeActivite {
 
         while (rs.next()) {
             TypeActivite t = new TypeActivite();
-            t.setIdType(rs.getInt("id_type"));
+            t.setIdType(rs.getInt("id_type_activite"));
             t.setLibelle(rs.getString("libelle"));
             list.add(t);
         }
@@ -47,7 +47,7 @@ public class ServiceTypeActivite {
 
     // Supprimer un type d'activité
     public boolean supprimer(TypeActivite t) throws SQLException {
-        String req = "DELETE FROM type_activite WHERE id_type = ?";
+        String req = "DELETE FROM type_activite WHERE id_type_activite = ?";
         PreparedStatement pst = connect.prepareStatement(req);
         pst.setInt(1, t.getIdType());
         return pst.executeUpdate() > 0;
@@ -55,7 +55,7 @@ public class ServiceTypeActivite {
 
     // Modifier un type d'activité
     public boolean modifier(TypeActivite t) throws SQLException {
-        String req = "UPDATE type_activite SET libelle = ? WHERE id_type = ?";
+        String req = "UPDATE type_activite SET libelle = ? WHERE id_type_activite = ?";
         PreparedStatement pst = connect.prepareStatement(req);
         pst.setString(1, t.getLibelle());
         pst.setInt(2, t.getIdType());
@@ -64,12 +64,12 @@ public class ServiceTypeActivite {
 
     // Chercher un type par id
     public TypeActivite findById(int id) throws SQLException {
-        String req = "SELECT * FROM type_activite WHERE id_type = ?";
+        String req = "SELECT * FROM type_activite WHERE id_type_activite = ?";
         PreparedStatement pst = connect.prepareStatement(req);
         pst.setInt(1, id);
         ResultSet rs = pst.executeQuery();
         if (rs.next()) {
-            return new TypeActivite(rs.getInt("id_type"), rs.getString("libelle"));
+            return new TypeActivite(rs.getInt("id_type_activite"), rs.getString("libelle"));
         }
         return null;
     }

@@ -100,9 +100,9 @@ public class ServiceActivite implements IService<Activite> {
         List<Activite> list = new ArrayList<>();
 
         // ✅ Jointure avec type_activite
-        String query = "SELECT a.*, t.id_type, t.libelle " +
+        String query = "SELECT a.*, t.id_type_activite, t.libelle " +
                 "FROM `activite` a " +
-                "LEFT JOIN `type_activite` t ON a.id_type_activite = t.id_type";
+                "LEFT JOIN `type_activite` t ON a.id_type_activite = t.id_type_activite";
 
         ResultSet rest = st.executeQuery(query);
 
@@ -117,9 +117,9 @@ public class ServiceActivite implements IService<Activite> {
             activite.setHoraire(rest.getString("horaire"));
 
             // ✅ Charger le type d'activité
-            if (rest.getObject("id_type") != null) {
+            if (rest.getObject("id_type_activite") != null) {
                 TypeActivite type = new TypeActivite();
-                type.setIdType(rest.getInt("id_type"));
+                type.setIdType(rest.getInt("id_type_activite"));
                 type.setLibelle(rest.getString("libelle"));
                 activite.setTypeAct(type);
             }
