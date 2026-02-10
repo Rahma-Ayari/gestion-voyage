@@ -13,8 +13,12 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane style="-fx-background-color: linear-gradient(to bottom, #f5f7fa, #c3cfe2);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.DestinationController">
+<BorderPane style="-fx-background-color: linear-gradient(to bottom, #f5f7fa, #c3cfe2);" 
+xmlns="http://javafx.com/javafx/25" 
+xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.VolController">
 
     <top>
         <!-- HEADER AMÉLIORÉ -->
