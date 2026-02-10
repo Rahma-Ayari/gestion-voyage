@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="608.0" prefWidth="773.0" style="-fx-background-color: linear-gradient(to bottom, #f5f7fa, #c3cfe2);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.DestinationController">
+
+    <top>
+        <!-- HEADER AMÉLIORÉ -->
+        <VBox spacing="0">
+            <!-- Barre supérieure avec logo et titre -->
+            <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: linear-gradient(to right, #FF6B35, #F7931E);                          -fx-padding: 20 40 20 40;">
+
+                <!-- Logo Container avec meilleur positionnement -->
+                <HBox alignment="CENTER" spacing="12">
+                    <StackPane prefHeight="55" prefWidth="55" style="-fx-background-color: white;                                    -fx-background-radius: 15;                                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0, 0, 3);">
+                        <ImageView fx:id="logo" fitHeight="50" fitWidth="50" preserveRatio="true" smooth="true">
+
+                        </ImageView>
+                    </StackPane>
+
+                    <!-- Séparateur vertical -->
+                    <Separator orientation="VERTICAL" prefHeight="40" style="-fx-background-color: rgba(255,255,255,0.3);" />
+                </HBox>
+
+                <!-- Titre et sous-titre -->
+                <VBox alignment="CENTER_LEFT" spacing="3" HBox.hgrow="ALWAYS">
+                    <Label fx:id="nomapp" style="-fx-font-size: 28px;                                   -fx-font-weight: bold;                                   -fx-font-family: 'Segoe UI', Arial;                                   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);" text="TripEase" textFill="white" />
+
+                    <Label fx:id="nompage" text="Gestion des Notifications" textFill="rgba(255,255,255,0.95)">
+                        <font>
+                            <Font name="Segoe UI Semibold" size="15" />
+                        </font>
+                    </Label>
+                </VBox>
+
+                <!-- Éléments de navigation/info à droite (optionnel) -->
+                <HBox alignment="CENTER_RIGHT" spacing="15">
+                    <Label style="-fx-font-size: 13px;                                   -fx-padding: 8 15;                                   -fx-background-color: rgba(255,255,255,0.2);                                   -fx-background-radius: 20;" text="👤 admin" textFill="white" />
+                </HBox>
+            </HBox>
+
+            <!-- Barre de navigation secondaire (optionnelle) -->
+            <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: white;                          -fx-padding: 12 40;                          -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+
+                <Label fx:id="accueil" style="-fx-font-size: 13px; -fx-text-fill: #666;                               -fx-padding: 5 15;                               -fx-cursor: hand;" text="🏠 Accueil" />
+                <Label style="-fx-text-fill: #ccc;" text="&gt;" />
+                <Label fx:id="volpage" style="-fx-font-size: 13px; -fx-text-fill: #FF6B35;                               -fx-font-weight: bold;                               -fx-padding: 5 15;" text="Notifications" />
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- Center Panel - Table -->
+    <center>
+    <VBox spacing="15">
+        <padding>
+            <Insets bottom="25" left="25" right="25" top="25" />
+        </padding>
+
+        <!-- Title -->
+        <Label style="-fx-font-size:26px; -fx-font-weight:bold;" text="Notifications" />
+
+        <!-- Filter Row -->
+        <HBox spacing="10">
+            <Button text="Filtrer par : Tous" />
+
+            <ComboBox promptText="Trier par : Plus Récent" />
+
+            <Region HBox.hgrow="ALWAYS" />
+
+            <TextField promptText="Rechercher..." />
+        </HBox>
+
+        <!-- Today -->
+        <Label style="-fx-font-weight:bold;" text="Aujourd'hui">
+            <font>
+               <Font size="16.0" />
+            </font></Label>
+
+        <VBox spacing="10">
+
+            <HBox spacing="15" style="-fx-background-color:white; -fx-padding:12; -fx-background-radius:8;">
+                <Label prefHeight="28.0" prefWidth="31.0" text="👤">
+                  <font>
+                     <Font size="30.0" />
+                  </font></Label>
+                <VBox>
+                    <Label prefHeight="24.0" prefWidth="188.0" text="Nouvel utilisateur enregistré">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Label>
+                    <Label style="-fx-text-fill:gray;" text="il y a 5 minutes" />
+                </VBox>
+            </HBox>
+
+            <HBox spacing="15" style="-fx-background-color:white; -fx-padding:12; -fx-background-radius:8;">
+               <Label prefHeight="28.0" prefWidth="31.0" text="🛠">
+                  <font>
+                     <Font size="30.0" />
+                  </font>
+               </Label>
+                <VBox>
+                    <Label text="Mise à jour du système terminée">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Label>
+                    <Label style="-fx-text-fill:gray;" text="il y a 5 minutes" />
+                </VBox>
+            </HBox>
+
+            <HBox spacing="15" style="-fx-background-color:white; -fx-padding:12; -fx-background-radius:8;">
+               <Label prefHeight="28.0" prefWidth="31.0" text="⚠">
+                  <font>
+                     <Font size="30.0" />
+                  </font>
+               </Label>
+                <VBox>
+                    <Label text="Erreur de connexion détectée">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Label>
+                    <Label style="-fx-text-fill:gray;" text="il y a 30 minutes" />
+                </VBox>
+            </HBox>
+
+        </VBox>
+
+        <!-- Older -->
+        <Label style="-fx-font-weight:bold;" text="Plus anciennes">
+            <font>
+               <Font size="16.0" />
+            </font></Label>
+
+        <VBox spacing="10">
+            <HBox spacing="15" style="-fx-background-color:white; -fx-padding:12; -fx-background-radius:8;">
+               <Label prefHeight="28.0" prefWidth="31.0" text="⚠">
+                  <font>
+                     <Font size="30.0" />
+                  </font>
+               </Label>
+                <VBox>
+                    <Label text="Erreur de connexion détectée">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Label>
+                    <Label style="-fx-text-fill:gray;" text="hier" />
+                </VBox>
+            </HBox>
+        </VBox>
+
+    </VBox>
+</center>
+
+
+</BorderPane>
