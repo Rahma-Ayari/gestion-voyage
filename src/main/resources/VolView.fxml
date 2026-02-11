@@ -13,12 +13,8 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 
-<BorderPane style="-fx-background-color: linear-gradient(to bottom, #f5f7fa, #c3cfe2);" 
-xmlns="http://javafx.com/javafx/25" 
-xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.VolController">
+<BorderPane style="-fx-background-color: linear-gradient(to bottom, #f5f7fa, #c3cfe2);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.VolController">
 
     <top>
         <!-- HEADER AMÉLIORÉ -->
@@ -146,6 +142,7 @@ xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.VolController">
                 <columns>
                     <TableColumn fx:id="colidvol" prefWidth="80" style="-fx-alignment: CENTER;" text="ID" />
                     <TableColumn fx:id="colnumvol" prefWidth="106.22" text="Numéro" />
+               <TableColumn fx:id="colnumvol1" prefWidth="106.22" text="Compagnie" />
                     <TableColumn fx:id="coldatedepart" prefWidth="130.22" text="Date Départ" />
                     <TableColumn fx:id="coldatearrivee" prefWidth="135.11" text="Date Arrivée" />
                     <TableColumn fx:id="colprix" prefWidth="134.44" style="-fx-alignment: CENTER;" text="Prix" />
