@@ -24,24 +24,16 @@ xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.VolController">
         <!-- HEADER AMÉLIORÉ -->
         <VBox spacing="0">
             <!-- Barre supérieure avec logo et titre -->
-            <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: linear-gradient(to right, #FF6B35, #F7931E);                          -fx-padding: 20 40 20 40;">
-
-                <!-- Logo Container avec meilleur positionnement -->
+            <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: linear-gradient(to right, #FF6B35, #F7931E); -fx-padding: 20 40 20 40;">
                 <HBox alignment="CENTER" spacing="12">
-                    <StackPane prefHeight="55" prefWidth="55" style="-fx-background-color: white;                                    -fx-background-radius: 15;                                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0, 0, 3);">
-                        <ImageView fx:id="logo" fitHeight="50" fitWidth="50" preserveRatio="true" smooth="true">
-
-                        </ImageView>
+                    <StackPane prefHeight="55" prefWidth="55" style="-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0, 0, 3);">
+                        <ImageView fx:id="logo" fitHeight="50" fitWidth="50" preserveRatio="true" smooth="true" />
                     </StackPane>
-
-                    <!-- Séparateur vertical -->
                     <Separator orientation="VERTICAL" prefHeight="40" style="-fx-background-color: rgba(255,255,255,0.3);" />
                 </HBox>
 
-                <!-- Titre et sous-titre -->
                 <VBox alignment="CENTER_LEFT" spacing="3" HBox.hgrow="ALWAYS">
-                    <Label fx:id="nomapp" style="-fx-font-size: 28px;                                   -fx-font-weight: bold;                                   -fx-font-family: 'Segoe UI', Arial;                                   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);" text="TripEase" textFill="white" />
-
+                    <Label fx:id="nomapp" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-font-family: 'Segoe UI', Arial; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);" text="TripEase" textFill="white" />
                     <Label fx:id="nompage" text="Gestion des Vols" textFill="rgba(255,255,255,0.95)">
                         <font>
                             <Font name="Segoe UI Semibold" size="15" />
@@ -49,26 +41,22 @@ xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.VolController">
                     </Label>
                 </VBox>
 
-                <!-- Éléments de navigation/info à droite (optionnel) -->
                 <HBox alignment="CENTER_RIGHT" spacing="15">
-                    <Label style="-fx-font-size: 13px;                                   -fx-padding: 8 15;                                   -fx-background-color: rgba(255,255,255,0.2);                                   -fx-background-radius: 20;" text="👤 admin" textFill="white" />
+                    <Label style="-fx-font-size: 13px; -fx-padding: 8 15; -fx-background-color: rgba(255,255,255,0.2); -fx-background-radius: 20;" text="👤 admin" textFill="white" />
                 </HBox>
             </HBox>
 
-            <!-- Barre de navigation secondaire (optionnelle) -->
-            <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: white;                          -fx-padding: 12 40;                          -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
-
-                <Label fx:id="accueil" style="-fx-font-size: 13px; -fx-text-fill: #666;                               -fx-padding: 5 15;                               -fx-cursor: hand;" text="🏠 Accueil" />
+            <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: white; -fx-padding: 12 40; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+                <Label fx:id="accueil" style="-fx-font-size: 13px; -fx-text-fill: #666; -fx-padding: 5 15; -fx-cursor: hand;" text="🏠 Accueil" />
                 <Label style="-fx-text-fill: #ccc;" text="&gt;" />
-                <Label fx:id="volpage" style="-fx-font-size: 13px; -fx-text-fill: #FF6B35;                               -fx-font-weight: bold;                               -fx-padding: 5 15;" text="Vols" />
+                <Label fx:id="volpage" style="-fx-font-size: 13px; -fx-text-fill: #FF6B35; -fx-font-weight: bold; -fx-padding: 5 15;" text="Vols" />
             </HBox>
         </VBox>
     </top>
 
     <!-- Left Panel - Form -->
     <left>
-        <VBox alignment="TOP_CENTER" maxWidth="350" spacing="15" style="-fx-background-color: white;                      -fx-background-radius: 15;                      -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 5);">
-
+        <VBox alignment="TOP_CENTER" maxWidth="350" spacing="15" style="-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 5);">
             <padding>
                 <Insets bottom="30" left="20" right="20" top="30" />
             </padding>
@@ -85,65 +73,54 @@ xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.VolController">
 
             <Separator />
 
-            <!-- Pays  -->
             <HBox alignment="CENTER_LEFT" spacing="10">
                 <Label style="-fx-font-size: 18px;" text="🆔" />
-                <TextField fx:id="numero" prefWidth="280" promptText="Pays" style="-fx-background-radius: 8;                                   -fx-border-color: #ddd;                                   -fx-border-radius: 8;                                   -fx-padding: 10;                                   -fx-font-size: 13px;" text="Numéro" />
+                <TextField fx:id="numero" prefWidth="280" promptText="Numéro" style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;" />
             </HBox>
 
-            <!-- Ville -->
             <HBox alignment="CENTER_LEFT" spacing="10">
                 <Label style="-fx-font-size: 18px;" text="📅" />
-                <TextField fx:id="datedepart" prefWidth="280" promptText="Ville" style="-fx-background-radius: 8;                                   -fx-border-color: #ddd;                                   -fx-border-radius: 8;                                   -fx-padding: 10;                                   -fx-font-size: 13px;" text="Date Départ" />
+                <TextField fx:id="datedepart" prefWidth="280" promptText="Date Départ" style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;" />
             </HBox>
-         <HBox alignment="CENTER_LEFT" layoutX="30.0" layoutY="159.0" spacing="10">
-            <children>
-               <Label style="-fx-font-size: 18px;" text="📅" />
-               <TextField fx:id="datearrivee" prefWidth="280" promptText="Ville" style="-fx-background-radius: 8;                                   -fx-border-color: #ddd;                                   -fx-border-radius: 8;                                   -fx-padding: 10;                                   -fx-font-size: 13px;" text="Date Arrivé" />
-            </children>
-         </HBox>
-         <HBox alignment="CENTER_LEFT" layoutX="30.0" layoutY="217.0" spacing="10">
-            <children>
-               <Label style="-fx-font-size: 18px;" text="💰" />
-               <TextField fx:id="prix" prefWidth="280" promptText="Ville" style="-fx-background-radius: 8;                                   -fx-border-color: #ddd;                                   -fx-border-radius: 8;                                   -fx-padding: 10;                                   -fx-font-size: 13px;" text="Prix" />
-            </children>
-         </HBox>
 
-                        <!-- Description -->
-            <HBox alignment="CENTER_LEFT" spacing="10" />
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-size: 18px;" text="📅" />
+                <TextField fx:id="datearrivee" prefWidth="280" promptText="Date Arrivée" style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;" />
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-size: 18px;" text="💰" />
+                <TextField fx:id="prix" prefWidth="280" promptText="Prix" style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;" />
+            </HBox>
 
             <!-- Buttons -->
             <HBox alignment="CENTER" spacing="10">
                 <VBox spacing="10">
-                    <Button fx:id="ajouterBtn" onAction="#ajouterDestination" prefHeight="40" prefWidth="130" style="-fx-background-color: #4CAF50;                                    -fx-text-fill: white;                                    -fx-font-weight: bold;                                    -fx-font-size: 13px;                                    -fx-background-radius: 8;                                    -fx-cursor: hand;                                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 2);" text="Ajouter" />
-                    <Button fx:id="modifierBtn" onAction="#modifierDestination" prefHeight="40" prefWidth="130" style="-fx-background-color: #2196F3;                                    -fx-text-fill: white;                                    -fx-font-weight: bold;                                    -fx-font-size: 13px;                                    -fx-background-radius: 8;                                    -fx-cursor: hand;                                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 2);" text="Modifier" />
+                    <Button fx:id="ajouterBtn" onAction="#ajouterVol" prefHeight="40" prefWidth="130" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 2);" text="Ajouter" />
+                    <Button fx:id="modifierBtn" onAction="#modifierVol" prefHeight="40" prefWidth="130" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 2);" text="Modifier" />
                 </VBox>
-
                 <VBox spacing="10">
-                    <Button fx:id="supprimerBtn" onAction="#supprimerDestination" prefHeight="40" prefWidth="130" style="-fx-background-color: #f44336;                                    -fx-text-fill: white;                                    -fx-font-weight: bold;                                    -fx-font-size: 13px;                                    -fx-background-radius: 8;                                    -fx-cursor: hand;                                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 2);" text="Supprimer" />
-                    <Button fx:id="clearBtn" onAction="#clearFields" prefHeight="40" prefWidth="130" style="-fx-background-color: #9E9E9E;                                    -fx-text-fill: white;                                    -fx-font-weight: bold;                                    -fx-font-size: 13px;                                    -fx-background-radius: 8;                                    -fx-cursor: hand;                                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 2);" text="Effacer" />
+                    <Button fx:id="supprimerBtn" onAction="#supprimerVol" prefHeight="40" prefWidth="130" style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 2);" text="Supprimer" />
+                    <Button fx:id="clearBtn" onAction="#clearFields" prefHeight="40" prefWidth="130" style="-fx-background-color: #9E9E9E; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 2);" text="Effacer" />
                 </VBox>
             </HBox>
 
             <!-- Info Panel -->
-            <VBox spacing="10" style="-fx-background-color: #FFF3E0;                          -fx-background-radius: 10;                          -fx-border-color: #FF6B35;                          -fx-border-radius: 10;                          -fx-border-width: 2;">
+            <VBox spacing="10" style="-fx-background-color: #FFF3E0; -fx-background-radius: 10; -fx-border-color: #FF6B35; -fx-border-radius: 10; -fx-border-width: 2;">
                 <padding>
                     <Insets bottom="15" left="15" right="15" top="15" />
                 </padding>
-
                 <Label text="💡 Conseils" textFill="#FF6B35">
                     <font>
                         <Font name="Segoe UI Bold" size="14" />
                     </font>
                 </Label>
-
                 <Label text="• Remplissez tous les champs&#10;• Double-cliquez pour modifier&#10;• Sélectionnez pour supprimer" textFill="#666">
                     <font>
                         <Font name="Segoe UI" size="12" />
                     </font>
                 </Label>
             </VBox>
-
         </VBox>
     </left>
 
@@ -159,41 +136,37 @@ xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.VolController">
                 <padding>
                     <Insets bottom="10" left="10" right="10" top="10" />
                 </padding>
-
                 <Label style="-fx-font-size: 18px;" text="🔍" />
-                <TextField fx:id="searchField" prefWidth="300" promptText="Rechercher une destination..." style="-fx-background-radius: 8;                                   -fx-border-color: #ddd;                                   -fx-border-radius: 8;                                   -fx-padding: 10;                                   -fx-font-size: 13px;" text="Rechercher...." />
-                <Button fx:id="refreshBtn" onAction="#refreshTable" style="-fx-background-color: #FF6B35;                                -fx-text-fill: white;                                -fx-font-size: 16px;                                -fx-background-radius: 50%;                                -fx-padding: 8 12;                                -fx-cursor: hand;" text="🔄" />
+                <TextField fx:id="searchField" prefWidth="300" promptText="Rechercher un vol..." style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;" />
+                <Button fx:id="refreshBtn" onAction="#refreshTable" style="-fx-background-color: #FF6B35; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 50%; -fx-padding: 8 12; -fx-cursor: hand;" text="🔄" />
             </HBox>
 
             <!-- Table -->
-            <TableView fx:id="table" style="-fx-background-color: white;                               -fx-background-radius: 10;                               -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 5);" VBox.vgrow="ALWAYS">
+            <TableView fx:id="table" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 5);" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="colidvol" prefWidth="80" style="-fx-alignment: CENTER;" text="ID" />
-                    <TableColumn fx:id="colnumvol" prefWidth="106.22213745117188" text="Numéro" />
-                    <TableColumn fx:id="coldatedepart" prefWidth="130.22216796875" text="Date Départ" />
-                    <TableColumn fx:id="coldatearrivee" prefWidth="135.11114501953125" text="Date Arrivée" />
-               <TableColumn fx:id="colprix" prefWidth="134.44439697265625" style="-fx-alignment: CENTER;" text="Prix" />
-               <TableColumn fx:id="colstatut" prefWidth="113.55560302734375" style="-fx-alignment: CENTER;" text="Statut" />
+                    <TableColumn fx:id="colnumvol" prefWidth="106.22" text="Numéro" />
+                    <TableColumn fx:id="coldatedepart" prefWidth="130.22" text="Date Départ" />
+                    <TableColumn fx:id="coldatearrivee" prefWidth="135.11" text="Date Arrivée" />
+                    <TableColumn fx:id="colprix" prefWidth="134.44" style="-fx-alignment: CENTER;" text="Prix" />
+                    <TableColumn fx:id="colstatut" prefWidth="113.55" style="-fx-alignment: CENTER;" text="Statut" />
                 </columns>
-
                 <placeholder>
                     <Label text="Aucun contenu dans la table" />
                 </placeholder>
             </TableView>
 
-                     <!-- Stats Panel -->
-            <HBox alignment="CENTER" spacing="20" style="-fx-background-color: white;                          -fx-background-radius: 10;                          -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+            <!-- Stats Panel -->
+            <HBox alignment="CENTER" spacing="20" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
                 <padding>
                     <Insets bottom="15" left="15" right="15" top="15" />
                 </padding>
-
-                         <Label fx:id="titretotal" text="Total des Vols: ">
+                <Label fx:id="titretotal" text="Total des Vols: ">
                     <font>
                         <Font name="Segoe UI Bold" size="14" />
                     </font>
                 </Label>
-
-                         <Label fx:id="count" text="0" textFill="#FF6B35">
+                <Label fx:id="count" text="0" textFill="#FF6B35">
                     <font>
                         <Font name="Segoe UI Bold" size="18" />
                     </font>
@@ -201,5 +174,4 @@ xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.VolController">
             </HBox>
         </VBox>
     </center>
-
 </BorderPane>
