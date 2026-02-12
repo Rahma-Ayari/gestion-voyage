@@ -73,6 +73,12 @@
                 <Label style="-fx-font-size: 18px;" text="🆔" />
                 <TextField fx:id="numero" prefWidth="280" promptText="Numéro" style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;" />
             </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-size: 18px;" text="🏢" />
+                <TextField fx:id="compagnie" prefWidth="280"
+                           promptText="Compagnie"
+                           style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;" />
+            </HBox>
 
             <HBox alignment="CENTER_LEFT" spacing="10">
                 <Label style="-fx-font-size: 18px;" text="📅" />
@@ -142,7 +148,7 @@
                 <columns>
                     <TableColumn fx:id="colidvol" prefWidth="80" style="-fx-alignment: CENTER;" text="ID" />
                     <TableColumn fx:id="colnumvol" prefWidth="106.22" text="Numéro" />
-               <TableColumn fx:id="colnumvol1" prefWidth="106.22" text="Compagnie" />
+                    <TableColumn fx:id="colcompagnie" prefWidth="106.22" text="Compagnie" />
                     <TableColumn fx:id="coldatedepart" prefWidth="130.22" text="Date Départ" />
                     <TableColumn fx:id="coldatearrivee" prefWidth="135.11" text="Date Arrivée" />
                     <TableColumn fx:id="colprix" prefWidth="134.44" style="-fx-alignment: CENTER;" text="Prix" />
