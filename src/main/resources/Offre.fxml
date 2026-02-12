@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.ImageView?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controller.OffreController"
+            style="-fx-background-color: linear-gradient(to bottom, #f5f7fa, #c3cfe2);">
+
+    <!-- ================= TOP HEADER ================= -->
+    <top>
+        <VBox spacing="0">
+            <!-- Barre supérieure avec logo et titre -->
+            <HBox alignment="CENTER_LEFT" spacing="15"
+                  style="-fx-background-color: linear-gradient(to right, #FF6B35, #F7931E);
+                         -fx-padding: 20 40 20 40;">
+
+                <!-- Logo -->
+                <StackPane
+                        prefWidth="55"
+                        prefHeight="55"
+                        style="-fx-background-color: white;
+                               -fx-background-radius: 15;
+                               -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0, 0, 3);">
+                    <ImageView fitHeight="50"
+                               fitWidth="50"
+                               preserveRatio="true"
+                               smooth="true"/>
+                </StackPane>
+
+                <Separator orientation="VERTICAL"
+                           style="-fx-background-color: rgba(255,255,255,0.3);"
+                           prefHeight="40"/>
+
+                <!-- Titre -->
+                <VBox alignment="CENTER_LEFT" spacing="3" HBox.hgrow="ALWAYS">
+                    <Label text="TripEase"
+                           textFill="white"
+                           style="-fx-font-size: 28px;
+                                  -fx-font-weight: bold;
+                                  -fx-font-family: 'Segoe UI', Arial;
+                                  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);"/>
+                    <Label text="Gestion des Offres"
+                           textFill="rgba(255,255,255,0.95)">
+                        <font>
+                            <Font name="Segoe UI Semibold" size="15"/>
+                        </font>
+                    </Label>
+                </VBox>
+
+                <HBox alignment="CENTER_RIGHT" spacing="15">
+                    <Label text="👤 Admin"
+                           textFill="white"
+                           style="-fx-font-size: 13px;
+                                  -fx-padding: 8 15;
+                                  -fx-background-color: rgba(255,255,255,0.2);
+                                  -fx-background-radius: 20;"/>
+                </HBox>
+            </HBox>
+
+            <!-- Barre secondaire -->
+            <HBox alignment="CENTER_LEFT" spacing="10"
+                  style="-fx-background-color: white;
+                         -fx-padding: 12 40;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+                <Label text="🏠 Accueil"
+                       style="-fx-font-size: 13px; -fx-text-fill: #666;
+                              -fx-padding: 5 15;"/>
+                <Label text=">" style="-fx-text-fill: #ccc;"/>
+                <Label text="🎫 Offres"
+                       style="-fx-font-size: 13px; -fx-text-fill: #FF6B35;
+                              -fx-font-weight: bold;
+                              -fx-padding: 5 15;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- ================= LEFT FORM ================= -->
+    <left>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" style="-fx-background-color: transparent; -fx-padding: 10;">
+            <content>
+                <VBox spacing="11" maxWidth="350" alignment="TOP_CENTER"
+                      style="-fx-background-color: white;
+                             -fx-background-radius: 15;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 5);">
+                    <padding>
+                        <Insets top="30" right="20" bottom="30" left="20"/>
+                    </padding>
+
+                    <Label text="📝 Ajouter une Offre" textFill="#FF6B35">
+                        <font>
+                            <Font name="Segoe UI Bold" size="22"/>
+                        </font>
+                    </Label>
+
+                    <Separator/>
+
+                    <!-- Type -->
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="🏷" style="-fx-font-size: 18px;"/>
+                        <TextField fx:id="typeField"
+                                   promptText="Type d'offre"
+                                   prefWidth="280"
+                                   style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
+                    </HBox>
+
+                    <!-- Prix -->
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="💰" style="-fx-font-size: 18px;"/>
+                        <TextField fx:id="prixField"
+                                   promptText="Prix (€)"
+                                   prefWidth="280"
+                                   style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
+                    </HBox>
+
+                    <!-- Description -->
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="📝" style="-fx-font-size: 18px;"/>
+                        <TextArea fx:id="descriptionArea"
+                                  promptText="Description de l'offre..."
+                                  prefWidth="280"
+                                  prefRowCount="3"
+                                  wrapText="true"
+                                  style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
+                    </HBox>
+
+                    <!-- Disponibilité -->
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="✅" style="-fx-font-size: 18px;"/>
+                        <CheckBox fx:id="disponibiliteCheck" text="Disponible">
+                            <font>
+                                <Font name="Segoe UI" size="13"/>
+                            </font>
+                        </CheckBox>
+                    </HBox>
+
+                    <Separator/>
+
+                    <!-- Voyage -->
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="✈" style="-fx-font-size: 18px;"/>
+                        <ComboBox fx:id="voyageCombo"
+                                  promptText="Voyage associé"
+                                  prefWidth="280"
+                                  style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
+                    </HBox>
+
+                    <!-- Destination -->
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="🌍" style="-fx-font-size: 18px;"/>
+                        <ComboBox fx:id="destinationCombo"
+                                  promptText="Destination (optionnel)"
+                                  prefWidth="280"
+                                  style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
+                    </HBox>
+
+                    <!-- Vol -->
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="🛫" style="-fx-font-size: 18px;"/>
+                        <ComboBox fx:id="volCombo"
+                                  promptText="Vol (optionnel)"
+                                  prefWidth="280"
+                                  style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
+                    </HBox>
+
+                    <!-- Hotel -->
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="🏨" style="-fx-font-size: 18px;"/>
+                        <ComboBox fx:id="hotelCombo"
+                                  promptText="Hôtel (optionnel)"
+                                  prefWidth="280"
+                                  style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
+                    </HBox>
+
+                    <!-- Activité -->
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="🎯" style="-fx-font-size: 18px;"/>
+                        <ComboBox fx:id="activiteCombo"
+                                  promptText="Activité (optionnel)"
+                                  prefWidth="280"
+                                  style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
+                    </HBox>
+
+                    <Separator/>
+
+                    <!-- Buttons -->
+                    <HBox spacing="10" alignment="CENTER">
+                        <VBox spacing="10">
+                            <Button fx:id="ajouterBtn"
+                                    text="Ajouter"
+                                    prefWidth="130" prefHeight="40"
+                                    onAction="#ajouterOffre"
+                                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                            <Button fx:id="modifierBtn"
+                                    text="Modifier"
+                                    prefWidth="130" prefHeight="40"
+                                    onAction="#modifierOffre"
+                                    style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                        </VBox>
+                        <VBox spacing="10">
+                            <Button fx:id="supprimerBtn"
+                                    text="Supprimer"
+                                    prefWidth="130" prefHeight="40"
+                                    onAction="#supprimerOffre"
+                                    style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                            <Button fx:id="clearBtn"
+                                    text="Effacer"
+                                    prefWidth="130" prefHeight="40"
+                                    onAction="#clearFields"
+                                    style="-fx-background-color: #9E9E9E; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                        </VBox>
+                    </HBox>
+
+                </VBox>
+            </content>
+        </ScrollPane>
+    </left>
+
+    <!-- ================= CENTER TABLE ================= -->
+    <center>
+        <VBox spacing="15">
+            <padding>
+                <Insets top="30" right="30" bottom="30" left="20"/>
+            </padding>
+
+            <!-- Search Bar -->
+            <HBox spacing="10" alignment="CENTER_LEFT"
+                  style="-fx-background-color: white;
+                         -fx-background-radius: 10;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+
+                <Label text="🔍" style="-fx-font-size: 18px;"/>
+                <TextField fx:id="searchField"
+                           promptText="Rechercher une offre..."
+                           prefWidth="300"
+                           style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
+                <Button fx:id="refreshBtn"
+                        text="🔄"
+                        onAction="#refreshTable"
+                        style="-fx-background-color: #FF6B35; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 50%; -fx-padding: 8 12; -fx-cursor: hand;"/>
+            </HBox>
+
+            <!-- Table -->
+            <TableView fx:id="tableView"
+                       VBox.vgrow="ALWAYS"
+                       style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 5);">
+                <columns>
+                    <TableColumn fx:id="typeCol" text="Type" prefWidth="100"/>
+                    <TableColumn fx:id="prixCol" text="Prix (€)" prefWidth="80"/>
+                    <TableColumn fx:id="descriptionCol" text="Description" prefWidth="180"/>
+                    <TableColumn fx:id="disponibiliteCol" text="Disponibilité" prefWidth="90"/>
+                    <TableColumn fx:id="voyageCol" text="Voyage" prefWidth="280"/>
+                    <TableColumn fx:id="destinationCol" text="Destination" prefWidth="200"/>
+                    <TableColumn fx:id="volCol" text="Vol" prefWidth="220"/>
+                    <TableColumn fx:id="hotelCol" text="Hôtel" prefWidth="220"/>
+                    <TableColumn fx:id="activiteCol" text="Activité" prefWidth="200"/>
+                </columns>
+
+                <placeholder>
+                    <Label text="Aucune offre trouvée"/>
+                </placeholder>
+            </TableView>
+
+            <!-- Stats -->
+            <HBox spacing="30" alignment="CENTER"
+                  style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="15"/>
+                </padding>
+
+                <HBox spacing="5">
+                    <Label text="📊 Total des offres: ">
+                        <font>
+                            <Font name="Segoe UI Bold" size="14"/>
+                        </font>
+                    </Label>
+                    <Label fx:id="countLabel" text="0" textFill="#FF6B35">
+                        <font>
+                            <Font name="Segoe UI Bold" size="18"/>
+                        </font>
+                    </Label>
+                </HBox>
+
+                <HBox spacing="5">
+                    <Label text="✅ Disponibles: ">
+                        <font>
+                            <Font name="Segoe UI Bold" size="14"/>
+                        </font>
+                    </Label>
+                    <Label fx:id="disponiblesLabel" text="0" textFill="#4CAF50">
+                        <font>
+                            <Font name="Segoe UI Bold" size="18"/>
+                        </font>
+                    </Label>
+                </HBox>
+
+                <HBox spacing="5">
+                    <Label text="❌ Non disponibles: ">
+                        <font>
+                            <Font name="Segoe UI Bold" size="14"/>
+                        </font>
+                    </Label>
+                    <Label fx:id="nonDisponiblesLabel" text="0" textFill="#f44336">
+                        <font>
+                            <Font name="Segoe UI Bold" size="18"/>
+                        </font>
+                    </Label>
+                </HBox>
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane>
