@@ -22,9 +22,17 @@ public class ServiceHotel implements IService<Hotel> {
     @Override
     public boolean ajouter(Hotel h) throws SQLException {
         boolean test = false;
-        int res = -1;
-        String req = "INSERT INTO `hotel` (`nom`, `ville`, `adresse`) VALUES ('" + h.getNom() + "', '" + h.getVille() + "', '" + h.getAdresse() + "');";
-        res = st.executeUpdate(req);
+        String req = "INSERT INTO hotel (nom, ville, adresse, stars, capacite, type_chambre, prix_par_nuit, disponibilite) VALUES ("
+                + "'" + h.getNom() + "', "
+                + "'" + h.getVille() + "', "
+                + "'" + h.getAdresse() + "', "
+                + h.getStars() + ", "
+                + h.getCapacite() + ", "
+                + "'" + h.getTypeChambre() + "', "
+                + h.getPrixParNuit() + ", "
+                + (h.isDisponibilite() ? 1 : 0) + ");";
+
+        int res = st.executeUpdate(req);
         if (res > 0)
             test = true;
         return test;
@@ -40,14 +48,18 @@ public class ServiceHotel implements IService<Hotel> {
         return test;
     }
 
-
     @Override
     public boolean modifier(Hotel h) throws SQLException {
         boolean test = false;
         String req = "UPDATE hotel SET "
                 + "nom = '" + h.getNom() + "', "
                 + "ville = '" + h.getVille() + "', "
-                + "adresse = '" + h.getAdresse() + "' "
+                + "adresse = '" + h.getAdresse() + "', "
+                + "stars = " + h.getStars() + ", "
+                + "capacite = " + h.getCapacite() + ", "
+                + "type_chambre = '" + h.getTypeChambre() + "', "
+                + "prix_par_nuit = " + h.getPrixParNuit() + ", "
+                + "disponibilite = " + (h.isDisponibilite() ? 1 : 0) + " "
                 + "WHERE id_hotel = " + h.getIdHotel();
 
         int res = st.executeUpdate(req);
@@ -55,7 +67,6 @@ public class ServiceHotel implements IService<Hotel> {
             test = true;
         return test;
     }
-
 
     @Override
     public Hotel findbyId(int id) throws SQLException {
@@ -68,24 +79,35 @@ public class ServiceHotel implements IService<Hotel> {
                     rs.getInt("id_hotel"),
                     rs.getString("nom"),
                     rs.getString("ville"),
-                    rs.getString("adresse")
+                    rs.getString("adresse"),
+                    rs.getInt("stars"),
+                    rs.getInt("capacite"),
+                    rs.getString("type_chambre"),
+                    rs.getDouble("prix_par_nuit"),
+                    rs.getBoolean("disponibilite")
             );
         }
         return hotel;
     }
 
-
     @Override
     public List<Hotel> readAll() throws SQLException {
         List<Hotel> list = new ArrayList<>();
-        String query = "SELECT * FROM `hotel`";
-        ResultSet rest = st.executeQuery(query);
-        while (rest.next()) {
-            int id = rest.getInt(1);
-            String nom = rest.getString("nom");
-            String ville = rest.getString(3);
-            String adresse = rest.getString("adresse");
-            Hotel hotel = new Hotel(id, nom, ville, adresse);
+        String query = "SELECT * FROM hotel";
+        ResultSet rs = st.executeQuery(query);
+
+        while (rs.next()) {
+            Hotel hotel = new Hotel(
+                    rs.getInt("id_hotel"),
+                    rs.getString("nom"),
+                    rs.getString("ville"),
+                    rs.getString("adresse"),
+                    rs.getInt("stars"),
+                    rs.getInt("capacite"),
+                    rs.getString("type_chambre"),
+                    rs.getDouble("prix_par_nuit"),
+                    rs.getBoolean("disponibilite")
+            );
             list.add(hotel);
         }
         return list;
