@@ -15,7 +15,7 @@ public class MainApp extends Application {
         try {
             // Chargement du fichier FXML
             // Note : Adaptez le chemin si votre FXML est dans un sous-dossier (ex: "/View/Destination.fxml")
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AvisUser.fxml"));
             Parent root = loader.load();
 
             // Création de la scène

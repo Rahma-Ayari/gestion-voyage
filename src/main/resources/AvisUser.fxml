@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controller.AvisUserController"
+            stylesheets="@style.css"
+            style="-fx-background-color: #f8f9fa;">
+
+    <!-- Header Orange -->
+    <top>
+        <HBox style="-fx-background-color: linear-gradient(to right, #FF7F50, #FF9A76); -fx-padding: 20 30;" alignment="CENTER_LEFT" spacing="15">
+            <HBox spacing="15" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                <Region style="-fx-background-color: white; -fx-pref-width: 60; -fx-pref-height: 60; -fx-background-radius: 10;"/>
+                <VBox>
+                    <Label text="TripEase" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                    <Label text="Votre avis fait la différence" style="-fx-font-size: 14px; -fx-text-fill: rgba(255,255,255,0.9);"/>
+                </VBox>
+            </HBox>
+            <Button text="👤 Utilisateur" style="-fx-background-color: rgba(255,255,255,0.2); -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5; -fx-background-radius: 5; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20; -fx-cursor: hand;"/>
+        </HBox>
+    </top>
+
+    <!-- Breadcrumb -->
+    <center>
+        <VBox>
+            <HBox style="-fx-padding: 15 30; -fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0;" spacing="10" alignment="CENTER_LEFT">
+                <Label text="🏠 Accueil" style="-fx-text-fill: #666; -fx-font-size: 13px;"/>
+                <Label text=">" style="-fx-text-fill: #999;"/>
+                <Label text="📝 Avis" style="-fx-text-fill: #FF7F50; -fx-font-weight: bold; -fx-font-size: 13px;"/>
+            </HBox>
+
+            <!-- Contenu principal avec ScrollPane -->
+            <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background: #f8f9fa; -fx-background-color: #f8f9fa;">
+                <VBox style="-fx-background-color: #f8f9fa;" alignment="TOP_CENTER">
+                    <padding>
+                        <Insets top="40" right="30" bottom="40" left="30"/>
+                    </padding>
+
+                    <!-- Section Hero -->
+                    <VBox alignment="CENTER" spacing="10">
+                        <padding>
+                            <Insets bottom="40"/>
+                        </padding>
+                        <Label text="Partagez votre expérience" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                        <Label text="Votre avis compte et aide les futurs voyageurs" style="-fx-font-size: 15px; -fx-text-fill: #7f8c8d;"/>
+                    </VBox>
+
+                    <!-- Card principale -->
+                    <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 20, 0, 0, 5);" maxWidth="900" alignment="TOP_CENTER">
+                        <padding>
+                            <Insets top="40" right="50" bottom="40" left="50"/>
+                        </padding>
+
+                        <VBox spacing="35" alignment="TOP_CENTER">
+
+                            <!-- Section étoiles -->
+                            <VBox alignment="CENTER" spacing="15">
+                                <Label text="Comment évaluez-vous votre expérience ?" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+                                <HBox spacing="15" alignment="CENTER">
+                                    <Button fx:id="star1" text="★" style="-fx-font-size: 50; -fx-background-color: transparent; -fx-text-fill: #ddd; -fx-cursor: hand;"/>
+                                    <Button fx:id="star2" text="★" style="-fx-font-size: 50; -fx-background-color: transparent; -fx-text-fill: #ddd; -fx-cursor: hand;"/>
+                                    <Button fx:id="star3" text="★" style="-fx-font-size: 50; -fx-background-color: transparent; -fx-text-fill: #ddd; -fx-cursor: hand;"/>
+                                    <Button fx:id="star4" text="★" style="-fx-font-size: 50; -fx-background-color: transparent; -fx-text-fill: #ddd; -fx-cursor: hand;"/>
+                                    <Button fx:id="star5" text="★" style="-fx-font-size: 50; -fx-background-color: transparent; -fx-text-fill: #ddd; -fx-cursor: hand;"/>
+                                </HBox>
+
+                                <Label fx:id="lblRating" text="Sélectionnez une note" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #7f8c8d;"/>
+                            </VBox>
+
+                            <Separator prefWidth="200"/>
+
+                            <!-- Évaluations détaillées -->
+                            <VBox spacing="30" alignment="TOP_LEFT">
+                                <padding>
+                                    <Insets top="10" bottom="10"/>
+                                </padding>
+                                <Label text="Évaluations détaillées" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+                                <!-- Hébergement -->
+                                <VBox spacing="15">
+                                    <HBox alignment="CENTER_LEFT" spacing="15">
+                                        <StackPane style="-fx-background-color: linear-gradient(to bottom right, #FF6B6B, #FF8E53); -fx-pref-width: 50; -fx-pref-height: 50; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(255,107,107,0.3), 8, 0, 0, 3);">
+                                            <Label text="🏨" style="-fx-font-size: 26px;"/>
+                                        </StackPane>
+                                        <VBox spacing="2">
+                                            <Label text="Hébergement" style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                                            <Label text="Qualité du logement" style="-fx-font-size: 12px; -fx-text-fill: #7f8c8d;"/>
+                                        </VBox>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <Label fx:id="lblHebergement" text="0/5" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #FF6B6B; -fx-min-width: 65; -fx-alignment: center-right;"/>
+                                    </HBox>
+                                    <Slider fx:id="sliderHebergement" styleClass="modern-slider, slider-hebergement"/>
+                                </VBox>
+
+                                <!-- Transport -->
+                                <VBox spacing="15">
+                                    <HBox alignment="CENTER_LEFT" spacing="15">
+                                        <StackPane style="-fx-background-color: linear-gradient(to bottom right, #4A90E2, #357ABD); -fx-pref-width: 50; -fx-pref-height: 50; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(74,144,226,0.3), 8, 0, 0, 3);">
+                                            <Label text="🚗" style="-fx-font-size: 26px;"/>
+                                        </StackPane>
+                                        <VBox spacing="2">
+                                            <Label text="Transport" style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                                            <Label text="Facilité de déplacement" style="-fx-font-size: 12px; -fx-text-fill: #7f8c8d;"/>
+                                        </VBox>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <Label fx:id="lblTransport" text="0/5" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #4A90E2; -fx-min-width: 65; -fx-alignment: center-right;"/>
+                                    </HBox>
+                                    <Slider fx:id="sliderTransport" styleClass="modern-slider, slider-transport"/>
+                                </VBox>
+
+                                <!-- Activités -->
+                                <VBox spacing="15">
+                                    <HBox alignment="CENTER_LEFT" spacing="15">
+                                        <StackPane style="-fx-background-color: linear-gradient(to bottom right, #9B59B6, #8E44AD); -fx-pref-width: 50; -fx-pref-height: 50; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(155,89,182,0.3), 8, 0, 0, 3);">
+                                            <Label text="🎯" style="-fx-font-size: 26px;"/>
+                                        </StackPane>
+                                        <VBox spacing="2">
+                                            <Label text="Activités" style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                                            <Label text="Choses à faire et visiter" style="-fx-font-size: 12px; -fx-text-fill: #7f8c8d;"/>
+                                        </VBox>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <Label fx:id="lblActivites" text="0/5" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #9B59B6; -fx-min-width: 65; -fx-alignment: center-right;"/>
+                                    </HBox>
+                                    <Slider fx:id="sliderActivites" styleClass="modern-slider, slider-activites"/>
+                                </VBox>
+
+                                <!-- Qualité/Prix -->
+                                <VBox spacing="15">
+                                    <HBox alignment="CENTER_LEFT" spacing="15">
+                                        <StackPane style="-fx-background-color: linear-gradient(to bottom right, #F39C12, #E67E22); -fx-pref-width: 50; -fx-pref-height: 50; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(243,156,18,0.3), 8, 0, 0, 3);">
+                                            <Label text="💰" style="-fx-font-size: 26px;"/>
+                                        </StackPane>
+                                        <VBox spacing="2">
+                                            <Label text="Qualité / Prix" style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                                            <Label text="Rapport qualité-prix global" style="-fx-font-size: 12px; -fx-text-fill: #7f8c8d;"/>
+                                        </VBox>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <Label fx:id="lblQualitePrix" text="0/5" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #F39C12; -fx-min-width: 65; -fx-alignment: center-right;"/>
+                                    </HBox>
+                                    <Slider fx:id="sliderQualitePrix" styleClass="modern-slider, slider-qualiteprix"/>
+                                </VBox>
+                            </VBox>
+
+                            <Separator prefWidth="200"/>
+
+                            <!-- Partagez votre avis -->
+                            <VBox spacing="20" alignment="TOP_LEFT">
+                                <Label text="Partagez votre avis" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+                                <!-- Titre -->
+                                <VBox spacing="8">
+                                    <Label text="Titre de votre avis *" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                                    <TextField fx:id="txtTitre" promptText="Résumez votre expérience en quelques mots"
+                                               style="-fx-font-size: 14px; -fx-padding: 12; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #ddd; -fx-border-width: 1;"/>
+                                </VBox>
+
+                                <!-- Commentaire -->
+                                <VBox spacing="8">
+                                    <Label text="Votre commentaire *" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                                    <TextArea fx:id="txtCommentaire"
+                                              promptText="Partagez les détails de votre voyage : ce que vous avez aimé, vos recommandations..."
+                                              wrapText="true" prefHeight="150"
+                                              style="-fx-font-size: 13px; -fx-padding: 12; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #ddd; -fx-border-width: 1;"/>
+                                    <HBox alignment="CENTER_RIGHT">
+                                        <Label fx:id="lblCharCount" text="0/1000" style="-fx-font-size: 12px; -fx-text-fill: #95a5a6;"/>
+                                    </HBox>
+                                </VBox>
+                            </VBox>
+
+                            <Separator prefWidth="200"/>
+
+                            <!-- Recommandation -->
+                            <VBox spacing="20" alignment="CENTER">
+                                <Label text="Recommandation" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                                <Label text="Recommanderiez-vous cette destination ? *" style="-fx-font-size: 14px; -fx-text-fill: #34495e;"/>
+
+                                <HBox spacing="20" alignment="CENTER">
+                                    <ToggleButton fx:id="btnOui" text="✓ Oui"
+                                                  style="-fx-font-size: 15px; -fx-padding: 15 40; -fx-background-color: white; -fx-border-color: #10b981; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10; -fx-text-fill: #10b981; -fx-font-weight: bold; -fx-cursor: hand;"/>
+                                    <ToggleButton fx:id="btnNon" text="✗ Non"
+                                                  style="-fx-font-size: 15px; -fx-padding: 15 40; -fx-background-color: white; -fx-border-color: #ef4444; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10; -fx-text-fill: #ef4444; -fx-font-weight: bold; -fx-cursor: hand;"/>
+                                </HBox>
+                            </VBox>
+
+                            <!-- Boutons d'action -->
+                            <HBox spacing="20" alignment="CENTER">
+                                <padding>
+                                    <Insets top="20"/>
+                                </padding>
+                                <Button fx:id="btnAnnuler" text="Annuler"
+                                        style="-fx-font-size: 15px; -fx-padding: 15 50; -fx-background-color: white; -fx-border-color: #95a5a6; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10; -fx-text-fill: #34495e; -fx-font-weight: bold; -fx-cursor: hand;"/>
+                                <Button fx:id="btnPublier" text="PUBLIER MON AVIS"
+                                        style="-fx-font-size: 15px; -fx-padding: 15 50; -fx-background-color: linear-gradient(to right, #FF7F50, #FF9A76); -fx-text-fill: white; -fx-background-radius: 10; -fx-font-weight: bold; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(255,127,80,0.4), 10, 0, 0, 3);"/>
+                            </HBox>
+
+                        </VBox>
+                    </VBox>
+
+                </VBox>
+            </ScrollPane>
+        </VBox>
+    </center>
+
+</BorderPane>
