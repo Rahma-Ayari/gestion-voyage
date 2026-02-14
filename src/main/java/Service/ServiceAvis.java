@@ -6,18 +6,28 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServiceAvis implements IService <Avis> {
+public class ServiceAvis implements IService<Avis> {
 
     private Connection con = DataSource.getInstance().getCon();
 
     @Override
     public boolean ajouter(Avis a) throws SQLException {
-        String req = "INSERT INTO avis (note, commentaire, date_avis, id_utilisateur) VALUES (?, ?, ?, ?)";
+        // Requête incluant les 10 colonnes (id est auto-incrémenté)
+        String req = "INSERT INTO avis (id_utilisateur, note, titre, commentaire, note_hebergement, " +
+                "note_transport, note_activites, note_qualite_prix, recommande, date_avis) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
         PreparedStatement ps = con.prepareStatement(req, Statement.RETURN_GENERATED_KEYS);
-        ps.setInt(1, a.getNote());
-        ps.setString(2, a.getCommentaire());
-        ps.setDate(3, a.getDateAvis());
-        ps.setInt(4, a.getIdUtilisateur());
+        ps.setInt(1, a.getIdUtilisateur());
+        ps.setInt(2, a.getNote());
+        ps.setString(3, a.getTitre());
+        ps.setString(4, a.getCommentaire());
+        ps.setInt(5, a.getNoteHebergement());
+        ps.setInt(6, a.getNoteTransport());
+        ps.setInt(7, a.getNoteActivites());
+        ps.setInt(8, a.getNoteQualitePrix());
+        ps.setBoolean(9, a.isRecommande());
+        ps.setDate(10, a.getDateAvis());
 
         int res = ps.executeUpdate();
 
@@ -32,23 +42,32 @@ public class ServiceAvis implements IService <Avis> {
     }
 
     @Override
-    public boolean supprimer(Avis a) throws SQLException {
-        // La colonne s'appelle bien 'id' dans votre SQL
-        String req = "DELETE FROM avis WHERE id = ?";
+    public boolean modifier(Avis a) throws SQLException {
+        String req = "UPDATE avis SET id_utilisateur = ?, note = ?, titre = ?, commentaire = ?, " +
+                "note_hebergement = ?, note_transport = ?, note_activites = ?, " +
+                "note_qualite_prix = ?, recommande = ?, date_avis = ? WHERE id = ?";
+
         PreparedStatement ps = con.prepareStatement(req);
-        ps.setInt(1, a.getId());
+        ps.setInt(1, a.getIdUtilisateur());
+        ps.setInt(2, a.getNote());
+        ps.setString(3, a.getTitre());
+        ps.setString(4, a.getCommentaire());
+        ps.setInt(5, a.getNoteHebergement());
+        ps.setInt(6, a.getNoteTransport());
+        ps.setInt(7, a.getNoteActivites());
+        ps.setInt(8, a.getNoteQualitePrix());
+        ps.setBoolean(9, a.isRecommande());
+        ps.setDate(10, a.getDateAvis());
+        ps.setInt(11, a.getId());
+
         return ps.executeUpdate() > 0;
     }
 
     @Override
-    public boolean modifier(Avis a) throws SQLException {
-        String req = "UPDATE avis SET note = ?, commentaire = ?, date_avis = ?, id_utilisateur = ? WHERE id = ?";
+    public boolean supprimer(Avis a) throws SQLException {
+        String req = "DELETE FROM avis WHERE id = ?";
         PreparedStatement ps = con.prepareStatement(req);
-        ps.setInt(1, a.getNote());
-        ps.setString(2, a.getCommentaire());
-        ps.setDate(3, a.getDateAvis());
-        ps.setInt(4, a.getIdUtilisateur());
-        ps.setInt(5, a.getId());
+        ps.setInt(1, a.getId());
         return ps.executeUpdate() > 0;
     }
 
@@ -60,13 +79,7 @@ public class ServiceAvis implements IService <Avis> {
         ResultSet rs = st.executeQuery(req);
 
         while (rs.next()) {
-            listeAvis.add(new Avis(
-                    rs.getInt("id"),
-                    rs.getInt("note"),
-                    rs.getString("commentaire"),
-                    rs.getDate("date_avis"),
-                    rs.getInt("id_utilisateur")
-            ));
+            listeAvis.add(mapResultSetToAvis(rs));
         }
         return listeAvis;
     }
@@ -79,14 +92,28 @@ public class ServiceAvis implements IService <Avis> {
         ResultSet rs = ps.executeQuery();
 
         if (rs.next()) {
-            return new Avis(
-                    rs.getInt("id"),
-                    rs.getInt("note"),
-                    rs.getString("commentaire"),
-                    rs.getDate("date_avis"),
-                    rs.getInt("id_utilisateur")
-            );
+            return mapResultSetToAvis(rs);
         }
         return null;
+    }
+
+    /**
+     * Méthode utilitaire pour transformer une ligne de ResultSet en objet Avis
+     * Cela évite de répéter le code dans readAll et findById
+     */
+    private Avis mapResultSetToAvis(ResultSet rs) throws SQLException {
+        return new Avis(
+                rs.getInt("id"),
+                rs.getInt("id_utilisateur"),
+                rs.getInt("note"),
+                rs.getString("titre"),
+                rs.getString("commentaire"),
+                rs.getInt("note_hebergement"),
+                rs.getInt("note_transport"),
+                rs.getInt("note_activites"),
+                rs.getInt("note_qualite_prix"),
+                rs.getBoolean("recommande"),
+                rs.getDate("date_avis")
+        );
     }
 }
