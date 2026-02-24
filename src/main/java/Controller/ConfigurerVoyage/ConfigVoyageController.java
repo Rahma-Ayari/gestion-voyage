@@ -1,205 +1,201 @@
 package Controller.ConfigurerVoyage;
 
 import Entite.Destination;
-import Entite.Voyage;
 import Service.ServiceDestination;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import javafx.util.StringConverter;
+import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class ConfigVoyageController {
 
-    @FXML
-    private ComboBox<Destination> destinationCombo;
+    @FXML private DatePicker          dateDebutPicker;
+    @FXML private DatePicker          dateFinPicker;
+    @FXML private Label               dureeLabel;
+    @FXML private ComboBox<String>    rythmeCombo;
+    @FXML private ComboBox<Destination> destinationCombo;
+    @FXML private Label               destinationPreview;
+    @FXML private Button              suivantButton;
 
-    @FXML
-    private ComboBox<String> rythmeCombo;
+    private final ServiceDestination serviceDestination = new ServiceDestination();
 
-    @FXML
-    private DatePicker dateDebutPicker, dateFinPicker;
-
-    @FXML
-    private Label dureeLabel, destinationPreview;
-
-    @FXML
-    private Button suivantButton;
-
-    private Voyage voyage = new Voyage();
-    private ServiceDestination serviceDestination = new ServiceDestination();
-
+    /* ══════════════════════════════════════════
+       INIT
+    ══════════════════════════════════════════ */
     @FXML
     public void initialize() {
-        configurerComboDestination();
-        chargerDestinations();
-        chargerRythmes();
-        initListeners();
-    }
+        rythmeCombo.getItems().addAll(
+                "Détente", "Aventure", "Culturel", "Gastronomique", "Sport", "Famille");
 
-    /* ================= DESTINATIONS ================= */
-
-    private void configurerComboDestination() {
-        destinationCombo.setConverter(new StringConverter<Destination>() {
-            @Override
-            public String toString(Destination d) {
-                if (d == null) return "";
-                return d.getPays() + " - " + d.getVille();
-            }
-
-            @Override
-            public Destination fromString(String string) {
-                return null;
-            }
+        // Les dates pilotent la liste de destinations
+        dateDebutPicker.valueProperty().addListener((obs, old, nw) -> {
+            calculerDuree();
+            rafraichirDestinations();
         });
-    }
+        dateFinPicker.valueProperty().addListener((obs, old, nw) -> {
+            calculerDuree();
+            rafraichirDestinations();
+        });
 
-    private void chargerDestinations() {
-        try {
-            List<Destination> destinations = serviceDestination.readAll();
-            destinationCombo.getItems().setAll(destinations);
-        } catch (SQLException e) {
-            showAlert("Erreur chargement destinations");
-        }
-    }
-
-    /* ================= RYTHMES ================= */
-
-    private void chargerRythmes() {
-        rythmeCombo.getItems().addAll("Détendu", "Normal", "Intensif");
-    }
-
-    /* ================= LISTENERS ================= */
-
-    private void initListeners() {
-
-        destinationCombo.valueProperty().addListener((obs, oldV, newV) -> {
-            if (newV != null) {
+        // Aperçu quand la destination change
+        destinationCombo.valueProperty().addListener((obs, old, nw) -> {
+            if (nw != null) {
                 destinationPreview.setText(
-                        "📍 " + newV.getVille() + ", " + newV.getPays() + "\n\n" +
-                                newV.getDescription()
-                );
-                voyage.setDestination(newV);
+                        "🌍 " + nw.getPays() + "  —  " + nw.getVille()
+                                + "\n\n" + (nw.getDescription() != null ? nw.getDescription() : ""));
+                destinationPreview.setStyle(
+                        "-fx-text-fill: #555; -fx-font-size: 13px; -fx-line-spacing: 4px;");
+            } else {
+                destinationPreview.setText("Sélectionnez une destination pour voir l'aperçu");
+                destinationPreview.setStyle("-fx-text-fill: #888; -fx-font-size: 13px;");
             }
         });
 
-        dateDebutPicker.valueProperty().addListener((o, a, b) -> calculerDuree());
-        dateFinPicker.valueProperty().addListener((o, a, b) -> calculerDuree());
-
-        rythmeCombo.valueProperty().addListener((obs, o, n) -> voyage.setRythme(n));
+        // Afficher message par défaut dans le combo
+        destinationCombo.setPromptText("Choisissez d'abord vos dates");
+        configurerConverterDestination();
     }
 
-    /* ================= DURÉE ================= */
-
-    private void calculerDuree() {
-        if (dateDebutPicker.getValue() != null && dateFinPicker.getValue() != null) {
-
-            if (dateFinPicker.getValue().isBefore(dateDebutPicker.getValue())) {
-                showAlert("La date de retour doit être après la date de départ");
-                return;
+    /* ── Converter affiché dans le ComboBox ── */
+    private void configurerConverterDestination() {
+        destinationCombo.setConverter(new javafx.util.StringConverter<>() {
+            @Override public String toString(Destination d) {
+                return d == null ? "" : d.getPays() + " — " + d.getVille();
             }
-
-            long jours = ChronoUnit.DAYS.between(
-                    dateDebutPicker.getValue(),
-                    dateFinPicker.getValue()
-            ) + 1;
-
-            dureeLabel.setText("Durée : " + jours + " jours");
-
-            voyage.setDuree((int) jours);
-            voyage.setDateDebut(dateDebutPicker.getValue());
-            voyage.setDateFin(dateFinPicker.getValue());
-        }
+            @Override public Destination fromString(String s) { return null; }
+        });
     }
 
-    /* ================= NAVIGATION ================= */
+    /* ── Recharge les destinations filtrées selon les dates saisies ── */
+    private void rafraichirDestinations() {
+        LocalDate debut = dateDebutPicker.getValue();
+        LocalDate fin   = dateFinPicker.getValue();
 
-    @FXML
-    private void passerEtapeSuivante() {
-        if (voyage.getDestination() == null ||
-                voyage.getDateDebut() == null ||
-                voyage.getDateFin() == null ||
-                voyage.getRythme() == null) {
+        destinationCombo.getItems().clear();
+        destinationCombo.setValue(null);
 
-            showAlert("Veuillez compléter tous les champs !");
+        if (debut == null || fin == null || fin.isBefore(debut)) {
+            destinationCombo.setPromptText("Choisissez d'abord des dates valides");
             return;
         }
 
-        System.out.println("Voyage en cours : " + voyage);
-        // ➜ Charger interface Activités
+        try {
+            // ← Requête filtrée : destinations dont la période contient les dates user
+            List<Destination> dispo = serviceDestination.findByDateRange(debut, fin);
+
+            if (dispo.isEmpty()) {
+                destinationCombo.setPromptText("Aucune destination disponible pour ces dates");
+            } else {
+                destinationCombo.getItems().setAll(dispo);
+                destinationCombo.setPromptText("Choisir une destination (" + dispo.size() + " disponible(s))");
+            }
+        } catch (SQLException e) {
+            showAlert("Erreur", "Impossible de charger les destinations : " + e.getMessage());
+        }
     }
 
-    /* ================= EFFETS HOVER - Colors updated to match screenshot ================= */
+    /* ── Calcul durée ── */
+    private void calculerDuree() {
+        LocalDate debut = dateDebutPicker.getValue();
+        LocalDate fin   = dateFinPicker.getValue();
+        if (debut != null && fin != null) {
+            if (fin.isBefore(debut)) {
+                dureeLabel.setText("⚠ Date de retour invalide");
+                dureeLabel.setStyle("-fx-font-size:14.5px;-fx-font-weight:bold;-fx-text-fill:#E74C3C;");
+            } else {
+                long j = ChronoUnit.DAYS.between(debut, fin);
+                dureeLabel.setText("Durée : " + j + " jour" + (j > 1 ? "s" : ""));
+                dureeLabel.setStyle("-fx-font-size:14.5px;-fx-font-weight:bold;-fx-text-fill:#FF6B35;");
+            }
+        } else {
+            dureeLabel.setText("Durée : 0 jours");
+            dureeLabel.setStyle("-fx-font-size:14.5px;-fx-font-weight:bold;-fx-text-fill:#FF6B35;");
+        }
+    }
 
+    /* ══════════════════════════════════════════
+       NAVIGATION → Vol
+    ══════════════════════════════════════════ */
     @FXML
-    private void onMouseEnteredButton(MouseEvent event) {
-        Button btn = (Button) event.getSource();
-        btn.setStyle(btn.getStyle() + "-fx-background-color: #F8F9FA;");
+    private void passerEtapeSuivante() {
+        if (dateDebutPicker.getValue() == null) {
+            showAlert("Champ requis", "Veuillez sélectionner une date de départ."); return;
+        }
+        if (dateFinPicker.getValue() == null) {
+            showAlert("Champ requis", "Veuillez sélectionner une date de retour."); return;
+        }
+        if (dateFinPicker.getValue().isBefore(dateDebutPicker.getValue())) {
+            showAlert("Dates invalides", "La date de retour doit être après la date de départ."); return;
+        }
+        if (rythmeCombo.getValue() == null) {
+            showAlert("Champ requis", "Veuillez choisir un type de voyage."); return;
+        }
+        if (destinationCombo.getValue() == null) {
+            showAlert("Champ requis", "Veuillez choisir une destination."); return;
+        }
+
+        URL url = getClass().getClassLoader().getResource("ConfigurerVoyage/Vol.fxml");
+        if (url == null) url = getClass().getResource("/ConfigurerVoyage/Vol.fxml");
+        if (url == null) {
+            showAlert("Erreur", "Vol.fxml introuvable."); return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(url);
+            Parent root = loader.load();
+
+            // ── Transmission des données à VolController ──
+            VolController volCtrl = loader.getController();
+            volCtrl.initDonnees(
+                    destinationCombo.getValue(),
+                    dateDebutPicker.getValue(),
+                    dateFinPicker.getValue()
+            );
+
+            Stage stage = (Stage) suivantButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("TripEase — Choisir un Vol");
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible de charger Vol.fxml : " + e.getMessage());
+        }
     }
 
-    @FXML
-    private void onMouseExitedButton(MouseEvent event) {
-        Button btn = (Button) event.getSource();
-        String style = btn.getStyle().replace("-fx-background-color: #F8F9FA;", "");
-        btn.setStyle(style);
+    /* ── Hover effects ── */
+    @FXML private void onMouseEnteredButton(javafx.scene.input.MouseEvent e) {
+        ((Button) e.getSource()).setOpacity(0.85);
+    }
+    @FXML private void onMouseExitedButton(javafx.scene.input.MouseEvent e) {
+        ((Button) e.getSource()).setOpacity(1.0);
+    }
+    @FXML private void onMouseEnteredSuivantButton(javafx.scene.input.MouseEvent e) {
+        ((Button) e.getSource()).setStyle(
+                "-fx-background-color:linear-gradient(to right,#E8622F,#E08519);" +
+                        "-fx-text-fill:white;-fx-font-size:15px;-fx-font-weight:bold;" +
+                        "-fx-background-radius:10;-fx-cursor:hand;" +
+                        "-fx-effect:dropshadow(gaussian,rgba(255,107,53,0.6),16,0,0,5);");
+    }
+    @FXML private void onMouseExitedSuivantButton(javafx.scene.input.MouseEvent e) {
+        ((Button) e.getSource()).setStyle(
+                "-fx-background-color:linear-gradient(to right,#FF6B35,#F7931E);" +
+                        "-fx-text-fill:white;-fx-font-size:15px;-fx-font-weight:bold;" +
+                        "-fx-background-radius:10;-fx-cursor:hand;" +
+                        "-fx-effect:dropshadow(gaussian,rgba(255,107,53,0.45),12,0,0,4);");
     }
 
-    @FXML
-    private void onMouseEnteredSubButton(MouseEvent event) {
-        Button btn = (Button) event.getSource();
-        btn.setStyle(btn.getStyle() + "-fx-background-color: #F8F9FA; -fx-text-fill: #666;");
-    }
-
-    @FXML
-    private void onMouseExitedSubButton(MouseEvent event) {
-        Button btn = (Button) event.getSource();
-        String style = btn.getStyle()
-                .replace("-fx-background-color: #F8F9FA;", "")
-                .replace("-fx-text-fill: #666;", "-fx-text-fill: #999;");
-        btn.setStyle(style);
-    }
-
-    @FXML
-    private void onMouseEnteredHeaderButton(MouseEvent event) {
-        Button btn = (Button) event.getSource();
-        btn.setStyle(btn.getStyle()
-                .replace("rgba(255, 255, 255, 0.25)", "rgba(255, 255, 255, 0.4)"));
-    }
-
-    @FXML
-    private void onMouseExitedHeaderButton(MouseEvent event) {
-        Button btn = (Button) event.getSource();
-        btn.setStyle(btn.getStyle()
-                .replace("rgba(255, 255, 255, 0.4)", "rgba(255, 255, 255, 0.25)"));
-    }
-
-    @FXML
-    private void onMouseEnteredSuivantButton(MouseEvent event) {
-        Button btn = (Button) event.getSource();
-        btn.setStyle(btn.getStyle()
-                .replace("-fx-background-color: #FF6B47;", "-fx-background-color: #FF8563;")
-                .replace("dropshadow(gaussian, rgba(255,107,71,0.3), 10, 0, 0, 3)",
-                        "dropshadow(gaussian, rgba(255,107,71,0.5), 12, 0, 0, 4)"));
-    }
-
-    @FXML
-    private void onMouseExitedSuivantButton(MouseEvent event) {
-        Button btn = (Button) event.getSource();
-        btn.setStyle(btn.getStyle()
-                .replace("-fx-background-color: #FF8563;", "-fx-background-color: #FF6B47;")
-                .replace("dropshadow(gaussian, rgba(255,107,71,0.5), 12, 0, 0, 4)",
-                        "dropshadow(gaussian, rgba(255,107,71,0.3), 10, 0, 0, 3)"));
-    }
-
-    /* ================= ALERT ================= */
-
-    private void showAlert(String msg) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setHeaderText(null);
-        alert.setContentText(msg);
-        alert.showAndWait();
+    private void showAlert(String title, String msg) {
+        Alert a = new Alert(Alert.AlertType.WARNING);
+        a.setTitle(title); a.setHeaderText(null); a.setContentText(msg); a.showAndWait();
     }
 }

@@ -1,91 +1,59 @@
 package Entite;
 
-
 import java.time.LocalDateTime;
 
 public class Vol {
-    private int idVol;
-    private String numeroVol;
-    private String compagnie;
+
+    private int           idVol;
+    private String        numeroVol;
+    private String        compagnie;
     private LocalDateTime dateDepart;
     private LocalDateTime dateArrivee;
-    private double prix;
-    private Destination destination;
+    private double        prix;
+    private Destination   destination;
+    private String        typeVol; // "ALLER_SIMPLE" | "RETOUR_SIMPLE" | "ALLER_RETOUR"
 
     public Vol() {}
 
     public Vol(int idVol, String numeroVol, String compagnie,
                LocalDateTime dateDepart, LocalDateTime dateArrivee,
                double prix, Destination destination) {
-        this.idVol = idVol;
-        this.numeroVol = numeroVol;
-        this.compagnie = compagnie;
-        this.dateDepart = dateDepart;
+        this.idVol       = idVol;
+        this.numeroVol   = numeroVol;
+        this.compagnie   = compagnie;
+        this.dateDepart  = dateDepart;
         this.dateArrivee = dateArrivee;
-        this.prix = prix;
+        this.prix        = prix;
         this.destination = destination;
     }
 
-    public int getIdVol() {
-        return idVol;
-    }
+    public int           getIdVol()               { return idVol; }
+    public void          setIdVol(int v)           { this.idVol = v; }
 
-    public void setIdVol(int idVol) {
-        this.idVol = idVol;
-    }
+    public String        getNumeroVol()            { return numeroVol; }
+    public void          setNumeroVol(String v)    { this.numeroVol = v; }
 
-    public String getNumeroVol() {
-        return numeroVol;
-    }
+    public String        getCompagnie()            { return compagnie; }
+    public void          setCompagnie(String v)    { this.compagnie = v; }
 
-    public void setNumeroVol(String numeroVol) {
-        this.numeroVol = numeroVol;
-    }
+    public LocalDateTime getDateDepart()                { return dateDepart; }
+    public void          setDateDepart(LocalDateTime v) { this.dateDepart = v; }
 
-    public String getCompagnie() {
-        return compagnie;
-    }
+    public LocalDateTime getDateArrivee()                { return dateArrivee; }
+    public void          setDateArrivee(LocalDateTime v) { this.dateArrivee = v; }
 
-    public void setCompagnie(String compagnie) {
-        this.compagnie = compagnie;
-    }
+    public double        getPrix()                 { return prix; }
+    public void          setPrix(double v)         { this.prix = v; }
 
-    public LocalDateTime getDateDepart() {
-        return dateDepart;
-    }
+    public Destination   getDestination()                { return destination; }
+    public void          setDestination(Destination v)   { this.destination = v; }
 
-    public void setDateDepart(LocalDateTime dateDepart) {
-        this.dateDepart = dateDepart;
-    }
-
-    public LocalDateTime getDateArrivee() {
-        return dateArrivee;
-    }
-
-    public void setDateArrivee(LocalDateTime dateArrivee) {
-        this.dateArrivee = dateArrivee;
-    }
-
-    public double getPrix() {
-        return prix;
-    }
-
-    public void setPrix(double prix) {
-        this.prix = prix;
-    }
-
-    public Destination getDestination() {
-        return destination;
-    }
-
-    public void setDestination(Destination destination) {
-        this.destination = destination;
-    }
+    public String        getTypeVol()              { return typeVol; }
+    public void          setTypeVol(String v)      { this.typeVol = v; }
 
     @Override
     public String toString() {
-        return "Vol{id=" + idVol + ", numeroVol='" + numeroVol + "', compagnie='" + compagnie + "', prix=" + prix + "}";
+        return "Vol{id=" + idVol + ", numero='" + numeroVol
+                + "', compagnie='" + compagnie + "', type='" + typeVol + "'}";
     }
-
 }
-
