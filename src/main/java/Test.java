@@ -82,12 +82,15 @@ public class Test {
         voyage.setDateDebut(LocalDate.now());
         voyage.setDateFin(LocalDate.now().plusDays(5));
         voyage.setRythme("Calme");
-        if (destForVol != null) voyage.setDestination(destForVol);
-        if (volForVoyage != null) voyage.setVol(volForVoyage);
+            if (destForVol != null)
+                voyage.setIdDestination(destForVol.getIdDestination());
+
+            if (volForVoyage != null)
+                voyage.setIdVol(volForVoyage.getIdVol());
 
         try {
-            boolean resVoyage = svy.ajouter(voyage);
-            System.out.println("Voyage ajouté ? " + resVoyage);
+            int resVoyage = svy.ajouter(voyage);
+            System.out.println("Voyage ajouté ? " + (resVoyage > 0));
 
             List<Voyage> voyages = svy.readAll();
             for (Voyage v : voyages) {
