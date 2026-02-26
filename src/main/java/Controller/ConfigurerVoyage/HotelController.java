@@ -481,12 +481,30 @@ public class HotelController {
         }
         // ─────────────────────────────────────────────────────────
 
-        // TODO : charger Activités.fxml en passant idVoyage
-        showAlert("✅ Enregistré !",
-                "Hôtel « " + hotelSelectionne.getNom() + " » enregistré dans le voyage #" + idVoyage
-                        + "\nCheck-in : "  + checkInPicker.getValue().format(fmt)
-                        + "\nCheck-out : " + checkOutPicker.getValue().format(fmt)
-                        + "\n\nProchaine étape : Activités");
+        // ── Navigation vers Activités ─────────────────────────────
+        URL url = getClass().getClassLoader().getResource("ConfigurerVoyage/ActiviteUser.fxml");
+        if (url == null) url = getClass().getResource("/ConfigurerVoyage/ActiviteUser.fxml");
+        if (url == null) { showAlert("Erreur", "ActiviteUser.fxml introuvable."); return; }
+        try {
+            FXMLLoader loader = new FXMLLoader(url);
+            Parent root = loader.load();
+            // Récupérer le rythme depuis la BD car Destination ne l'a pas
+            String rythme = "";
+            try {
+                rythme = serviceVoyage.findbyId(idVoyage).getRythme();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            ((ActiviteUserController) loader.getController())
+                    .initDonnees(destination, dateDebut, dateFin, rythme, idVoyage);
+            Stage stage = (Stage) suivantButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("TripEase — Choisir des Activités");
+            stage.show();
+        } catch (IOException ex) {
+            showAlert("Erreur", "Impossible de charger ActiviteUser.fxml : " + ex.getMessage());
+        }
+        // ─────────────────────────────────────────────────────────
     }
 
     @FXML
