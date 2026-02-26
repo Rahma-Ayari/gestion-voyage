@@ -8,8 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceHotel implements IService<Hotel> {
+
     private Connection connect = DataSource.getInstance().getCon();
-    private Statement st;
+    private Statement  st;
 
     public ServiceHotel() {
         try {
@@ -19,75 +20,125 @@ public class ServiceHotel implements IService<Hotel> {
         }
     }
 
+    // ══════════════════════════════════════════════════════════════
+    //  CRUD
+    // ══════════════════════════════════════════════════════════════
+
     @Override
     public boolean ajouter(Hotel h) throws SQLException {
-        boolean test = false;
-        int res = -1;
-        String req = "INSERT INTO `hotel` (`nom`, `ville`, `adresse`) VALUES ('" + h.getNom() + "', '" + h.getVille() + "', '" + h.getAdresse() + "');";
-        res = st.executeUpdate(req);
-        if (res > 0)
-            test = true;
-        return test;
+        PreparedStatement ps = connect.prepareStatement(
+                "INSERT INTO hotel " +
+                        "(nom, ville, adresse, stars, capacite, type_chambre, type_reservation, prix_par_nuit, disponibilite, id_destination) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        ps.setString (1, h.getNom());
+        ps.setString (2, h.getVille());
+        ps.setString (3, h.getAdresse());
+        ps.setInt    (4, h.getStars());
+        ps.setInt    (5, h.getCapacite());
+        ps.setString (6, h.getTypeChambre());
+        ps.setString (7, h.getTypeReservation());   // ← NOUVEAU
+        ps.setDouble (8, h.getPrixParNuit());
+        ps.setBoolean(9, h.isDisponibilite());
+        ps.setInt    (10, h.getIdDestination());
+        return ps.executeUpdate() > 0;
     }
 
     @Override
     public boolean supprimer(Hotel h) throws SQLException {
-        boolean test = false;
-        String req = "DELETE FROM hotel WHERE id_hotel = " + h.getIdHotel();
-        int res = st.executeUpdate(req);
-        if (res > 0)
-            test = true;
-        return test;
+        PreparedStatement ps = connect.prepareStatement(
+                "DELETE FROM hotel WHERE id_hotel = ?");
+        ps.setInt(1, h.getIdHotel());
+        return ps.executeUpdate() > 0;
     }
-
 
     @Override
     public boolean modifier(Hotel h) throws SQLException {
-        boolean test = false;
-        String req = "UPDATE hotel SET "
-                + "nom = '" + h.getNom() + "', "
-                + "ville = '" + h.getVille() + "', "
-                + "adresse = '" + h.getAdresse() + "' "
-                + "WHERE id_hotel = " + h.getIdHotel();
-
-        int res = st.executeUpdate(req);
-        if (res > 0)
-            test = true;
-        return test;
+        PreparedStatement ps = connect.prepareStatement(
+                "UPDATE hotel SET " +
+                        "nom = ?, ville = ?, adresse = ?, stars = ?, capacite = ?, " +
+                        "type_chambre = ?, type_reservation = ?, prix_par_nuit = ?, disponibilite = ?, id_destination = ? " +
+                        "WHERE id_hotel = ?");
+        ps.setString (1, h.getNom());
+        ps.setString (2, h.getVille());
+        ps.setString (3, h.getAdresse());
+        ps.setInt    (4, h.getStars());
+        ps.setInt    (5, h.getCapacite());
+        ps.setString (6, h.getTypeChambre());
+        ps.setString (7, h.getTypeReservation());   // ← NOUVEAU
+        ps.setDouble (8, h.getPrixParNuit());
+        ps.setBoolean(9, h.isDisponibilite());
+        ps.setInt    (10, h.getIdDestination());
+        ps.setInt    (11, h.getIdHotel());
+        return ps.executeUpdate() > 0;
     }
-
 
     @Override
     public Hotel findbyId(int id) throws SQLException {
-        Hotel hotel = null;
-        String req = "SELECT * FROM hotel WHERE id_hotel = " + id;
-        ResultSet rs = st.executeQuery(req);
-
-        if (rs.next()) {
-            hotel = new Hotel(
-                    rs.getInt("id_hotel"),
-                    rs.getString("nom"),
-                    rs.getString("ville"),
-                    rs.getString("adresse")
-            );
-        }
-        return hotel;
+        PreparedStatement ps = connect.prepareStatement(
+                "SELECT * FROM hotel WHERE id_hotel = ?");
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) return mapHotel(rs);
+        return null;
     }
-
 
     @Override
     public List<Hotel> readAll() throws SQLException {
         List<Hotel> list = new ArrayList<>();
-        String query = "SELECT * FROM `hotel`";
-        ResultSet rest = st.executeQuery(query);
-        while (rest.next()) {
-            int id = rest.getInt(1);
-            String nom = rest.getString("nom");
-            String ville = rest.getString(3);
-            String adresse = rest.getString("adresse");
-            Hotel hotel = new Hotel(id, nom, ville, adresse);
-            list.add(hotel);
-        }
+        ResultSet rs = st.executeQuery("SELECT * FROM hotel ORDER BY nom ASC");
+        while (rs.next()) list.add(mapHotel(rs));
         return list;
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    //  REQUÊTES MÉTIER
+    // ══════════════════════════════════════════════════════════════
+
+    /**
+     * Tous les hôtels d'une ville (disponibles + complets).
+     * Le filtrage disponibilité / étoiles / nom se fait côté HotelController.
+     */
+    public List<Hotel> findByVille(String ville) throws SQLException {
+        List<Hotel> list = new ArrayList<>();
+        PreparedStatement ps = connect.prepareStatement(
+                "SELECT * FROM hotel WHERE ville = ? ORDER BY stars DESC, nom ASC");
+        ps.setString(1, ville);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) list.add(mapHotel(rs));
+        return list;
+    }
+
+    /**
+     * Tous les hôtels liés à une destination (disponibles + complets).
+     * Utilisé par HotelController — le filtrage se fait en mémoire.
+     */
+    public List<Hotel> findByDestination(int idDestination) throws SQLException {
+        List<Hotel> list = new ArrayList<>();
+        PreparedStatement ps = connect.prepareStatement(
+                "SELECT * FROM hotel WHERE id_destination = ? ORDER BY stars DESC, nom ASC");
+        ps.setInt(1, idDestination);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) list.add(mapHotel(rs));
+        return list;
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    //  MAPPING  ResultSet → Hotel
+    // ══════════════════════════════════════════════════════════════
+
+    private Hotel mapHotel(ResultSet rs) throws SQLException {
+        return new Hotel(
+                rs.getInt    ("id_hotel"),
+                rs.getString ("nom"),
+                rs.getString ("ville"),
+                rs.getString ("adresse"),
+                rs.getInt    ("stars"),
+                rs.getInt    ("capacite"),
+                rs.getString ("type_chambre"),
+                rs.getDouble ("prix_par_nuit"),
+                rs.getBoolean("disponibilite"),
+                rs.getInt    ("id_destination"),
+                rs.getString ("type_reservation")
+                );
     }
 }
