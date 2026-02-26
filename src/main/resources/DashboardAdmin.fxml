@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controller.DashboardController"
+            prefWidth="1100" prefHeight="700"
+            style="-fx-background-color: #FAF9F6;">
+
+
+    <top>
+        <VBox>
+            <!-- Bandeau principal -->
+            <Pane style="-fx-background-color: linear-gradient(to right, #FF6B00, #FFA040);"
+                  prefHeight="95">
+                <Label text="TripEase Admin"
+                       style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: white; -fx-font-family: 'Segoe UI';"
+                       layoutX="28" layoutY="18"/>
+                <Label text="Modération des demandes d'inscription"
+                       style="-fx-font-size: 13px; -fx-text-fill: rgba(255,255,255,0.88); -fx-font-family: 'Segoe UI';"
+                       layoutX="30" layoutY="58"/>
+            </Pane>
+
+            <!-- Fil d'Ariane -->
+            <HBox spacing="6" alignment="CENTER_LEFT"
+                  style="-fx-background-color: white; -fx-padding: 9 28 9 28; -fx-border-color: #E8E8E8; -fx-border-width: 0 0 1 0;">
+                <Label text="🏠" style="-fx-font-size: 13px;"/>
+                <Label text="Accueil" style="-fx-font-size: 13px; -fx-text-fill: #666;"/>
+                <Label text="›" style="-fx-font-size: 13px; -fx-text-fill: #bbb;"/>
+                <Label text="Gestion des inscriptions"
+                       style="-fx-font-size: 13px; -fx-text-fill: #FF6B00; -fx-font-weight: bold;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- ════════════════════════════════════════════════
+         SIDEBAR GAUCHE
+    ════════════════════════════════════════════════ -->
+    <left>
+        <VBox prefWidth="228" spacing="3"
+              style="-fx-background-color: white; -fx-border-color: #E8E8E8; -fx-border-width: 0 1 0 0; -fx-padding: 18 8 18 8;">
+
+            <!-- En attente (actif par défaut) -->
+            <HBox fx:id="menuAttente" spacing="11" alignment="CENTER_LEFT"
+                  style="-fx-padding: 11 14 11 14; -fx-background-color: #FFF3E0; -fx-background-radius: 8; -fx-cursor: hand;"
+                  onMouseClicked="#showPendingUsers">
+                <Label text="📋" style="-fx-font-size: 17px;"/>
+                <VBox spacing="1">
+                    <Label text="Utilisateurs en attente"
+                           style="-fx-font-size: 13.5px; -fx-text-fill: #FF6B00; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';"/>
+                </VBox>
+            </HBox>
+
+            <!-- Approuvés -->
+            <HBox fx:id="menuApprouves" spacing="11" alignment="CENTER_LEFT"
+                  style="-fx-padding: 11 14 11 14; -fx-background-radius: 8; -fx-cursor: hand;"
+                  onMouseEntered="#onMenuHover" onMouseExited="#onMenuExit"
+                  onMouseClicked="#showApprovedUsers">
+                <Label text="👥" style="-fx-font-size: 17px; -fx-text-fill: #999;"/>
+                <Label text="Utilisateurs approuvés"
+                       style="-fx-font-size: 13.5px; -fx-text-fill: #666; -fx-font-family: 'Segoe UI';"/>
+            </HBox>
+
+            <!-- Refusés -->
+            <HBox fx:id="menuRefuses" spacing="11" alignment="CENTER_LEFT"
+                  style="-fx-padding: 11 14 11 14; -fx-background-radius: 8; -fx-cursor: hand;"
+                  onMouseEntered="#onMenuHover" onMouseExited="#onMenuExit"
+                  onMouseClicked="#showRefusedUsers">
+                <Label text="🚫" style="-fx-font-size: 17px; -fx-text-fill: #999;"/>
+                <Label text="Utilisateurs refusés"
+                       style="-fx-font-size: 13.5px; -fx-text-fill: #666; -fx-font-family: 'Segoe UI';"/>
+            </HBox>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <!-- Badge compteur en attente -->
+            <VBox alignment="CENTER" spacing="3"
+                  style="-fx-background-color: #FFF3E0; -fx-background-radius: 12; -fx-padding: 14 0 14 0; -fx-margin: 8;">
+                <Label fx:id="badgeCount" text="0"
+                       style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #FF6B00;"/>
+                <Label text="en attente"
+                       style="-fx-font-size: 11px; -fx-text-fill: #AAA;"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- ════════════════════════════════════════════════
+         CONTENU PRINCIPAL
+    ════════════════════════════════════════════════ -->
+    <center>
+        <VBox spacing="18" style="-fx-padding: 28 28 18 28;">
+
+            <!-- Titre de section -->
+            <VBox spacing="4">
+                <Label fx:id="pageTitle" text="Inscriptions en attente"
+                       style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #1A1A1A; -fx-font-family: 'Segoe UI';"/>
+                <Label fx:id="pageSubtitle" text="Examinez et gérez les demandes de création de compte utilisateur."
+                       style="-fx-font-size: 13px; -fx-text-fill: #999; -fx-font-family: 'Segoe UI';"/>
+            </VBox>
+
+            <!-- Barre de recherche + bouton actualiser -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <TextField fx:id="searchField"
+                           promptText="🔍   Rechercher par nom, prénom ou email..."
+                           prefWidth="330"
+                           style="-fx-background-radius: 22; -fx-border-radius: 22; -fx-border-color: #DDD; -fx-border-width: 1; -fx-padding: 8 14 8 14; -fx-font-size: 13px; -fx-background-color: white;"
+                           onKeyReleased="#onSearch"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="↻  Actualiser" onAction="#refreshData"
+                        style="-fx-background-color: white; -fx-border-color: #FF6B00; -fx-border-width: 1.5; -fx-border-radius: 22; -fx-background-radius: 22; -fx-text-fill: #FF6B00; -fx-font-weight: bold; -fx-padding: 8 18 8 18; -fx-cursor: hand; -fx-font-size: 13px;"/>
+            </HBox>
+
+            <!-- Carte tableau -->
+            <VBox style="-fx-background-color: white; -fx-background-radius: 14; -fx-border-color: #EBEBEB; -fx-border-radius: 14; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 12, 0, 0, 3);">
+
+                <!-- En-tête colonnes -->
+                <HBox style="-fx-padding: 13 20 13 20; -fx-border-color: transparent transparent #F0F0F0 transparent; -fx-border-width: 1; -fx-background-color: #FAFAFA; -fx-background-radius: 14 14 0 0;">
+                    <Label text="UTILISATEUR"
+                           style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #AAA; -fx-font-family: 'Segoe UI';"
+                           prefWidth="195"/>
+                    <Label text="ADRESSE E-MAIL"
+                           style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #AAA;"
+                           prefWidth="235"/>
+                    <Label text="DATE DE LA DEMANDE"
+                           style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #AAA;"
+                           prefWidth="175"/>
+                    <Label text="ACTIONS"
+                           style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #AAA;"
+                           HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <!-- Lignes dynamiques (remplies par le controller) -->
+                <ScrollPane fx:id="tableScroll" fitToWidth="true" prefHeight="330"
+                            style="-fx-background: transparent; -fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 0;">
+                    <VBox fx:id="usersContainer" spacing="0"/>
+                </ScrollPane>
+
+                <!-- Footer pagination -->
+                <HBox alignment="CENTER_LEFT" spacing="10"
+                      style="-fx-padding: 13 20 13 20; -fx-border-color: #F0F0F0 transparent transparent transparent; -fx-border-width: 1; -fx-background-radius: 0 0 14 14;">
+                    <Label fx:id="paginationLabel" text="Affichage de 0 demandes sur 0"
+                           style="-fx-font-size: 12px; -fx-text-fill: #AAA;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="btnPrecedent" text="  Précédent  " onAction="#goToPreviousPage"
+                            style="-fx-background-color: white; -fx-border-color: #CCC; -fx-border-width: 1; -fx-border-radius: 7; -fx-background-radius: 7; -fx-padding: 7 14 7 14; -fx-cursor: hand; -fx-font-size: 13px; -fx-text-fill: #555;"/>
+                    <Button fx:id="btnSuivant" text="  Suivant  " onAction="#goToNextPage"
+                            style="-fx-background-color: #FF6B00; -fx-text-fill: white; -fx-border-radius: 7; -fx-background-radius: 7; -fx-padding: 7 14 7 14; -fx-cursor: hand; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                </HBox>
+            </VBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>
