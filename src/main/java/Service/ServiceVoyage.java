@@ -100,4 +100,12 @@ public class ServiceVoyage {
                 checkout
         );
     }
+
+    public boolean mettreAJourActivites(int idVoyage, List<Integer> idActivites) throws SQLException {
+        // Déléguer au ServiceActivite
+        new ServiceActivite().enregistrerActivitesVoyage(idVoyage, idActivites);
+        return true;
+    }
+
+
 }
