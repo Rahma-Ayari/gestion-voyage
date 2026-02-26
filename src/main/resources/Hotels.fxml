@@ -1,167 +1,147 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
 
-<BorderPane style="-fx-background-color: linear-gradient(to bottom, #f5f7fa, #c3cfe2);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.HotelController">
+<BorderPane style="-fx-background-color: linear-gradient(to bottom, #f5f7fa, #c3cfe2);"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controller.HotelController">
 
     <!-- Header -->
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: linear-gradient(to right, #FF9800, #FFA726); -fx-background-radius: 0 0 15 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 5);">
-            <padding>
-                <Insets bottom="20" left="30" right="30" top="20" />
-            </padding>
+        <HBox alignment="CENTER_LEFT" spacing="15"
+              style="-fx-background-color: linear-gradient(to right, #FF9800, #FFA726); -fx-background-radius: 0 0 15 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 5);">
+            <padding><Insets bottom="20" left="30" right="30" top="20" /></padding>
             <Label text="TripEase" textFill="WHITE">
-                <font>
-                    <Font name="Segoe UI Bold" size="32" />
-                </font>
+                <font><Font name="Segoe UI Bold" size="32" /></font>
             </Label>
             <Label text="Gestion des Hôtels" textFill="WHITE">
-                <font>
-                    <Font name="Segoe UI" size="28" />
-                </font>
+                <font><Font name="Segoe UI" size="28" /></font>
             </Label>
         </HBox>
     </top>
 
     <!-- Left Panel - Form -->
     <left>
-        <VBox alignment="TOP_CENTER" maxWidth="350" spacing="15" style="-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 5);">
-            <padding>
-                <Insets bottom="30" left="20" right="20" top="30" />
-            </padding>
+        <VBox alignment="TOP_CENTER" maxWidth="350" spacing="12"
+              style="-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 5);">
+            <padding><Insets bottom="20" left="20" right="20" top="20" /></padding>
 
             <Label text="📝 Ajouter / Modifier un Hôtel">
-                <font>
-                    <Font name="Segoe UI Bold" size="20" />
-                </font>
+                <font><Font name="Segoe UI Bold" size="16" /></font>
             </Label>
+            <Separator />
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-size: 16px;" text="🏨" />
+                <TextField fx:id="nomField" prefWidth="260" promptText="Nom de l'hôtel" />
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-size: 16px;" text="🌆" />
+                <TextField fx:id="villeField" prefWidth="260" promptText="Ville" />
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-size: 16px;" text="📍" />
+                <TextField fx:id="adresseField" prefWidth="260" promptText="Adresse" />
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-size: 16px;" text="⭐" />
+                <TextField fx:id="starsField" prefWidth="260" promptText="Étoiles (1-5)" />
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-size: 16px;" text="🛏️" />
+                <TextField fx:id="capaciteField" prefWidth="260" promptText="Capacité (chambres)" />
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-size: 16px;" text="🛎️" />
+                <TextField fx:id="typeChambreField" prefWidth="260" promptText="Type de chambre" />
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-size: 16px;" text="💰" />
+                <TextField fx:id="prixParNuitField" prefWidth="260" promptText="Prix par nuit" />
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-size: 16px;" text="📌" />
+                <TextField fx:id="latitudeField" prefWidth="260" promptText="Latitude (auto si vide)" />
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-size: 16px;" text="📌" />
+                <TextField fx:id="longitudeField" prefWidth="260" promptText="Longitude (auto si vide)" />
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-size: 16px;" text="✔️" />
+                <CheckBox fx:id="disponibiliteCheckBox" text="Disponible" />
+            </HBox>
 
             <Separator />
 
-            <!-- Nom -->
-            <HBox alignment="CENTER_LEFT" spacing="10">
-                <Label style="-fx-font-size: 18px;" text="🏨" />
-                <TextField fx:id="nomField" prefWidth="280" promptText="Nom de l'hôtel" style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;" />
-            </HBox>
-
-            <!-- Ville -->
-            <HBox alignment="CENTER_LEFT" spacing="10">
-                <Label style="-fx-font-size: 18px;" text="🌆" />
-                <TextField fx:id="villeField" prefWidth="280" promptText="Ville" style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;" />
-            </HBox>
-
-            <!-- Adresse -->
-            <HBox alignment="CENTER_LEFT" spacing="10">
-                <Label style="-fx-font-size: 18px;" text="📍" />
-                <TextField fx:id="adresseField" prefWidth="280" promptText="Adresse" style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;" />
-            </HBox>
-
-            <!-- Stars -->
-            <HBox alignment="CENTER_LEFT" spacing="10">
-                <Label style="-fx-font-size: 18px;" text="⭐" />
-                <TextField fx:id="starsField" prefWidth="280" promptText="Nombre d'étoiles" style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;" />
-            </HBox>
-
-            <!-- Capacite -->
-            <HBox alignment="CENTER_LEFT" spacing="10">
-                <Label style="-fx-font-size: 18px;" text="🛏️" />
-                <TextField fx:id="capaciteField" prefWidth="280" promptText="Capacité (nombre de chambres)" style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;" />
-            </HBox>
-
-            <!-- Type de Chambre -->
-            <HBox alignment="CENTER_LEFT" spacing="10">
-                <Label style="-fx-font-size: 18px;" text="🛎️" />
-                <TextField fx:id="typeChambreField" prefWidth="280" promptText="Type de chambre (Simple/Double/Suite)" style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;" />
-            </HBox>
-
-            <!-- Prix par Nuit -->
-            <HBox alignment="CENTER_LEFT" spacing="10">
-                <Label style="-fx-font-size: 18px;" text="💰" />
-                <TextField fx:id="prixParNuitField" prefWidth="280" promptText="Prix par nuit" style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;" />
-            </HBox>
-
-            <!-- Disponibilite -->
-            <HBox alignment="CENTER_LEFT" spacing="10">
-                <Label style="-fx-font-size: 18px;" text="✔️" />
-                <CheckBox fx:id="disponibiliteCheckBox" text="Disponible" style="-fx-font-size: 14px;" />
-            </HBox>
-
-            <!-- Buttons -->
+            <!-- Boutons CRUD -->
             <HBox alignment="CENTER" spacing="10">
-                <VBox spacing="10">
-                    <Button fx:id="ajouterBtn" onAction="#ajouterHotel" prefHeight="40" prefWidth="130" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8;" text="Ajouter" />
-                    <Button fx:id="modifierBtn" onAction="#modifierHotel" prefHeight="40" prefWidth="130" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8;" text="Modifier" />
-                </VBox>
-                <VBox spacing="10">
-                    <Button fx:id="supprimerBtn" onAction="#supprimerHotel" prefHeight="40" prefWidth="130" style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8;" text="Supprimer" />
-                    <Button fx:id="clearBtn" onAction="#clearFields" prefHeight="40" prefWidth="130" style="-fx-background-color: #9E9E9E; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8;" text="Effacer" />
-                </VBox>
+                <Button onAction="#ajouterHotel" text="➕ Ajouter"
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 7 14;" />
+                <Button onAction="#modifierHotel" text="✏️ Modifier"
+                        style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 7 14;" />
             </HBox>
+            <HBox alignment="CENTER" spacing="10">
+                <Button onAction="#supprimerHotel" text="🗑️ Supprimer"
+                        style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 7 14;" />
+                <Button onAction="#clearFields" text="🧹 Effacer"
+                        style="-fx-background-color: #9E9E9E; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 7 14;" />
+            </HBox>
+
+            <Separator />
+
 
         </VBox>
     </left>
 
-    <!-- Center Panel - Table -->
+    <!-- Center Panel -->
     <center>
-        <VBox spacing="15">
-            <padding>
-                <Insets bottom="30" left="20" right="30" top="30" />
-            </padding>
+        <VBox spacing="12">
+            <padding><Insets bottom="20" left="20" right="20" top="20" /></padding>
 
-            <!-- Search Bar -->
-            <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
-                <padding>
-                    <Insets bottom="10" left="10" right="10" top="10" />
-                </padding>
-                <Label style="-fx-font-size: 18px;" text="🔍" />
-                <TextField fx:id="searchField" prefWidth="300" promptText="Rechercher un hôtel..." style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;" />
-                <Button fx:id="refreshBtn" onAction="#refreshTable" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 50%; -fx-padding: 8 12;" text="🔄" textFill="#000000ab" />
+            <!-- Barre recherche -->
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-size: 16px;" text="🔍" />
+                <TextField fx:id="searchField" prefWidth="280" promptText="Rechercher un hôtel..." />
+                <Button onAction="#refreshTable" text="🔄 Rafraîchir"
+                        style="-fx-background-color: #607D8B; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 7 14;" />
+                <Label text="Total :" style="-fx-font-weight: bold;" />
+                <Label fx:id="countLabel" text="0"
+                       style="-fx-font-weight: bold; -fx-text-fill: #FF9800; -fx-font-size: 15px;" />
             </HBox>
 
             <!-- Table -->
-            <TableView fx:id="tableView" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 5);" VBox.vgrow="ALWAYS">
+            <TableView fx:id="tableView" prefHeight="280" VBox.vgrow="NEVER">
                 <columns>
-                    <TableColumn fx:id="nomCol" prefWidth="150" text="Nom" />
-                    <TableColumn fx:id="villeCol" prefWidth="100" text="Ville" />
-                    <TableColumn fx:id="adresseCol" prefWidth="150" text="Adresse" />
-                    <TableColumn fx:id="starsCol" prefWidth="80" text=" Étoiles" />
-                    <TableColumn fx:id="capaciteCol" prefWidth="100" text=" Capacité" />
-                    <TableColumn fx:id="typeChambreCol" prefWidth="120" text=" Type Chambre" />
-                    <TableColumn fx:id="prixParNuitCol" prefWidth="100" text="Prix/Nuit" />
-                    <TableColumn fx:id="disponibiliteCol" prefWidth="80" text="Disponibilité" />
+                    <TableColumn fx:id="nomCol"          text="Nom"         prefWidth="110" />
+                    <TableColumn fx:id="villeCol"        text="Ville"       prefWidth="90"  />
+                    <TableColumn fx:id="adresseCol"      text="Adresse"     prefWidth="140" />
+                    <TableColumn fx:id="starsCol"        text="⭐"          prefWidth="45"  />
+                    <TableColumn fx:id="capaciteCol"     text="Capacité"    prefWidth="70"  />
+                    <TableColumn fx:id="typeChambreCol"  text="Type"        prefWidth="85"  />
+                    <TableColumn fx:id="prixParNuitCol"  text="Prix/Nuit"   prefWidth="75"  />
+                    <TableColumn fx:id="latitudeCol"     text="Latitude"    prefWidth="85"  />
+                    <TableColumn fx:id="longitudeCol"    text="Longitude"   prefWidth="85"  />
+                    <TableColumn fx:id="disponibiliteCol" text="Disponible" prefWidth="75"  />
+                    <TableColumn fx:id="carteCol" text="📍 Carte" prefWidth="90" />
                 </columns>
                 <placeholder>
-                    <Label text="Aucun contenu dans la table" />
+                    <Label text="Aucun hôtel trouvé" />
                 </placeholder>
             </TableView>
 
-            <!-- Stats Panel -->
-            <HBox alignment="CENTER" spacing="20" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
-                <padding>
-                    <Insets bottom="15" left="15" right="15" top="15" />
-                </padding>
-                <Label text="📊 Total des hôtels: ">
-                    <font>
-                        <Font name="Segoe UI Bold" size="14" />
-                    </font>
-                </Label>
-                <Label fx:id="countLabel" text="0" textFill="#FF9800">
-                    <font>
-                        <Font name="Segoe UI Bold" size="18" />
-                    </font>
-                </Label>
-            </HBox>
+            <!-- Titre carte -->
+            <Label text="🗺️ Localisation sur la carte"
+                   style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #FF9800;" />
+
+            <!-- WebView Carte -->
+            <WebView fx:id="mapView" prefHeight="380" VBox.vgrow="ALWAYS" />
+
         </VBox>
     </center>
 

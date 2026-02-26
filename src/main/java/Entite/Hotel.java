@@ -10,12 +10,16 @@ public class Hotel {
     private String typeChambre;     // Simple, Double, Suite...
     private double prixParNuit;
     private boolean disponibilite;
+    private double latitude;        // Latitude de l'hôtel
+    private double longitude;       // Longitude de l'hôtel
 
+    // Constructeur vide
     public Hotel() {}
 
+    // Constructeur complet
     public Hotel(int idHotel, String nom, String ville, String adresse, int stars,
                  int capacite, String typeChambre, double prixParNuit,
-                 boolean disponibilite) {
+                 boolean disponibilite, double latitude, double longitude) {
         this.idHotel = idHotel;
         this.nom = nom;
         this.ville = ville;
@@ -25,6 +29,8 @@ public class Hotel {
         this.typeChambre = typeChambre;
         this.prixParNuit = prixParNuit;
         this.disponibilite = disponibilite;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     // Getters et Setters
@@ -55,10 +61,26 @@ public class Hotel {
     public boolean isDisponibilite() { return disponibilite; }
     public void setDisponibilite(boolean disponibilite) { this.disponibilite = disponibilite; }
 
+    public double getLatitude() { return latitude; }
+    public void setLatitude(double latitude) { this.latitude = latitude; }
+
+    public double getLongitude() { return longitude; }
+    public void setLongitude(double longitude) { this.longitude = longitude; }
+
     @Override
     public String toString() {
-        return "Hotel{id=" + idHotel + ", nom='" + nom + "', ville='" + ville + "', adresse='" + adresse +
-                "', stars=" + stars + ", capacite=" + capacite + ", typeChambre='" + typeChambre +
-                "', prixParNuit=" + prixParNuit + ", disponibilite=" + disponibilite + '}';
+        return "Hotel{" +
+                "idHotel=" + idHotel +
+                ", nom='" + nom + '\'' +
+                ", ville='" + ville + '\'' +
+                ", adresse='" + adresse + '\'' +
+                ", stars=" + stars +
+                ", capacite=" + capacite +
+                ", typeChambre='" + typeChambre + '\'' +
+                ", prixParNuit=" + prixParNuit +
+                ", disponibilite=" + disponibilite +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
     }
 }
