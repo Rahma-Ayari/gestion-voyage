@@ -48,6 +48,8 @@ public class HotelController {
     @FXML private TextField        searchNomField;
     @FXML private ComboBox<String> filterStarsBox;
     @FXML private CheckBox         showCompletCheckBox;
+    @FXML private ComboBox<String> filterTypeChambreBox;
+    @FXML private ComboBox<String> filterTypeReservationBox;
 
     private final ServiceHotel     serviceHotel  = new ServiceHotel();
     private final ServiceVoyage    serviceVoyage = new ServiceVoyage();
@@ -67,10 +69,38 @@ public class HotelController {
     @FXML
     public void initialize() {
         if (filterStarsBox != null) {
-            filterStarsBox.getItems().addAll("Toutes", "1 ★", "2 ★★", "3 ★★★", "4 ★★★★", "5 ★★★★★");
+            filterStarsBox.getItems().addAll(
+                    "Toutes", "1 ★", "2 ★★", "3 ★★★", "4 ★★★★", "5 ★★★★★"
+            );
             filterStarsBox.setValue("Toutes");
             filterStarsBox.setOnAction(e -> appliquerFiltres());
         }
+
+        if (filterTypeChambreBox != null) {
+            filterTypeChambreBox.getItems().addAll(
+                    "Tous", "Individuelle", "Double", "Twin", "Triple",
+                    "Suite", "Suite Présidentielle", "Familiale", "Studio"
+            );
+            filterTypeChambreBox.setValue("Tous");
+            filterTypeChambreBox.setOnAction(e -> appliquerFiltres());
+        }
+
+        if (filterTypeReservationBox != null) {
+            filterTypeReservationBox.getItems().addAll(
+                    "Tous",
+                    "Logement Seul",
+                    "Accès Piscine Seulement",
+                    "Bed and Breakfast",
+                    "Demi-Pension",
+                    "Pension Complète",
+                    "Tout Inclus",
+                    "All Inclusive Premium",
+                    "Chambre + Petit-Déjeuner + Dîner"
+            );
+            filterTypeReservationBox.setValue("Tous");
+            filterTypeReservationBox.setOnAction(e -> appliquerFiltres());
+        }
+
         if (searchNomField != null)
             searchNomField.textProperty().addListener((obs, o, n) -> appliquerFiltres());
         if (showCompletCheckBox != null)
@@ -194,11 +224,26 @@ public class HotelController {
         boolean afficherComplets = showCompletCheckBox != null && showCompletCheckBox.isSelected();
         final int sf = starFilter;
 
+        // ── NOUVEAU : lire les deux nouveaux filtres ──────────────────
+        String filterChambre = (filterTypeChambreBox != null && filterTypeChambreBox.getValue() != null
+                && !filterTypeChambreBox.getValue().equals("Tous"))
+                ? filterTypeChambreBox.getValue() : "";
+
+        String filterResa = (filterTypeReservationBox != null && filterTypeReservationBox.getValue() != null
+                && !filterTypeReservationBox.getValue().equals("Tous"))
+                ? filterTypeReservationBox.getValue() : "";
+        // ─────────────────────────────────────────────────────────────
+
+        // ── REMPLACE l'ancienne List<Hotel> tousFiltrés ───────────────
         List<Hotel> tousFiltrés = allHotels.stream()
                 .filter(h -> recherche.isEmpty() || h.getNom().toLowerCase().contains(recherche))
                 .filter(h -> sf == 0 || h.getStars() == sf)
+                .filter(h -> filterChambre.isEmpty() || filterChambre.equals(h.getTypeChambre()))
+                .filter(h -> filterResa.isEmpty()    || filterResa.equals(h.getTypeReservation()))
                 .collect(Collectors.toList());
+        // ─────────────────────────────────────────────────────────────
 
+        // (le reste ne change pas)
         List<Hotel> disponibles = tousFiltrés.stream()
                 .filter(h -> h.getCapacite() > 0)
                 .collect(Collectors.toList());
