@@ -196,7 +196,6 @@
                                style="-fx-font-size: 13px; -fx-text-fill: #999;"/>
                     </VBox>
                     <Region HBox.hgrow="ALWAYS"/>
-                    <!-- Badge résumé séjour -->
                     <HBox spacing="18" alignment="CENTER"
                           style="-fx-background-color: white; -fx-background-radius: 12;
                                  -fx-border-color: #ECECEC; -fx-border-radius: 12; -fx-border-width: 1;
@@ -255,15 +254,16 @@
                                      -fx-border-color: #FFCDB0; -fx-border-radius: 10;
                                      -fx-border-width: 1.5; -fx-padding: 14;">
 
+                            <!-- Titre -->
                             <HBox alignment="CENTER_LEFT" spacing="8">
                                 <Label text="🔍" style="-fx-font-size: 14px;"/>
                                 <Label text="Filtrer les hôtels"
                                        style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #FF6B35;"/>
                             </HBox>
 
+                            <!-- LIGNE 1 : Nom + Étoiles + Checkbox -->
                             <HBox spacing="12" alignment="CENTER_LEFT">
 
-                                <!-- Recherche par nom -->
                                 <VBox spacing="4" HBox.hgrow="ALWAYS">
                                     <Label text="NOM DE L'HÔTEL"
                                            style="-fx-font-size: 9.5px; -fx-font-weight: bold; -fx-text-fill: #AAA;"/>
@@ -275,7 +275,6 @@
                                                       -fx-border-width: 1.5; -fx-font-size: 12.5px; -fx-padding: 0 10;"/>
                                 </VBox>
 
-                                <!-- Filtre étoiles -->
                                 <VBox spacing="4" prefWidth="165">
                                     <Label text="NOMBRE D'ÉTOILES"
                                            style="-fx-font-size: 9.5px; -fx-font-weight: bold; -fx-text-fill: #AAA;"/>
@@ -286,7 +285,6 @@
                                                      -fx-border-width: 1.5; -fx-font-size: 12.5px;"/>
                                 </VBox>
 
-                                <!-- CheckBox complets -->
                                 <VBox spacing="4" prefWidth="175" alignment="CENTER_LEFT">
                                     <Label text=" " style="-fx-font-size: 9.5px;"/>
                                     <CheckBox fx:id="showCompletCheckBox"
@@ -295,7 +293,34 @@
                                 </VBox>
 
                             </HBox>
+
+                            <!-- LIGNE 2 : Type chambre + Type réservation (NOUVEAU) -->
+                            <HBox spacing="12" alignment="CENTER_LEFT">
+
+                                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                    <Label text="TYPE DE CHAMBRE"
+                                           style="-fx-font-size: 9.5px; -fx-font-weight: bold; -fx-text-fill: #AAA;"/>
+                                    <ComboBox fx:id="filterTypeChambreBox"
+                                              prefHeight="36" maxWidth="Infinity"
+                                              style="-fx-background-color: white; -fx-background-radius: 8;
+                                                     -fx-border-color: #DCDCDC; -fx-border-radius: 8;
+                                                     -fx-border-width: 1.5; -fx-font-size: 12.5px;"/>
+                                </VBox>
+
+                                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                    <Label text="TYPE DE RÉSERVATION"
+                                           style="-fx-font-size: 9.5px; -fx-font-weight: bold; -fx-text-fill: #AAA;"/>
+                                    <ComboBox fx:id="filterTypeReservationBox"
+                                              prefHeight="36" maxWidth="Infinity"
+                                              style="-fx-background-color: white; -fx-background-radius: 8;
+                                                     -fx-border-color: #DCDCDC; -fx-border-radius: 8;
+                                                     -fx-border-width: 1.5; -fx-font-size: 12.5px;"/>
+                                </VBox>
+
+                            </HBox>
+
                         </VBox>
+                        <!-- FIN BARRE DE FILTRES -->
 
                         <!-- Conteneur dynamique des cartes hôtel -->
                         <ScrollPane fitToWidth="true" prefHeight="430" hbarPolicy="NEVER"
@@ -307,7 +332,9 @@
                                        style="-fx-text-fill: #AAA; -fx-font-size: 13px; -fx-padding: 20;"/>
                             </VBox>
                         </ScrollPane>
+
                     </VBox>
+                    <!-- FIN LISTE DES HÔTELS -->
 
                     <!-- ===== PANNEAU DROITE ===== -->
                     <VBox spacing="20" prefWidth="320" minWidth="300">
@@ -383,6 +410,7 @@
                                        style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #FF6B35;"
                                        wrapText="true"/>
                             </VBox>
+
                         </VBox>
 
                         <!-- Conseils -->
@@ -407,7 +435,7 @@
                             </HBox>
                             <HBox spacing="10" alignment="TOP_LEFT">
                                 <Label text="›" style="-fx-text-fill: #FF6B35; -fx-font-size: 18px; -fx-font-weight: bold;"/>
-                                <Label text="Utilisez les filtres pour affiner votre recherche par nom ou étoiles"
+                                <Label text="Utilisez les filtres pour affiner votre recherche"
                                        style="-fx-text-fill: #666; -fx-font-size: 12.5px;" wrapText="true" HBox.hgrow="ALWAYS"/>
                             </HBox>
                             <HBox spacing="10" alignment="TOP_LEFT">
@@ -440,7 +468,10 @@
                                            -fx-border-width: 1.5; -fx-cursor: hand;"
                                     text="← Retour"/>
                         </VBox>
+
                     </VBox>
+                    <!-- FIN PANNEAU DROITE -->
+
                 </HBox>
             </VBox>
         </ScrollPane>

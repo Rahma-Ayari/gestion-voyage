@@ -28,17 +28,18 @@ public class ServiceHotel implements IService<Hotel> {
     public boolean ajouter(Hotel h) throws SQLException {
         PreparedStatement ps = connect.prepareStatement(
                 "INSERT INTO hotel " +
-                        "(nom, ville, adresse, stars, capacite, type_chambre, prix_par_nuit, disponibilite, id_destination) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                        "(nom, ville, adresse, stars, capacite, type_chambre, type_reservation, prix_par_nuit, disponibilite, id_destination) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         ps.setString (1, h.getNom());
         ps.setString (2, h.getVille());
         ps.setString (3, h.getAdresse());
         ps.setInt    (4, h.getStars());
         ps.setInt    (5, h.getCapacite());
         ps.setString (6, h.getTypeChambre());
-        ps.setDouble (7, h.getPrixParNuit());
-        ps.setBoolean(8, h.isDisponibilite());
-        ps.setInt    (9, h.getIdDestination());
+        ps.setString (7, h.getTypeReservation());   // ← NOUVEAU
+        ps.setDouble (8, h.getPrixParNuit());
+        ps.setBoolean(9, h.isDisponibilite());
+        ps.setInt    (10, h.getIdDestination());
         return ps.executeUpdate() > 0;
     }
 
@@ -55,7 +56,7 @@ public class ServiceHotel implements IService<Hotel> {
         PreparedStatement ps = connect.prepareStatement(
                 "UPDATE hotel SET " +
                         "nom = ?, ville = ?, adresse = ?, stars = ?, capacite = ?, " +
-                        "type_chambre = ?, prix_par_nuit = ?, disponibilite = ?, id_destination = ? " +
+                        "type_chambre = ?, type_reservation = ?, prix_par_nuit = ?, disponibilite = ?, id_destination = ? " +
                         "WHERE id_hotel = ?");
         ps.setString (1, h.getNom());
         ps.setString (2, h.getVille());
@@ -63,10 +64,11 @@ public class ServiceHotel implements IService<Hotel> {
         ps.setInt    (4, h.getStars());
         ps.setInt    (5, h.getCapacite());
         ps.setString (6, h.getTypeChambre());
-        ps.setDouble (7, h.getPrixParNuit());
-        ps.setBoolean(8, h.isDisponibilite());
-        ps.setInt    (9, h.getIdDestination());
-        ps.setInt    (10, h.getIdHotel());
+        ps.setString (7, h.getTypeReservation());   // ← NOUVEAU
+        ps.setDouble (8, h.getPrixParNuit());
+        ps.setBoolean(9, h.isDisponibilite());
+        ps.setInt    (10, h.getIdDestination());
+        ps.setInt    (11, h.getIdHotel());
         return ps.executeUpdate() > 0;
     }
 
@@ -135,7 +137,8 @@ public class ServiceHotel implements IService<Hotel> {
                 rs.getString ("type_chambre"),
                 rs.getDouble ("prix_par_nuit"),
                 rs.getBoolean("disponibilite"),
-                rs.getInt    ("id_destination")
-        );
+                rs.getInt    ("id_destination"),
+                rs.getString ("type_reservation")
+                );
     }
 }
