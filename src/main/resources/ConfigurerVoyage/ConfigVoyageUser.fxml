@@ -166,14 +166,6 @@
                 <Label text="Services supplémentaires" style="-fx-text-fill: #BBB; -fx-font-size: 12.5px;"/>
             </HBox>
 
-            <HBox alignment="CENTER_LEFT" spacing="12" prefHeight="42"
-                  style="-fx-padding: 0 18; -fx-cursor: hand;">
-                <StackPane prefWidth="26" prefHeight="26" minWidth="26" minHeight="26"
-                           style="-fx-background-color: #E8E8E8; -fx-background-radius: 13;">
-                    <Label text="7" style="-fx-text-fill: #AAA; -fx-font-size: 11px; -fx-font-weight: bold;"/>
-                </StackPane>
-                <Label text="Catégories" style="-fx-text-fill: #BBB; -fx-font-size: 12.5px;"/>
-            </HBox>
 
             <Region VBox.vgrow="ALWAYS"/>
 
@@ -185,7 +177,7 @@
                 <HBox alignment="CENTER_LEFT">
                     <Label text="Progression" style="-fx-text-fill: #FF6B35; -fx-font-size: 11px; -fx-font-weight: bold;"/>
                     <Region HBox.hgrow="ALWAYS"/>
-                    <Label text="1 / 7" style="-fx-text-fill: #FF6B35; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                    <Label text="1 / 6" style="-fx-text-fill: #FF6B35; -fx-font-size: 11px; -fx-font-weight: bold;"/>
                 </HBox>
                 <StackPane prefHeight="6" style="-fx-background-color: #E8E8E8; -fx-background-radius: 3;">
                     <HBox alignment="CENTER_LEFT">

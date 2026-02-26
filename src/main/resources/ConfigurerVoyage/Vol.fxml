@@ -89,7 +89,7 @@
                 <Label text="Vols" style="-fx-text-fill: #FF6B35; -fx-font-weight: bold; -fx-font-size: 12.5px;"/>
             </HBox>
 
-            <!-- Étapes 3-7 inactives -->
+            <!-- Étapes 3-6 inactives -->
             <HBox alignment="CENTER_LEFT" spacing="12" prefHeight="42" style="-fx-padding: 0 18;">
                 <StackPane prefWidth="26" prefHeight="26" minWidth="26" minHeight="26"
                            style="-fx-background-color: #E8E8E8; -fx-background-radius: 13;">
@@ -118,13 +118,7 @@
                 </StackPane>
                 <Label text="Services supplémentaires" style="-fx-text-fill: #BBB; -fx-font-size: 12.5px;"/>
             </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="12" prefHeight="42" style="-fx-padding: 0 18;">
-                <StackPane prefWidth="26" prefHeight="26" minWidth="26" minHeight="26"
-                           style="-fx-background-color: #E8E8E8; -fx-background-radius: 13;">
-                    <Label text="7" style="-fx-text-fill: #AAA; -fx-font-size: 11px;"/>
-                </StackPane>
-                <Label text="Catégories" style="-fx-text-fill: #BBB; -fx-font-size: 12.5px;"/>
-            </HBox>
+
 
             <Region VBox.vgrow="ALWAYS"/>
 
@@ -136,7 +130,7 @@
                     <Label text="Progression"
                            style="-fx-text-fill: #FF6B35; -fx-font-size: 11px; -fx-font-weight: bold;"/>
                     <Region HBox.hgrow="ALWAYS"/>
-                    <Label text="2 / 7"
+                    <Label text="2 / 6"
                            style="-fx-text-fill: #FF6B35; -fx-font-size: 11px; -fx-font-weight: bold;"/>
                 </HBox>
                 <StackPane prefHeight="6"
