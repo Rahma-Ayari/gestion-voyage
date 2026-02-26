@@ -15,9 +15,19 @@ import java.util.ResourceBundle;
 public class AvisController implements Initializable {
 
     @FXML private TableView<Avis> tableView;
+
+    // Colonnes principales
     @FXML private TableColumn<Avis, Integer> idCol, noteCol, userCol;
-    @FXML private TableColumn<Avis, String> commentaireCol;
+    @FXML private TableColumn<Avis, String> commentaireCol, titreCol;
     @FXML private TableColumn<Avis, java.sql.Date> dateCol;
+
+    // Nouvelles colonnes pour les notes détaillées
+    @FXML private TableColumn<Avis, Integer> noteHebergementCol;
+    @FXML private TableColumn<Avis, Integer> noteTransportCol;
+    @FXML private TableColumn<Avis, Integer> noteActivitesCol;
+    @FXML private TableColumn<Avis, Integer> noteQualitePrixCol;
+    @FXML private TableColumn<Avis, Boolean> recommandeCol;
+
     @FXML private Button btnPublier, btnSupprimer;
 
     private final ServiceAvis serviceAvis = new ServiceAvis();
@@ -25,18 +35,40 @@ public class AvisController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Configuration professionnelle des colonnes
+        // Configuration des colonnes existantes
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         userCol.setCellValueFactory(new PropertyValueFactory<>("idUtilisateur"));
+        titreCol.setCellValueFactory(new PropertyValueFactory<>("titre"));
         noteCol.setCellValueFactory(new PropertyValueFactory<>("note"));
         dateCol.setCellValueFactory(new PropertyValueFactory<>("dateAvis"));
         commentaireCol.setCellValueFactory(new PropertyValueFactory<>("commentaire"));
 
-        // État initial des boutons (Désactivés sans sélection)
+        // Configuration des nouvelles colonnes
+        noteHebergementCol.setCellValueFactory(new PropertyValueFactory<>("noteHebergement"));
+        noteTransportCol.setCellValueFactory(new PropertyValueFactory<>("noteTransport"));
+        noteActivitesCol.setCellValueFactory(new PropertyValueFactory<>("noteActivites"));
+        noteQualitePrixCol.setCellValueFactory(new PropertyValueFactory<>("noteQualitePrix"));
+        recommandeCol.setCellValueFactory(new PropertyValueFactory<>("recommande"));
+
+        // Affichage personnalisé pour la colonne "Recommande" (Oui/Non au lieu de true/false)
+        recommandeCol.setCellFactory(column -> new TableCell<Avis, Boolean>() {
+            @Override
+            protected void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item ? "✓ Oui" : "✗ Non");
+                    setStyle(item ? "-fx-text-fill: green;" : "-fx-text-fill: red;");
+                }
+            }
+        });
+
+        // État initial des boutons
         btnPublier.setDisable(true);
         btnSupprimer.setDisable(true);
 
-        // Gestion intelligente de la sélection
+        // Gestion de la sélection
         tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             boolean hasSelection = (newSelection != null);
             btnPublier.setDisable(!hasSelection);
@@ -50,7 +82,6 @@ public class AvisController implements Initializable {
     private void handlePublier() {
         Avis selected = tableView.getSelectionModel().getSelectedItem();
         if (selected != null) {
-            // Logique de modération professionnelle
             afficherMessage(Alert.AlertType.INFORMATION, "Validation",
                     "L'avis #" + selected.getId() + " a été validé et publié avec succès.");
         }

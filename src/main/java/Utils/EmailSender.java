@@ -5,7 +5,6 @@ import jakarta.mail.internet.*;
 import java.util.Properties;
 
 public class EmailSender {
-    // Tes identifiants Gmail
     private static final String MY_EMAIL = "safabennasr14@gmail.com";
     private static final String MY_PASSWORD = "jruxvtzhlkdgkqaw";
 
