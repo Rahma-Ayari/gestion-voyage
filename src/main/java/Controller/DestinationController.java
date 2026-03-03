@@ -15,21 +15,21 @@ import java.util.List;
 
 public class DestinationController {
 
-    /* ── Formulaire ── */
+
     @FXML private TextField  paysField, villeField, searchField;
     @FXML private TextArea   descriptionField;
-    @FXML private DatePicker dateDebutPicker;  // null si pas encore dans le FXML
-    @FXML private DatePicker dateFinPicker;    // null si pas encore dans le FXML
+    @FXML private DatePicker dateDebutPicker;
+    @FXML private DatePicker dateFinPicker;
 
-    /* ── Boutons ── */
+
     @FXML private Button ajouterBtn, modifierBtn, supprimerBtn, clearBtn, refreshBtn;
 
-    /* ── Table ── */
+
     @FXML private TableView<Destination>            tableView;
     @FXML private TableColumn<Destination, Integer> idCol;
     @FXML private TableColumn<Destination, String>  paysCol, villeCol, descriptionCol;
-    @FXML private TableColumn<Destination, String>  dateDebutCol;  // null si pas dans le FXML
-    @FXML private TableColumn<Destination, String>  dateFinCol;    // null si pas dans le FXML
+    @FXML private TableColumn<Destination, String>  dateDebutCol;
+    @FXML private TableColumn<Destination, String>  dateFinCol;
 
     @FXML private Label countLabel;
 
@@ -37,20 +37,16 @@ public class DestinationController {
     private ObservableList<Destination> destinationList;
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    /* ══════════════════════════════════════════
-       INIT
-    ══════════════════════════════════════════ */
+
     @FXML
     public void initialize() {
         serviceDestination = new ServiceDestination();
 
-        // Colonnes de base (toujours présentes)
         idCol.setCellValueFactory(new PropertyValueFactory<>("idDestination"));
         paysCol.setCellValueFactory(new PropertyValueFactory<>("pays"));
         villeCol.setCellValueFactory(new PropertyValueFactory<>("ville"));
         descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
 
-        // Colonnes dates — seulement si elles existent dans le FXML (null-safe)
         if (dateDebutCol != null) {
             dateDebutCol.setCellValueFactory(data -> {
                 LocalDate d = data.getValue().getDateDebut();
@@ -92,9 +88,7 @@ public class DestinationController {
         }
     }
 
-    /* ══════════════════════════════════════════
-       CRUD
-    ══════════════════════════════════════════ */
+
     @FXML
     private void ajouterDestination() {
         if (!validerChamps()) return;

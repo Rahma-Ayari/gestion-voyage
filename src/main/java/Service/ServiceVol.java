@@ -5,229 +5,174 @@ import Entite.Vol;
 import Utils.DataSource;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.Statement;
 
-public class ServiceVol {
+public class ServiceVol implements IService<Vol> {
 
-    private Connection connect;
+    private final Connection connect = DataSource.getInstance().getCon();
     private Statement st;
 
-    public ServiceVol() throws SQLException {
-        connect = DataSource.getInstance().getCon();
-        st = connect.createStatement();
-    }
-    public void deleteAll() throws SQLException {
-        String query = "DELETE FROM vol";
-        st.executeUpdate(query);
-    }
-    // Read all vols with full Destination and VilleDepart objects
-    public List<Vol> readAll() throws SQLException {
-        List<Vol> vols = new ArrayList<>();
-
-        String query = "SELECT v.id_vol, v.numero_vol, v.compagnie, v.date_depart, v.date_arrivee, v.prix, " +
-                "d1.id_destination AS dep_id, d1.ville AS dep_ville, d1.pays AS dep_pays, d1.description AS dep_desc, " +
-                "d2.id_destination AS dest_id, d2.ville AS dest_ville, d2.pays AS dest_pays, d2.description AS dest_desc " +
-                "FROM vol v " +
-                "JOIN destination d1 ON v.ville_depart_id = d1.id_destination " +
-                "JOIN destination d2 ON v.id_destination = d2.id_destination";
-
-        Statement st = connect.createStatement();
-        ResultSet rs = st.executeQuery(query);
-
-        while(rs.next()) {
-            Vol vol = new Vol();
-            vol.setIdVol(rs.getInt("id_vol"));
-            vol.setNumeroVol(rs.getString("numero_vol"));
-            vol.setCompagnie(rs.getString("compagnie"));
-            vol.setDateDepart(rs.getTimestamp("date_depart").toLocalDateTime());
-            vol.setDateArrivee(rs.getTimestamp("date_arrivee").toLocalDateTime());
-            vol.setPrix(rs.getDouble("prix"));
-
-            Destination dep = new Destination();
-            dep.setIdDestination(rs.getInt("dep_id"));
-            dep.setVille(rs.getString("dep_ville"));
-            dep.setPays(rs.getString("dep_pays"));
-            dep.setDescription(rs.getString("dep_desc"));
-            vol.setVilleDepart(dep);
-
-            Destination dest = new Destination();
-            dest.setIdDestination(rs.getInt("dest_id"));
-            dest.setVille(rs.getString("dest_ville"));
-            dest.setPays(rs.getString("dest_pays"));
-            dest.setDescription(rs.getString("dest_desc"));
-            vol.setDestination(dest);
-
-            vols.add(vol);
-        }
-
-        rs.close();
-        st.close();
-        return vols;
-    }
-    public boolean ajouter(Vol v) {
+    public ServiceVol() {
         try {
-            String query = "INSERT INTO vol (compagnie, date_depart, date_arrivee, prix, id_destination, ville_depart_id) "
-                    + "VALUES (?, ?, ?, ?, ?, ?)";
-
-            PreparedStatement ps = connect.prepareStatement(query);
-
-            ps.setString(1, v.getCompagnie());
-            ps.setTimestamp(2, Timestamp.valueOf(v.getDateDepart()));
-            ps.setTimestamp(3, Timestamp.valueOf(v.getDateArrivee()));
-            ps.setDouble(4, v.getPrix());
-            ps.setInt(5, v.getDestination().getIdDestination());
-            ps.setInt(6, v.getVilleDepart().getIdDestination());
-
-            ps.executeUpdate();
-            ps.close();
-
-            return true;
-
+            st = connect.createStatement();
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            System.out.println(e);
         }
     }
-    // Update an existing Vol
-    public void modifier(Vol v) throws SQLException {
-        String query = "UPDATE vol SET numero_vol = ?, compagnie = ?, date_depart = ?, date_arrivee = ?, prix = ?, " +
-                "id_destination = ?, ville_depart_id = ? WHERE id_vol = ?";
-        PreparedStatement ps = connect.prepareStatement(query);
-        ps.setString(1, v.getNumeroVol());
-        ps.setString(2, v.getCompagnie());
-        ps.setTimestamp(3, Timestamp.valueOf(v.getDateDepart()));
-        ps.setTimestamp(4, Timestamp.valueOf(v.getDateArrivee()));
-        ps.setDouble(5, v.getPrix());
-        ps.setInt(6, v.getDestination().getIdDestination());
-        ps.setInt(7, v.getVilleDepart().getIdDestination());
-        ps.setInt(8, v.getIdVol());
-        ps.executeUpdate();
-        ps.close();
-    }
 
-    // Delete a Vol
-    public void supprimer(Vol v) throws SQLException {
-        String query = "DELETE FROM vol WHERE id_vol = ?";
-        PreparedStatement ps = connect.prepareStatement(query);
-        ps.setInt(1, v.getIdVol());
-        ps.executeUpdate();
-        ps.close();
-    }
-
-    // Get all distinct airline companies
-    public List<String> getAllCompanies() throws SQLException {
-        List<String> companies = new ArrayList<>();
-        String query = "SELECT DISTINCT compagnie FROM vol";
-        Statement st = connect.createStatement();
-        ResultSet rs = st.executeQuery(query);
-        while(rs.next()) {
-            companies.add(rs.getString("compagnie"));
+    @Override
+    public boolean ajouter(Vol v) throws SQLException {
+        String req = "INSERT INTO vol (numero_vol, compagnie, date_depart, date_arrivee, prix, id_destination, type_vol) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = connect.prepareStatement(req)) {
+            ps.setString(1, v.getNumeroVol());
+            ps.setString(2, v.getCompagnie());
+            ps.setTimestamp(3, Timestamp.valueOf(v.getDateDepart()));
+            ps.setTimestamp(4, Timestamp.valueOf(v.getDateArrivee()));
+            ps.setDouble(5, v.getPrix());
+            ps.setInt(6, v.getDestination().getIdDestination());
+            ps.setString(7, v.getTypeVol());
+            return ps.executeUpdate() > 0;
         }
-        rs.close();
-        st.close();
-        return companies;
     }
 
-    // Get all distinct destinations (arrival cities)
-    public List<String> getAllDestinations() throws SQLException {
-        List<String> destinations = new ArrayList<>();
-        String query = "SELECT DISTINCT ville FROM destination d " +
-                "JOIN vol v ON v.id_destination = d.id_destination";
-        Statement st = connect.createStatement();
-        ResultSet rs = st.executeQuery(query);
-        while(rs.next()) {
-            destinations.add(rs.getString("ville"));
+    @Override
+    public boolean supprimer(Vol v) throws SQLException {
+        String req = "DELETE FROM vol WHERE id_vol = ?";
+        try (PreparedStatement ps = connect.prepareStatement(req)) {
+            ps.setInt(1, v.getIdVol());
+            return ps.executeUpdate() > 0;
         }
-        rs.close();
-        st.close();
-        return destinations;
     }
 
-    // Get all distinct departure cities
-    public List<String> getAllDepartures() throws SQLException {
-        List<String> departures = new ArrayList<>();
-        String query = "SELECT DISTINCT ville FROM destination d " +
-                "JOIN vol v ON v.ville_depart_id = d.id_destination";
-        Statement st = connect.createStatement();
-        ResultSet rs = st.executeQuery(query);
-        while(rs.next()) {
-            departures.add(rs.getString("ville"));
+    @Override
+    public boolean modifier(Vol v) throws SQLException {
+        String req = "UPDATE vol SET numero_vol=?, compagnie=?, date_depart=?, "
+                + "date_arrivee=?, prix=?, id_destination=?, type_vol=? "
+                + "WHERE id_vol=?";
+        try (PreparedStatement ps = connect.prepareStatement(req)) {
+            ps.setString(1, v.getNumeroVol());
+            ps.setString(2, v.getCompagnie());
+            ps.setTimestamp(3, Timestamp.valueOf(v.getDateDepart()));
+            ps.setTimestamp(4, Timestamp.valueOf(v.getDateArrivee()));
+            ps.setDouble(5, v.getPrix());
+            ps.setInt(6, v.getDestination().getIdDestination());
+            ps.setString(7, v.getTypeVol());
+            ps.setInt(8, v.getIdVol());
+            return ps.executeUpdate() > 0;
         }
-        rs.close();
-        st.close();
-        return departures;
     }
-    public int getDestinationIdByVille(String ville) throws SQLException {
-        String query = "SELECT id_destination FROM destination WHERE ville = ?";
-        PreparedStatement ps = connect.prepareStatement(query);
-        ps.setString(1, ville);
-        ResultSet rs = ps.executeQuery();
 
-        if(rs.next()) {
-            return rs.getInt("id_destination");
+    @Override
+    public Vol findbyId(int id) throws SQLException {
+        String req = "SELECT v.*, d.pays, d.ville, d.description "
+                + "FROM vol v "
+                + "JOIN destination d ON v.id_destination = d.id_destination "
+                + "WHERE v.id_vol = ?";
+        try (PreparedStatement ps = connect.prepareStatement(req)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return mapVol(rs);
         }
-        return -1;
+        return null;
     }
 
-    public List<Vol> fetchFlightsFromAPI(String departureCity, String arrivalCity, LocalDateTime date) {
-        System.out.println("Calling external Flight API...");
-        System.out.println("Departure: " + departureCity);
-        System.out.println("Arrival: " + arrivalCity);
-        System.out.println("Date: " + date);
+    @Override
+    public List<Vol> readAll() throws SQLException {
+        List<Vol> list = new ArrayList<>();
+        String req = "SELECT v.*, d.pays, d.ville, d.description "
+                + "FROM vol v "
+                + "JOIN destination d ON v.id_destination = d.id_destination";
+        try (PreparedStatement ps = connect.prepareStatement(req)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) list.add(mapVol(rs));
+        }
+        return list;
+    }
 
-        List<Vol> apiFlights = new ArrayList<>();
 
-        try {
-            // In reality we reuse database data
-            List<Vol> vols = readAll();
+    public List<Vol> findByTypeAndDates(int idDestination,
+                                        String typeVol,
+                                        LocalDate dateAller,
+                                        LocalDate dateRetour)
+            throws SQLException {
 
-            for (Vol v : vols) {
-                if (v.getVilleDepart().getVille().equalsIgnoreCase(departureCity)
-                        && v.getDestination().getVille().equalsIgnoreCase(arrivalCity)) {
-                    apiFlights.add(v);
-                }
+        List<Vol> list = new ArrayList<>();
+        String req;
+
+        if (typeVol.equals("ALLER_SIMPLE")) {
+            req = "SELECT v.*, d.pays, d.ville, d.description "
+                    + "FROM vol v "
+                    + "JOIN destination d ON v.id_destination = d.id_destination "
+                    + "WHERE v.id_destination = ? "
+                    + "AND DATE(v.date_depart) = ?";
+
+            try (PreparedStatement ps = connect.prepareStatement(req)) {
+                ps.setInt(1, idDestination);
+                ps.setDate(2, Date.valueOf(dateAller));
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) list.add(mapVol(rs));
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else if (typeVol.equals("RETOUR_SIMPLE")) {
+            req = "SELECT v.*, d.pays, d.ville, d.description "
+                    + "FROM vol v "
+                    + "JOIN destination d ON v.id_destination = d.id_destination "
+                    + "WHERE v.id_destination = ? "
+                    + "AND DATE(v.date_arrivee) = ?";
+
+            try (PreparedStatement ps = connect.prepareStatement(req)) {
+                ps.setInt(1, idDestination);
+                ps.setDate(2, Date.valueOf(dateRetour));
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) list.add(mapVol(rs));
+            }
+
+        } else {
+            req = "SELECT v.*, d.pays, d.ville, d.description "
+                    + "FROM vol v "
+                    + "JOIN destination d ON v.id_destination = d.id_destination "
+                    + "WHERE v.id_destination = ? "
+                    + "AND DATE(v.date_depart) >= ? "
+                    + "AND DATE(v.date_arrivee) <= ?";
+
+            try (PreparedStatement ps = connect.prepareStatement(req)) {
+                ps.setInt(1, idDestination);
+                ps.setDate(2, Date.valueOf(dateAller));
+                ps.setDate(3, Date.valueOf(dateRetour));
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) list.add(mapVol(rs));
+            }
         }
 
-        return apiFlights;
+        return list;
     }
+    private Vol mapVol(ResultSet rs) throws SQLException {
+        Timestamp dateDepartTs  = rs.getTimestamp("date_depart");
+        Timestamp dateArriveeTs = rs.getTimestamp("date_arrivee");
 
+        LocalDateTime dateDepart  = dateDepartTs  != null ? dateDepartTs.toLocalDateTime()  : null;
+        LocalDateTime dateArrivee = dateArriveeTs != null ? dateArriveeTs.toLocalDateTime() : null;
 
-    public void syncFlightsFromAPI() {
-        System.out.println("Synchronizing flights with external API...");
-    }
+        Destination d = new Destination();
+        d.setIdDestination(rs.getInt("id_destination"));
+        d.setPays(rs.getString("pays"));
+        d.setVille(rs.getString("ville"));
+        d.setDescription(rs.getString("description"));
 
-
-    public List<String> fetchAirlinesFromAPI() {
-
-        System.out.println("Fetching airlines from API...");
-
-        try {
-            return getAllCompanies();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return new ArrayList<>();
-    }
-
-
-    public List<String> fetchDestinationsFromAPI() {
-
-        System.out.println("Fetching destinations from API...");
-
-        try {
-            return getAllDestinations();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return new ArrayList<>();
+        Vol vol = new Vol(
+                rs.getInt("id_vol"),
+                rs.getString("numero_vol"),
+                rs.getString("compagnie"),
+                dateDepart,
+                dateArrivee,
+                rs.getDouble("prix"),
+                d
+        );
+        vol.setTypeVol(rs.getString("type_vol"));
+        return vol;
     }
 }

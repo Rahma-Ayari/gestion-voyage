@@ -12,10 +12,7 @@ public class ServiceVoyage {
 
     private final Connection connect = DataSource.getInstance().getCon();
 
-    // ══════════════════════════════════════════════════════════════
-    //  CRÉER un nouveau voyage (étape 1 — Destination + dates)
-    //  Appelé depuis ConfigVoyageController
-    // ══════════════════════════════════════════════════════════════
+
     public int ajouter(Voyage v) throws SQLException {
         PreparedStatement ps = connect.prepareStatement(
                 "INSERT INTO voyage (duree, dateDebut, dateFin, rythme, id_destination) " +
@@ -34,9 +31,7 @@ public class ServiceVoyage {
         return -1;
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  METTRE À JOUR le vol (étape 2 — VolController)
-    // ══════════════════════════════════════════════════════════════
+
     public boolean mettreAJourVol(int idVoyage, int idVol) throws SQLException {
         PreparedStatement ps = connect.prepareStatement(
                 "UPDATE voyage SET id_vol = ? WHERE id_voyage = ?");
@@ -45,10 +40,7 @@ public class ServiceVoyage {
         return ps.executeUpdate() > 0;
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  METTRE À JOUR l'hôtel (étape 3 — HotelController)
-    //  Appelé dès que l'user clique "Suivant" dans HotelController
-    // ══════════════════════════════════════════════════════════════
+
     public boolean mettreAJourHotel(int idVoyage, int idHotel,
                                     LocalDate checkin, LocalDate checkout) throws SQLException {
         PreparedStatement ps = connect.prepareStatement(
@@ -61,9 +53,7 @@ public class ServiceVoyage {
         return ps.executeUpdate() > 0;
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  LIRE un voyage par id
-    // ══════════════════════════════════════════════════════════════
+
     public Voyage findbyId(int id) throws SQLException {
         PreparedStatement ps = connect.prepareStatement(
                 "SELECT * FROM voyage WHERE id_voyage = ?");
@@ -81,9 +71,7 @@ public class ServiceVoyage {
         return list;
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  MAPPING
-    // ══════════════════════════════════════════════════════════════
+
     private Voyage mapVoyage(ResultSet rs) throws SQLException {
         LocalDate checkin  = rs.getDate("date_checkin")  != null ? rs.getDate("date_checkin").toLocalDate()  : null;
         LocalDate checkout = rs.getDate("date_checkout") != null ? rs.getDate("date_checkout").toLocalDate() : null;
@@ -102,7 +90,7 @@ public class ServiceVoyage {
     }
 
     public boolean mettreAJourActivites(int idVoyage, List<Integer> idActivites) throws SQLException {
-        // Déléguer au ServiceActivite
+
         new ServiceActivite().enregistrerActivitesVoyage(idVoyage, idActivites);
         return true;
     }

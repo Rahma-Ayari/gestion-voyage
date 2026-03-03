@@ -48,7 +48,7 @@ public class VolController {
     private LocalDate   dateFin;
     private Vol         volSelectionne = null;
     private String      typeVolActuel  = "ALLER_RETOUR";
-    private int         idVoyage;      // ← reçu de ConfigVoyageController
+    private int         idVoyage;
 
     private static final String CARD_NORMAL   = "-fx-background-color:white;-fx-background-radius:14;-fx-border-color:#ECECEC;-fx-border-radius:14;-fx-border-width:1.5;-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.06),10,0,0,2);-fx-cursor:hand;";
     private static final String CARD_HOVER    = "-fx-background-color:#FFFAF7;-fx-background-radius:14;-fx-border-color:#FFCDB0;-fx-border-radius:14;-fx-border-width:1.5;-fx-effect:dropshadow(gaussian,rgba(255,107,53,0.10),12,0,0,3);-fx-cursor:hand;";
@@ -82,12 +82,11 @@ public class VolController {
         });
     }
 
-    // ── Ancienne signature (rétro-compatibilité si besoin) ──
     public void initDonnees(Destination destination, LocalDate dateDebut, LocalDate dateFin) {
         initDonnees(destination, dateDebut, dateFin, -1);
     }
 
-    // ── Nouvelle signature avec idVoyage ──
+
     public void initDonnees(Destination destination, LocalDate dateDebut, LocalDate dateFin, int idVoyage) {
         this.destination = destination;
         this.dateDebut   = dateDebut;
@@ -253,7 +252,6 @@ public class VolController {
             showAlert("Aucun vol sélectionné", "Veuillez choisir un vol avant de continuer."); return;
         }
 
-        // ── Enregistrer le vol dans le voyage ──
         if (idVoyage > 0) {
             try {
                 serviceVoyage.mettreAJourVol(idVoyage, volSelectionne.getIdVol());
@@ -270,7 +268,6 @@ public class VolController {
             FXMLLoader loader = new FXMLLoader(url);
             Parent root = loader.load();
             HotelController hotelCtrl = loader.getController();
-            // Passer destination + dates + idVoyage
             hotelCtrl.initDonnees(destination, dateDebut, dateFin, idVoyage);
 
             Stage stage = (Stage) suivantBtn.getScene().getWindow();
