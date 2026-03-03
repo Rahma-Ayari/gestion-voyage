@@ -2,6 +2,15 @@ package Controller.ConfigurerVoyage;
 
 
 
+import java.io.IOException;
+import java.net.URL;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import Entite.Activite;
 import Entite.Destination;
 import Service.ServiceActivite;
@@ -12,18 +21,16 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.net.URL;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class ActiviteUserController {
 
@@ -288,25 +295,45 @@ public class ActiviteUserController {
 
 
     @FXML
-    private void passerEtapeSuivante() {
-        if (activitesSelectionnees.isEmpty()) {
-            showAlert("Aucune sélection", "Veuillez sélectionner au moins une activité."); return;
-        }
-        if (idVoyage > 0) {
-            try {
-                List<Integer> ids = activitesSelectionnees.stream()
-                        .map(Activite::getIdActivite).collect(Collectors.toList());
-                serviceVoyage.mettreAJourActivites(idVoyage, ids);
-            } catch (SQLException e) {
-                showAlert("Erreur BD", "Impossible d'enregistrer les activités : " + e.getMessage()); return;
-            }
-        }
-        showAlert("✅ Enregistré !",
-                activitesSelectionnees.size() + " activité(s) enregistrée(s) pour le voyage #" + idVoyage
-                        + "\nTotal : " + String.format("%.0f TND",
-                        activitesSelectionnees.stream().mapToDouble(Activite::getPrix).sum())
-                        + "\n\nProchaine étape : Budget");
+private void passerEtapeSuivante() {
+    if (activitesSelectionnees.isEmpty()) {
+        showAlert("Aucune sélection", "Veuillez sélectionner au moins une activité.");
+        return;
     }
+
+    // Enregistrer les activités en BD
+    if (idVoyage > 0) {
+        try {
+            List<Integer> ids = activitesSelectionnees.stream()
+                    .map(Activite::getIdActivite)
+                    .collect(Collectors.toList());
+            serviceVoyage.mettreAJourActivites(idVoyage, ids);
+        } catch (SQLException e) {
+            showAlert("Erreur BD", "Impossible d'enregistrer les activités : " + e.getMessage());
+            return;
+        }
+    }
+
+    // ── Navigation vers ServicesSupplementaires ──
+    URL url = getClass().getClassLoader().getResource("ConfigurerVoyage/ServicesSuppUser.fxml");
+    if (url == null) url = getClass().getResource("/ConfigurerVoyage/ServicesSuppUser.fxml");
+    if (url == null) {
+        showAlert("Erreur", "ServicesSuppUser.fxml introuvable.");
+        return;
+    }
+    try {
+        FXMLLoader loader = new FXMLLoader(url);
+        Parent root = loader.load();
+        ((ServicesSuppUserController) loader.getController())
+                .initDonnees(destination, dateDebut, dateFin, idVoyage);
+        Stage stage = (Stage) suivantButton.getScene().getWindow();
+        stage.setScene(new Scene(root));
+        stage.setTitle("TripEase — Services Supplémentaires");
+        stage.show();
+    } catch (IOException ex) {
+        showAlert("Erreur", "Impossible de charger ServicesSupplementaires.fxml : " + ex.getMessage());
+    }
+}
 
     @FXML
     private void retourEtapePrecedente() {

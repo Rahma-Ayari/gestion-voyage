@@ -1,11 +1,14 @@
 package Service;
 
-import Entite.Activite;
-import Utils.DataSource;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import Entite.Activite;
+import Utils.DataSource;
 
 public class ServiceActivite implements IService<Activite> {
 
@@ -119,6 +122,23 @@ public class ServiceActivite implements IService<Activite> {
             ins.addBatch();
         }
         ins.executeBatch();
+    }
+
+    /**
+     * Retourne la liste des activités associées à un voyage (table voyage_activite).
+     */
+    public List<Activite> findByVoyage(int idVoyage) throws SQLException {
+        List<Activite> list = new ArrayList<>();
+        String sql =
+                SELECT_BASE +
+                "JOIN voyage_activite va ON va.id_activite = a.id_activite " +
+                "WHERE va.id_voyage = ? " +
+                "ORDER BY a.nom ASC";
+        PreparedStatement ps = connect.prepareStatement(sql);
+        ps.setInt(1, idVoyage);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) list.add(mapActivite(rs));
+        return list;
     }
 
     private Activite mapActivite(ResultSet rs) throws SQLException {
