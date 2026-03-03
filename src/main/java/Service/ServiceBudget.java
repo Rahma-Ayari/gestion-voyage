@@ -18,10 +18,10 @@ public class ServiceBudget {
      *   budget(id_budget PK AUTO_INCREMENT, id_voyage, total_vol, total_hotel,
      *          total_activite, total_service, total_global, date_creation TIMESTAMP)
      */
-    public void enregistrer(Budget b) throws SQLException {
+    public int enregistrer(Budget b) throws SQLException {
         String sql = "INSERT INTO budget (id_voyage, total_vol, total_hotel, " +
                      "total_activite, total_service, total_global) VALUES (?,?,?,?,?,?)";
-        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+        try (PreparedStatement ps = connect.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setInt   (1, b.getIdVoyage());
             ps.setDouble(2, b.getTotalVol());
             ps.setDouble(3, b.getTotalHotel());
@@ -29,6 +29,12 @@ public class ServiceBudget {
             ps.setDouble(5, b.getTotalService());
             ps.setDouble(6, b.getTotalGlobal());
             ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1); // id_budget
+            }
+            return -1;
         }
     }
 
