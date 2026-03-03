@@ -8,10 +8,10 @@ public class Destination {
     private String    pays;
     private String    ville;
     private String    description;
-    private LocalDate dateDebut;   // date de disponibilité début
-    private LocalDate dateFin;     // date de disponibilité fin
+    private LocalDate dateDebut;
+    private LocalDate dateFin;
 
-    /* ── Constructeurs ── */
+
     public Destination() {}
 
     /** Constructeur complet (avec dates) */
@@ -25,12 +25,12 @@ public class Destination {
         this.dateFin       = dateFin;
     }
 
-    /** Constructeur sans dates (rétro-compatibilité) */
+
     public Destination(int idDestination, String pays, String ville, String description) {
         this(idDestination, pays, ville, description, null, null);
     }
 
-    /* ── Getters / Setters ── */
+
     public int       getIdDestination()               { return idDestination; }
     public void      setIdDestination(int id)         { this.idDestination = id; }
 

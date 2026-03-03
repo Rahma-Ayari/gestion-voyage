@@ -59,9 +59,7 @@ public class ActiviteUserController {
     private List<Activite>   allActivites    = new ArrayList<>();
     private List<Activite>   activitesSelectionnees = new ArrayList<>();
 
-    // ══════════════════════════════════════════════════════════════
-    //  INITIALIZE
-    // ══════════════════════════════════════════════════════════════
+
     @FXML
     public void initialize() {
         if (filterTypeBox != null) {
@@ -83,9 +81,7 @@ public class ActiviteUserController {
             searchNomField.textProperty().addListener((obs, o, n) -> appliquerFiltres());
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  INIT DONNÉES
-    // ══════════════════════════════════════════════════════════════
+
     public void initDonnees(Destination destination, LocalDate dateDebut,
                             LocalDate dateFin, String rythme, int idVoyage) {
         this.destination = destination;
@@ -94,7 +90,6 @@ public class ActiviteUserController {
         this.rythme      = rythme;
         this.idVoyage    = idVoyage;
 
-        // Pré-sélectionner le filtre rythme selon le voyage
         if (filterRythmeBox != null) {
             if (rythme != null && !rythme.isBlank()) {
                 String r = rythme.substring(0,1).toUpperCase() + rythme.substring(1).toLowerCase();
@@ -106,9 +101,7 @@ public class ActiviteUserController {
         chargerActivites();
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  RÉSUMÉ EN-TÊTE
-    // ══════════════════════════════════════════════════════════════
+
     private void mettreAJourResume() {
         destinationLabel.setText("🌍 " + destination.getPays() + " — " + destination.getVille());
         datesLabel.setText(dateDebut.format(fmt) + "  →  " + dateFin.format(fmt));
@@ -118,9 +111,7 @@ public class ActiviteUserController {
         if (headerDatesLabel != null) headerDatesLabel.setText(dateDebut.format(fmt) + " → " + dateFin.format(fmt));
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  CHARGEMENT
-    // ══════════════════════════════════════════════════════════════
+
     private void chargerActivites() {
         try {
             allActivites = serviceActivite.findByDestination(destination.getIdDestination());
@@ -131,9 +122,7 @@ public class ActiviteUserController {
         appliquerFiltres();
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  FILTRES
-    // ══════════════════════════════════════════════════════════════
+
     private void appliquerFiltres() {
         activiteListContainer.getChildren().clear();
 
@@ -177,13 +166,11 @@ public class ActiviteUserController {
         return switch (rythme) {
             case "Détendu" -> List.of(2,5,8,12,13,16,18,20).contains(idType);
             case "Intense" -> List.of(1,3,4,6,7,9,10,15,19).contains(idType);
-            default        -> true; // Modéré = tout
+            default        -> true;
         };
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  CARTE ACTIVITÉ
-    // ══════════════════════════════════════════════════════════════
+
     private VBox creerCarteActivite(Activite activite) {
         boolean dejaSel = activitesSelectionnees.stream()
                 .anyMatch(a -> a.getIdActivite() == activite.getIdActivite());
@@ -195,13 +182,13 @@ public class ActiviteUserController {
         mainRow.setPadding(new Insets(14, 16, 12, 16));
         mainRow.setAlignment(Pos.CENTER_LEFT);
 
-        // Icône type
+
         StackPane icon = new StackPane();
         icon.setPrefSize(42, 42); icon.setMinSize(42, 42);
         icon.setStyle("-fx-background-color:" + (dejaSel ? "#FF6B35" : "#FFF3E0") + ";-fx-background-radius:10;");
         icon.getChildren().add(labelStyle(getEmoji(activite.getLibelleType()), "-fx-font-size:18px;"));
 
-        // Infos
+
         VBox infos = new VBox(4);
         HBox.setHgrow(infos, Priority.ALWAYS);
 
@@ -227,7 +214,7 @@ public class ActiviteUserController {
 
         infos.getChildren().addAll(nomRow, typeLbl, descLbl, detailRow);
 
-        // Prix + bouton
+
         VBox droite = new VBox(6);
         droite.setAlignment(Pos.CENTER_RIGHT);
         droite.setMinWidth(100);
@@ -247,7 +234,7 @@ public class ActiviteUserController {
         mainRow.getChildren().addAll(icon, infos, droite);
         carte.getChildren().add(mainRow);
 
-        // Hover
+
         if (!dejaSel) {
             carte.setOnMouseEntered(e -> carte.setStyle(
                     "-fx-background-color:#FFFAF7;-fx-background-radius:12;-fx-border-color:#FFCDB0;-fx-border-radius:12;-fx-border-width:1.5;-fx-cursor:hand;-fx-effect:dropshadow(gaussian,rgba(255,107,53,0.15),12,0,0,4);"));
@@ -257,9 +244,7 @@ public class ActiviteUserController {
         return carte;
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  TOGGLE SÉLECTION
-    // ══════════════════════════════════════════════════════════════
+
     private void toggleActivite(Activite activite) {
         boolean dejaSel = activitesSelectionnees.stream()
                 .anyMatch(a -> a.getIdActivite() == activite.getIdActivite());
@@ -272,9 +257,7 @@ public class ActiviteUserController {
         mettreAJourRecapitulatif();
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  RÉCAPITULATIF SÉLECTION
-    // ══════════════════════════════════════════════════════════════
+
     private void mettreAJourRecapitulatif() {
         int    nb     = activitesSelectionnees.size();
         double total  = activitesSelectionnees.stream().mapToDouble(Activite::getPrix).sum();
@@ -303,9 +286,7 @@ public class ActiviteUserController {
         }
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  NAVIGATION
-    // ══════════════════════════════════════════════════════════════
+
     @FXML
     private void passerEtapeSuivante() {
         if (activitesSelectionnees.isEmpty()) {
@@ -346,9 +327,7 @@ public class ActiviteUserController {
         }
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  HELPERS
-    // ══════════════════════════════════════════════════════════════
+
     private String getStyleCarte(boolean selected) {
         return selected
                 ? "-fx-background-color:#FFF3E0;-fx-background-radius:12;-fx-border-color:#FF6B35;-fx-border-radius:12;-fx-border-width:2;-fx-effect:dropshadow(gaussian,rgba(255,107,53,0.2),12,0,0,4);"

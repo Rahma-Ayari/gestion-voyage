@@ -23,7 +23,6 @@ public class ServiceVol implements IService<Vol> {
         }
     }
 
-    /* ══════════════════════════ AJOUTER ══════════════════════════ */
     @Override
     public boolean ajouter(Vol v) throws SQLException {
         String req = "INSERT INTO vol (numero_vol, compagnie, date_depart, date_arrivee, prix, id_destination, type_vol) "
@@ -40,7 +39,6 @@ public class ServiceVol implements IService<Vol> {
         }
     }
 
-    /* ══════════════════════════ SUPPRIMER ══════════════════════════ */
     @Override
     public boolean supprimer(Vol v) throws SQLException {
         String req = "DELETE FROM vol WHERE id_vol = ?";
@@ -50,7 +48,6 @@ public class ServiceVol implements IService<Vol> {
         }
     }
 
-    /* ══════════════════════════ MODIFIER ══════════════════════════ */
     @Override
     public boolean modifier(Vol v) throws SQLException {
         String req = "UPDATE vol SET numero_vol=?, compagnie=?, date_depart=?, "
@@ -69,7 +66,6 @@ public class ServiceVol implements IService<Vol> {
         }
     }
 
-    /* ══════════════════════════ FIND BY ID ══════════════════════════ */
     @Override
     public Vol findbyId(int id) throws SQLException {
         String req = "SELECT v.*, d.pays, d.ville, d.description "
@@ -84,7 +80,6 @@ public class ServiceVol implements IService<Vol> {
         return null;
     }
 
-    /* ══════════════════════════ READ ALL ══════════════════════════ */
     @Override
     public List<Vol> readAll() throws SQLException {
         List<Vol> list = new ArrayList<>();
@@ -98,13 +93,7 @@ public class ServiceVol implements IService<Vol> {
         return list;
     }
 
-    /* ══════════════════════════════════════════════════════════════
-       FILTRER PAR TYPE + DESTINATION + DATE
-       - ALLER_SIMPLE  → vols dont DATE(date_depart)  = dateAller
-       - RETOUR_SIMPLE → vols dont DATE(date_arrivee) = dateRetour
-       - ALLER_RETOUR  → vols dont date_depart >= dateAller
-                                 ET date_arrivee <= dateRetour
-    ══════════════════════════════════════════════════════════════ */
+
     public List<Vol> findByTypeAndDates(int idDestination,
                                         String typeVol,
                                         LocalDate dateAller,
@@ -115,7 +104,6 @@ public class ServiceVol implements IService<Vol> {
         String req;
 
         if (typeVol.equals("ALLER_SIMPLE")) {
-            // Chercher les vols qui PARTENT à la date choisie
             req = "SELECT v.*, d.pays, d.ville, d.description "
                     + "FROM vol v "
                     + "JOIN destination d ON v.id_destination = d.id_destination "
@@ -130,7 +118,6 @@ public class ServiceVol implements IService<Vol> {
             }
 
         } else if (typeVol.equals("RETOUR_SIMPLE")) {
-            // Chercher les vols qui ARRIVENT à la date choisie
             req = "SELECT v.*, d.pays, d.ville, d.description "
                     + "FROM vol v "
                     + "JOIN destination d ON v.id_destination = d.id_destination "
@@ -145,7 +132,6 @@ public class ServiceVol implements IService<Vol> {
             }
 
         } else {
-            // ALLER_RETOUR : vols dont le départ >= dateAller ET arrivée <= dateRetour
             req = "SELECT v.*, d.pays, d.ville, d.description "
                     + "FROM vol v "
                     + "JOIN destination d ON v.id_destination = d.id_destination "
@@ -164,7 +150,6 @@ public class ServiceVol implements IService<Vol> {
 
         return list;
     }
-    /* ══════════════════════════ MAPPER ResultSet → Vol ══════════════════════════ */
     private Vol mapVol(ResultSet rs) throws SQLException {
         Timestamp dateDepartTs  = rs.getTimestamp("date_depart");
         Timestamp dateArriveeTs = rs.getTimestamp("date_arrivee");
@@ -187,7 +172,7 @@ public class ServiceVol implements IService<Vol> {
                 rs.getDouble("prix"),
                 d
         );
-        vol.setTypeVol(rs.getString("type_vol")); // ← lire le type depuis la BD
+        vol.setTypeVol(rs.getString("type_vol"));
         return vol;
     }
 }

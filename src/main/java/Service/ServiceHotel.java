@@ -20,9 +20,7 @@ public class ServiceHotel implements IService<Hotel> {
         }
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  CRUD
-    // ══════════════════════════════════════════════════════════════
+
 
     @Override
     public boolean ajouter(Hotel h) throws SQLException {
@@ -36,7 +34,7 @@ public class ServiceHotel implements IService<Hotel> {
         ps.setInt    (4, h.getStars());
         ps.setInt    (5, h.getCapacite());
         ps.setString (6, h.getTypeChambre());
-        ps.setString (7, h.getTypeReservation());   // ← NOUVEAU
+        ps.setString (7, h.getTypeReservation());
         ps.setDouble (8, h.getPrixParNuit());
         ps.setBoolean(9, h.isDisponibilite());
         ps.setInt    (10, h.getIdDestination());
@@ -64,7 +62,7 @@ public class ServiceHotel implements IService<Hotel> {
         ps.setInt    (4, h.getStars());
         ps.setInt    (5, h.getCapacite());
         ps.setString (6, h.getTypeChambre());
-        ps.setString (7, h.getTypeReservation());   // ← NOUVEAU
+        ps.setString (7, h.getTypeReservation());
         ps.setDouble (8, h.getPrixParNuit());
         ps.setBoolean(9, h.isDisponibilite());
         ps.setInt    (10, h.getIdDestination());
@@ -90,14 +88,9 @@ public class ServiceHotel implements IService<Hotel> {
         return list;
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  REQUÊTES MÉTIER
-    // ══════════════════════════════════════════════════════════════
 
-    /**
-     * Tous les hôtels d'une ville (disponibles + complets).
-     * Le filtrage disponibilité / étoiles / nom se fait côté HotelController.
-     */
+
+
     public List<Hotel> findByVille(String ville) throws SQLException {
         List<Hotel> list = new ArrayList<>();
         PreparedStatement ps = connect.prepareStatement(
@@ -108,10 +101,7 @@ public class ServiceHotel implements IService<Hotel> {
         return list;
     }
 
-    /**
-     * Tous les hôtels liés à une destination (disponibles + complets).
-     * Utilisé par HotelController — le filtrage se fait en mémoire.
-     */
+
     public List<Hotel> findByDestination(int idDestination) throws SQLException {
         List<Hotel> list = new ArrayList<>();
         PreparedStatement ps = connect.prepareStatement(
@@ -122,9 +112,6 @@ public class ServiceHotel implements IService<Hotel> {
         return list;
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  MAPPING  ResultSet → Hotel
-    // ══════════════════════════════════════════════════════════════
 
     private Hotel mapHotel(ResultSet rs) throws SQLException {
         return new Hotel(

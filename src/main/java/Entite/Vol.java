@@ -11,7 +11,7 @@ public class Vol {
     private LocalDateTime dateArrivee;
     private double        prix;
     private Destination   destination;
-    private String        typeVol; // "ALLER_SIMPLE" | "RETOUR_SIMPLE" | "ALLER_RETOUR"
+    private String        typeVol;
 
     public Vol() {}
 

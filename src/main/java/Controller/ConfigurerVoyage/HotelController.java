@@ -61,11 +61,9 @@ public class HotelController {
     private LocalDate   dateFin;
     private Hotel       hotelSelectionne;
     private List<Hotel> allHotels = new java.util.ArrayList<>();
-    private int         idVoyage  = -1;   // ← reçu de VolController
+    private int         idVoyage  = -1;
 
-    // ══════════════════════════════════════════════════════════════
-    //  INITIALIZE
-    // ══════════════════════════════════════════════════════════════
+
     @FXML
     public void initialize() {
         if (filterStarsBox != null) {
@@ -114,16 +112,12 @@ public class HotelController {
         checkOutPicker.valueProperty().addListener(dl);
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  INIT DONNÉES
-    // ══════════════════════════════════════════════════════════════
 
-    // Ancienne signature (rétro-compatibilité)
+
     public void initDonnees(Destination destination, LocalDate dateDebut, LocalDate dateFin) {
         initDonnees(destination, dateDebut, dateFin, -1);
     }
 
-    // Nouvelle signature avec idVoyage
     public void initDonnees(Destination destination, LocalDate dateDebut, LocalDate dateFin, int idVoyage) {
         this.destination = destination;
         this.dateDebut   = dateDebut;
@@ -135,9 +129,6 @@ public class HotelController {
         chargerHotels();
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  RÉSUMÉ EN-TÊTE
-    // ══════════════════════════════════════════════════════════════
     private void mettreAJourResume() {
         destinationLabel.setText("🌍 " + destination.getPays() + " — " + destination.getVille());
         datesLabel.setText(dateDebut.format(fmt) + "  →  " + dateFin.format(fmt));
@@ -147,9 +138,7 @@ public class HotelController {
         if (headerDatesLabel != null) headerDatesLabel.setText(dateDebut.format(fmt) + " → " + dateFin.format(fmt));
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  CALCUL NUITS
-    // ══════════════════════════════════════════════════════════════
+
     private void calculerNuits() {
         LocalDate ci = checkInPicker.getValue();
         LocalDate co = checkOutPicker.getValue();
@@ -172,9 +161,7 @@ public class HotelController {
         }
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  CHARGEMENT HÔTELS
-    // ══════════════════════════════════════════════════════════════
+
     private void chargerHotels() {
         reinitialiserSelection();
         LocalDate ci = checkInPicker.getValue();
@@ -195,9 +182,7 @@ public class HotelController {
         appliquerFiltres();
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  FILTRES  (capacite > 0 = disponible)
-    // ══════════════════════════════════════════════════════════════
+
     private void appliquerFiltres() {
         hotelListContainer.getChildren().clear();
 
@@ -224,7 +209,7 @@ public class HotelController {
         boolean afficherComplets = showCompletCheckBox != null && showCompletCheckBox.isSelected();
         final int sf = starFilter;
 
-        // ── NOUVEAU : lire les deux nouveaux filtres ──────────────────
+        // ────────────────────
         String filterChambre = (filterTypeChambreBox != null && filterTypeChambreBox.getValue() != null
                 && !filterTypeChambreBox.getValue().equals("Tous"))
                 ? filterTypeChambreBox.getValue() : "";
@@ -234,7 +219,7 @@ public class HotelController {
                 ? filterTypeReservationBox.getValue() : "";
         // ─────────────────────────────────────────────────────────────
 
-        // ── REMPLACE l'ancienne List<Hotel> tousFiltrés ───────────────
+
         List<Hotel> tousFiltrés = allHotels.stream()
                 .filter(h -> recherche.isEmpty() || h.getNom().toLowerCase().contains(recherche))
                 .filter(h -> sf == 0 || h.getStars() == sf)
@@ -243,7 +228,7 @@ public class HotelController {
                 .collect(Collectors.toList());
         // ─────────────────────────────────────────────────────────────
 
-        // (le reste ne change pas)
+
         List<Hotel> disponibles = tousFiltrés.stream()
                 .filter(h -> h.getCapacite() > 0)
                 .collect(Collectors.toList());
@@ -282,9 +267,7 @@ public class HotelController {
         }
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  CARTE HÔTEL
-    // ══════════════════════════════════════════════════════════════
+
     private VBox creerCarteHotel(Hotel hotel, boolean complet) {
         VBox carte = new VBox(0);
         carte.setStyle(
@@ -410,9 +393,7 @@ public class HotelController {
         return carte;
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  SÉLECTION HÔTEL
-    // ══════════════════════════════════════════════════════════════
+
     private void selectionnerHotel(Hotel hotel, VBox carte) {
         hotelListContainer.getChildren().forEach(node -> {
             if (node instanceof VBox)
@@ -448,9 +429,7 @@ public class HotelController {
         hotelDetailPanel.setManaged(false);
     }
 
-    // ══════════════════════════════════════════════════════════════
-    //  NAVIGATION  →  enregistre en BD puis passe à l'étape suivante
-    // ══════════════════════════════════════════════════════════════
+
     @FXML
     private void passerEtapeSuivante() {
         if (hotelSelectionne == null) {
@@ -466,7 +445,6 @@ public class HotelController {
             showAlert("Dates invalides", "La date de check-out doit être après le check-in."); return;
         }
 
-        // ── Enregistrement en BD ──────────────────────────────────
         if (idVoyage > 0) {
             try {
                 serviceVoyage.mettreAJourHotel(
@@ -479,16 +457,14 @@ public class HotelController {
                 showAlert("Erreur BD", "Impossible d'enregistrer l'hôtel : " + e.getMessage()); return;
             }
         }
-        // ─────────────────────────────────────────────────────────
 
-        // ── Navigation vers Activités ─────────────────────────────
         URL url = getClass().getClassLoader().getResource("ConfigurerVoyage/ActiviteUser.fxml");
         if (url == null) url = getClass().getResource("/ConfigurerVoyage/ActiviteUser.fxml");
         if (url == null) { showAlert("Erreur", "ActiviteUser.fxml introuvable."); return; }
         try {
             FXMLLoader loader = new FXMLLoader(url);
             Parent root = loader.load();
-            // Récupérer le rythme depuis la BD car Destination ne l'a pas
+
             String rythme = "";
             try {
                 rythme = serviceVoyage.findbyId(idVoyage).getRythme();

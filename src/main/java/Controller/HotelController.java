@@ -40,7 +40,6 @@ public class HotelController {
     public void initialize() {
         serviceHotel = new ServiceHotel();
 
-        // Configurer les colonnes de la table
         nomCol.setCellValueFactory(new PropertyValueFactory<>("nom"));
         villeCol.setCellValueFactory(new PropertyValueFactory<>("ville"));
         adresseCol.setCellValueFactory(new PropertyValueFactory<>("adresse"));
@@ -49,7 +48,6 @@ public class HotelController {
         typeChambreCol.setCellValueFactory(new PropertyValueFactory<>("typeChambre"));
         prixParNuitCol.setCellValueFactory(new PropertyValueFactory<>("prixParNuit"));
 
-        // Colonne Disponibilité avec Oui / Non
         disponibiliteCol.setCellValueFactory(new PropertyValueFactory<>("disponibilite"));
         disponibiliteCol.setCellFactory(col -> new TableCell<Hotel, Boolean>() {
             @Override
@@ -63,13 +61,10 @@ public class HotelController {
             }
         });
 
-        // Charger les données
         loadHotels();
 
-        // Listener pour la recherche
         searchField.textProperty().addListener((obs, oldText, newText) -> searchHotels(newText));
 
-        // Listener pour sélectionner un hôtel dans la table
         tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
             if (newSel != null) {
                 nomField.setText(newSel.getNom());

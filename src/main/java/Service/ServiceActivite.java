@@ -11,7 +11,6 @@ public class ServiceActivite implements IService<Activite> {
 
     private final Connection connect = DataSource.getInstance().getCon();
 
-    // ── Requête de base avec JOIN type_activite ──────────────────
     private static final String SELECT_BASE =
             "SELECT a.*, t.libelle AS libelle_type " +
                     "FROM activite a " +
@@ -73,9 +72,8 @@ public class ServiceActivite implements IService<Activite> {
         return list;
     }
 
-    // ── Méthodes métier ──────────────────────────────────────────
 
-    /** Activités par destination */
+
     public List<Activite> findByDestination(int idDestination) throws SQLException {
         List<Activite> list = new ArrayList<>();
         PreparedStatement ps = connect.prepareStatement(
@@ -86,16 +84,15 @@ public class ServiceActivite implements IService<Activite> {
         return list;
     }
 
-    /** Activités par destination filtrées par rythme de voyage */
     public List<Activite> findByDestinationEtRythme(int idDestination, String rythme) throws SQLException {
-        // Mapping rythme → types d'activités
+
         String conditionType = switch (rythme.toLowerCase()) {
             case "détendu", "detendu", "relaxed" ->
-                    "t.id_type_activite IN (2,5,8,12,13,16,18,20)";   // Visite, Spa, Tour guidé, Atelier, Concert, Yoga, Plage, Croisière
+                    "t.id_type_activite IN (2,5,8,12,13,16,18,20)";
             case "intense", "sportif" ->
-                    "t.id_type_activite IN (1,3,4,6,7,9,10,15,19)";   // Randonnée, Sport nautique, Ski, Plongée, Montagne, Vélo, Kayak, Parapente, Escalade
-            default -> // modéré
-                    "t.id_type_activite IN (1,2,8,9,11,12,17,18,20)"; // mix
+                    "t.id_type_activite IN (1,3,4,6,7,9,10,15,19)";
+            default ->
+                    "t.id_type_activite IN (1,2,8,9,11,12,17,18,20)";
         };
 
         List<Activite> list = new ArrayList<>();
@@ -108,15 +105,12 @@ public class ServiceActivite implements IService<Activite> {
         return list;
     }
 
-    /** Enregistrer les activités sélectionnées pour un voyage */
     public void enregistrerActivitesVoyage(int idVoyage, List<Integer> idActivites) throws SQLException {
-        // Supprimer les anciennes sélections
         PreparedStatement del = connect.prepareStatement(
                 "DELETE FROM voyage_activite WHERE id_voyage = ?");
         del.setInt(1, idVoyage);
         del.executeUpdate();
 
-        // Insérer les nouvelles
         PreparedStatement ins = connect.prepareStatement(
                 "INSERT INTO voyage_activite (id_voyage, id_activite) VALUES (?, ?)");
         for (int idAct : idActivites) {
@@ -127,7 +121,6 @@ public class ServiceActivite implements IService<Activite> {
         ins.executeBatch();
     }
 
-    // ── Mapping ──────────────────────────────────────────────────
     private Activite mapActivite(ResultSet rs) throws SQLException {
         return new Activite(
                 rs.getInt   ("id_activite"),

@@ -11,9 +11,9 @@ public class Voyage {
     private String    rythme;
     private int       idDestination;
     private int       idVol;
-    private int       idHotel;        // ← nouveau
-    private LocalDate dateCheckin;    // ← nouveau
-    private LocalDate dateCheckout;   // ← nouveau
+    private int       idHotel;
+    private LocalDate dateCheckin;
+    private LocalDate dateCheckout;
 
     public Voyage() {}
 
@@ -32,7 +32,6 @@ public class Voyage {
         this.dateCheckout  = dateCheckout;
     }
 
-    // ── Getters / Setters ──────────────────────────────────────
 
     public int       getIdVoyage()                        { return idVoyage; }
     public void      setIdVoyage(int idVoyage)            { this.idVoyage = idVoyage; }

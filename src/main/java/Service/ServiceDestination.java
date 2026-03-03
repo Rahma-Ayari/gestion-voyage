@@ -21,9 +21,7 @@ public class ServiceDestination implements IService<Destination> {
         }
     }
 
-    /* ══════════════════════════════════════════
-       AJOUTER
-    ══════════════════════════════════════════ */
+
     @Override
     public boolean ajouter(Destination d) throws SQLException {
         String req = "INSERT INTO destination (pays, ville, description, date_debut, date_fin) VALUES ('"
@@ -37,9 +35,7 @@ public class ServiceDestination implements IService<Destination> {
         return res > 0;
     }
 
-    /* ══════════════════════════════════════════
-       SUPPRIMER
-    ══════════════════════════════════════════ */
+
     @Override
     public boolean supprimer(Destination d) throws SQLException {
         String req = "DELETE FROM destination WHERE id_destination = "
@@ -49,9 +45,7 @@ public class ServiceDestination implements IService<Destination> {
         return res > 0;
     }
 
-    /* ══════════════════════════════════════════
-       MODIFIER
-    ══════════════════════════════════════════ */
+
     @Override
     public boolean modifier(Destination d) throws SQLException {
         String req = "UPDATE destination SET "
@@ -66,9 +60,7 @@ public class ServiceDestination implements IService<Destination> {
         return res > 0;
     }
 
-    /* ══════════════════════════════════════════
-       FIND BY ID
-    ══════════════════════════════════════════ */
+
     @Override
     public Destination findbyId(int id) throws SQLException {
 
@@ -89,9 +81,7 @@ public class ServiceDestination implements IService<Destination> {
         return null;
     }
 
-    /* ══════════════════════════════════════════
-       READ ALL
-    ══════════════════════════════════════════ */
+
     @Override
     public List<Destination> readAll() throws SQLException {
 
@@ -113,12 +103,7 @@ public class ServiceDestination implements IService<Destination> {
         return list;
     }
 
-    /* ══════════════════════════════════════════
-       FILTRER par plage de dates utilisateur
-       Retourne les destinations dont la période [date_debut, date_fin]
-       CONTIENT la plage demandée par l'utilisateur
-       (date_debut <= userDebut  ET  date_fin >= userFin)
-    ══════════════════════════════════════════ */
+
     public List<Destination> findByDateRange(LocalDate debut, LocalDate fin) throws SQLException {
 
         List<Destination> list = new ArrayList<>();

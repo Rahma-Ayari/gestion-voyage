@@ -5,12 +5,12 @@ public class Hotel {
     private String nom;
     private String ville;
     private String adresse;
-    private int    stars;           // Nombre d'étoiles
-    private int    capacite;        // Nombre de chambres
-    private String typeChambre;     // Simple, Double, Suite...
+    private int    stars;
+    private int    capacite;
+    private String typeChambre;
     private double prixParNuit;
     private boolean disponibilite;
-    private int    idDestination;   // FK vers la table destination
+    private int    idDestination;
     private String  typeReservation;
 
     public Hotel() {}
@@ -60,7 +60,6 @@ public class Hotel {
         this.typeReservation = typeReservation;
     }
 
-    // ── Getters / Setters ──────────────────────────────────────
 
     public int     getIdHotel()                        { return idHotel; }
     public void    setIdHotel(int idHotel)             { this.idHotel = idHotel; }

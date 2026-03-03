@@ -132,7 +132,6 @@ public class ConfigVoyageController {
         LocalDate fin   = dateFinPicker.getValue();
         long duree = ChronoUnit.DAYS.between(debut, fin);
 
-        // ── Créer le voyage en BD dès l'étape 1 ──
         int idVoyage;
         try {
             Voyage v = new Voyage();
@@ -157,7 +156,6 @@ public class ConfigVoyageController {
             FXMLLoader loader = new FXMLLoader(url);
             Parent root = loader.load();
             VolController volCtrl = loader.getController();
-            // Passer destination + dates + idVoyage
             volCtrl.initDonnees(destinationCombo.getValue(), debut, fin, idVoyage);
 
             Stage stage = (Stage) suivantButton.getScene().getWindow();

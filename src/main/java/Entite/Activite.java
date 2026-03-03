@@ -8,7 +8,7 @@ public class Activite {
     private int    dureeEnHeure;
     private String horaire;
     private int    idTypeActivite;
-    private String libelleType;     // chargé par JOIN, pas de colonne BD
+    private String libelleType;
     private int    idDestination;
 
     public Activite() {}
