@@ -12,7 +12,7 @@ public class Vol {
     private double        prix;
     private Destination   destination;
     private String        typeVol;
-
+    private Destination villeDepart;
     public Vol() {}
 
     public Vol(int idVol, String numeroVol, String compagnie,
@@ -27,33 +27,103 @@ public class Vol {
         this.destination = destination;
     }
 
-    public int           getIdVol()               { return idVol; }
-    public void          setIdVol(int v)           { this.idVol = v; }
+    public Vol(int idVol, String numeroVol, String compagnie,
+               LocalDateTime dateDepart, LocalDateTime dateArrivee,
+               double prix, Destination destination, Destination villeDepart) {
+        this.idVol       = idVol;
+        this.numeroVol   = numeroVol;
+        this.compagnie   = compagnie;
+        this.dateDepart  = dateDepart;
+        this.dateArrivee = dateArrivee;
+        this.prix        = prix;
+        this.destination = destination;
+        this.villeDepart = villeDepart;
+    }
 
-    public String        getNumeroVol()            { return numeroVol; }
-    public void          setNumeroVol(String v)    { this.numeroVol = v; }
+    public int getIdVol() {
+        return idVol;
+    }
 
-    public String        getCompagnie()            { return compagnie; }
-    public void          setCompagnie(String v)    { this.compagnie = v; }
+    public void setIdVol(int idVol) {
+        this.idVol = idVol;
+    }
 
-    public LocalDateTime getDateDepart()                { return dateDepart; }
-    public void          setDateDepart(LocalDateTime v) { this.dateDepart = v; }
+    public String getNumeroVol() {
+        return numeroVol;
+    }
 
-    public LocalDateTime getDateArrivee()                { return dateArrivee; }
-    public void          setDateArrivee(LocalDateTime v) { this.dateArrivee = v; }
+    public void setNumeroVol(String numeroVol) {
+        this.numeroVol = numeroVol;
+    }
 
-    public double        getPrix()                 { return prix; }
-    public void          setPrix(double v)         { this.prix = v; }
+    public String getCompagnie() {
+        return compagnie;
+    }
 
-    public Destination   getDestination()                { return destination; }
-    public void          setDestination(Destination v)   { this.destination = v; }
+    public void setCompagnie(String compagnie) {
+        this.compagnie = compagnie;
+    }
 
-    public String        getTypeVol()              { return typeVol; }
-    public void          setTypeVol(String v)      { this.typeVol = v; }
+    public LocalDateTime getDateDepart() {
+        return dateDepart;
+    }
+
+    public void setDateDepart(LocalDateTime dateDepart) {
+        this.dateDepart = dateDepart;
+    }
+
+    public LocalDateTime getDateArrivee() {
+        return dateArrivee;
+    }
+
+    public void setDateArrivee(LocalDateTime dateArrivee) {
+        this.dateArrivee = dateArrivee;
+    }
+
+    public double getPrix() {
+        return prix;
+    }
+
+    public void setPrix(double prix) {
+        this.prix = prix;
+    }
+
+    public Destination getDestination() {
+        return destination;
+    }
+
+    public void setDestination(Destination destination) {
+        this.destination = destination;
+    }
+
+    public String getTypeVol() {
+        return typeVol;
+    }
+
+    public void setTypeVol(String typeVol) {
+        this.typeVol = typeVol;
+    }
+
+    public Destination getVilleDepart() {
+        return villeDepart;
+    }
+
+    public void setVilleDepart(Destination villeDepart) {
+        this.villeDepart = villeDepart;
+    }
 
     @Override
     public String toString() {
-        return "Vol{id=" + idVol + ", numero='" + numeroVol
-                + "', compagnie='" + compagnie + "', type='" + typeVol + "'}";
+        return "Vol{" +
+                "idVol=" + idVol +
+                ", numeroVol='" + numeroVol + '\'' +
+                ", compagnie='" + compagnie + '\'' +
+                ", dateDepart=" + dateDepart +
+                ", dateArrivee=" + dateArrivee +
+                ", prix=" + prix +
+                ", destination=" + destination +
+                ", typeVol='" + typeVol + '\'' +
+                ", villeDepart=" + villeDepart +
+                '}';
     }
 }
