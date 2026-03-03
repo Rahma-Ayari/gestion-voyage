@@ -154,7 +154,7 @@
                            style="-fx-background-color: #E8E8E8; -fx-background-radius: 13;">
                     <Label text="5" style="-fx-text-fill: #AAA; -fx-font-size: 11px; -fx-font-weight: bold;"/>
                 </StackPane>
-                <Label text="Budget" style="-fx-text-fill: #BBB; -fx-font-size: 12.5px;"/>
+                <Label text="Services supplémentaires" style="-fx-text-fill: #BBB; -fx-font-size: 12.5px;"/>
             </HBox>
 
             <HBox alignment="CENTER_LEFT" spacing="12" prefHeight="42"
@@ -163,7 +163,7 @@
                            style="-fx-background-color: #E8E8E8; -fx-background-radius: 13;">
                     <Label text="6" style="-fx-text-fill: #AAA; -fx-font-size: 11px; -fx-font-weight: bold;"/>
                 </StackPane>
-                <Label text="Services supplémentaires" style="-fx-text-fill: #BBB; -fx-font-size: 12.5px;"/>
+                <Label text="Budget" style="-fx-text-fill: #BBB; -fx-font-size: 12.5px;"/>
             </HBox>
 
 
