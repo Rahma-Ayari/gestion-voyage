@@ -458,6 +458,24 @@ public class HotelController {
             }
         }
 
+        allerEtapeActivites();
+        // ─────────────────────────────────────────────────────────
+    }
+
+    /**
+     * Permet à l'utilisateur de continuer sans sélectionner d'hôtel.
+     * Aucun hôtel n'est enregistré sur le voyage, on passe directement aux activités.
+     */
+    @FXML
+    private void passerSansHotel() {
+        // Ne pas appeler mettreAJourHotel : on laisse le voyage sans hôtel (idHotel par défaut)
+        allerEtapeActivites();
+    }
+
+    /**
+     * Navigation commune vers l'écran Activités.
+     */
+    private void allerEtapeActivites() {
         URL url = getClass().getClassLoader().getResource("ConfigurerVoyage/ActiviteUser.fxml");
         if (url == null) url = getClass().getResource("/ConfigurerVoyage/ActiviteUser.fxml");
         if (url == null) { showAlert("Erreur", "ActiviteUser.fxml introuvable."); return; }
@@ -480,7 +498,6 @@ public class HotelController {
         } catch (IOException ex) {
             showAlert("Erreur", "Impossible de charger ActiviteUser.fxml : " + ex.getMessage());
         }
-        // ─────────────────────────────────────────────────────────
     }
 
     @FXML
