@@ -303,7 +303,14 @@ public class BudgetController {
                         totalServices,
                         totalGlobal
                 );
-                serviceBudget.enregistrer(b);
+                int idBudget = serviceBudget.enregistrer(b);
+
+                if (idBudget > 0) {
+                    serviceVoyage.mettreAJourBudget(idVoyage, idBudget);
+                } else {
+                    showAlert("Information",
+                            "Le budget a été enregistré mais l'identifiant généré n'a pas pu être récupéré.");
+                }
             } catch (Exception e) {
                 showAlert("Erreur",
                         "Le budget a été calculé mais n'a pas pu être enregistré : " + e.getMessage());
@@ -314,7 +321,7 @@ public class BudgetController {
                 "Votre configuration de voyage est complète.\n\nBudget total estimé : "
                         + grandTotalLabel.getText());
     }
-
+    
     @FXML
     private void onMouseEnteredButton(javafx.scene.input.MouseEvent e)  {
         ((Button)e.getSource()).setOpacity(0.85);

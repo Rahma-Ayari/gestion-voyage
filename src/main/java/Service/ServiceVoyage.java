@@ -1,12 +1,17 @@
 package Service;
 
-import Entite.Voyage;
-import Utils.DataSource;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import Entite.Voyage;
+import Utils.DataSource;
 
 public class ServiceVoyage {
 
@@ -50,6 +55,14 @@ public class ServiceVoyage {
         ps.setDate  (2, Date.valueOf(checkin));
         ps.setDate  (3, Date.valueOf(checkout));
         ps.setInt   (4, idVoyage);
+        return ps.executeUpdate() > 0;
+    }
+
+    public boolean mettreAJourBudget(int idVoyage, int idBudget) throws SQLException {
+        PreparedStatement ps = connect.prepareStatement(
+                "UPDATE voyage SET id_budget = ? WHERE id_voyage = ?");
+        ps.setInt(1, idBudget);
+        ps.setInt(2, idVoyage);
         return ps.executeUpdate() > 0;
     }
 
