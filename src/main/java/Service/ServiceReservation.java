@@ -29,7 +29,7 @@ public class ServiceReservation implements IService<Reservation> {
                 + r.getDate_reservation() + "',"
                 + r.getPrix_reservation() + ",'"
                 + r.getEtat() + "',"
-                + r.getId_personne().getIdPersonne() + ","
+                + r.getId_personne().getIdUtilisateur() + ","
                 + r.getId_voyage().getIdVoyage() + ","
                 + r.getId_statut().getId_statut() + ")";
         return st.executeUpdate(req) > 0;
@@ -47,7 +47,7 @@ public class ServiceReservation implements IService<Reservation> {
                 + "date_reservation='" + r.getDate_reservation() + "', "
                 + "prix_reservation=" + r.getPrix_reservation() + ", "
                 + "etat='" + r.getEtat() + "', "
-                + "id_personne=" + r.getId_personne().getIdPersonne() + ", "
+                + "id_personne=" + r.getId_personne().getIdUtilisateur() + ", "
                 + "id_voyage=" + r.getId_voyage().getIdVoyage() + ", "
                 + "id_statut=" + r.getId_statut().getId_statut() + " "
                 + "WHERE id_reservation=" + r.getId_reservation();
@@ -68,7 +68,7 @@ public class ServiceReservation implements IService<Reservation> {
 
             // Crée les objets liés
             Personne p = new Personne();
-            p.setIdPersonne(rs.getInt("id_personne"));
+            p.setIdUtilisateur(rs.getInt("id_personne"));
             r.setId_personne(p);
 
             Voyage v = new Voyage();
@@ -98,7 +98,7 @@ public class ServiceReservation implements IService<Reservation> {
             r.setEtat(rs.getString("etat"));
 
             Personne p = new Personne();
-            p.setIdPersonne(rs.getInt("id_personne"));
+            p.setIdUtilisateur(rs.getInt("id_personne"));
             r.setId_personne(p);
 
             Voyage v = new Voyage();

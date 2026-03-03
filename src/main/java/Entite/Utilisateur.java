@@ -2,28 +2,23 @@ package Entite;
 
 import java.util.Date;
 
-public class Utilisateur extends Personne {
-    private String email;
-    private String motDePasse;
-    private Date dateInscription;
+public class Utilisateur {
+    protected int idUtilisateur;
+    protected String email;
+    protected String motDePasse;
+    protected Date dateInscription;
 
-    public Utilisateur(int idUtilisateur, String nom, String prenom, String email, String motDePasse, Date dateInscription) {
-        super(idUtilisateur, nom, prenom);
+    public Utilisateur() {}
+
+    public Utilisateur(int idUtilisateur, String email, String motDePasse, Date dateInscription) {
+        this.idUtilisateur = idUtilisateur;
         this.email = email;
         this.motDePasse = motDePasse;
         this.dateInscription = dateInscription;
     }
 
-    public Utilisateur(String nom, String prenom, String email, String motDePasse, Date dateInscription) {
-        super(nom, prenom);
-        this.email = email;
-        this.motDePasse = motDePasse;
-        this.dateInscription = dateInscription;
-    }
-
-    public int getIdUtilisateur() {
-        return this.idPersonne;
-    }
+    public int getIdUtilisateur() { return idUtilisateur; }
+    public void setIdUtilisateur(int idUtilisateur) { this.idUtilisateur = idUtilisateur; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
@@ -33,15 +28,4 @@ public class Utilisateur extends Personne {
 
     public Date getDateInscription() { return dateInscription; }
     public void setDateInscription(Date dateInscription) { this.dateInscription = dateInscription; }
-
-    @Override
-    public String toString() {
-        return "Utilisateur{" +
-                "id_utilisateur=" + idPersonne +
-                ", nom='" + nom + '\'' +
-                ", prenom='" + prenom + '\'' +
-                ", email='" + email + '\'' +
-                ", dateInscription=" + dateInscription +
-                '}';
-    }
 }

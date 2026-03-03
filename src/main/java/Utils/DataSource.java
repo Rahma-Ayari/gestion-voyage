@@ -8,7 +8,7 @@ public class DataSource {
 
     private static DataSource ds;
     private Connection con;
-    private String url = "jdbc:mysql://localhost:3306/gestion_voyage";
+    private String url = "jdbc:mysql://localhost:3306/gestion-voyage";
     private String user = "root";
     private String password = "";
 
