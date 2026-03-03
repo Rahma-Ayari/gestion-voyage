@@ -3,18 +3,26 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.CheckBox?>
 
-<BorderPane prefHeight="608.0" prefWidth="773.0" 
-    style="-fx-background-color: linear-gradient(to bottom, #f5f7fa, #c3cfe2);" 
-    xmlns="http://javafx.com/javafx/25" 
-    xmlns:fx="http://javafx.com/fxml/1" 
-    fx:controller="Controller.NotificationController">
+
+<BorderPane prefHeight="608.0" prefWidth="773.0"
+            style="-fx-background-color: linear-gradient(to bottom, #f5f7fa, #c3cfe2);"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controller.NotificationController">
 
     <top>
         <!-- HEADER -->
@@ -40,13 +48,17 @@
 
                 <!-- Right info -->
                 <HBox alignment="CENTER_RIGHT" spacing="15">
-                    <Label style="-fx-font-size: 13px; -fx-padding: 8 15; -fx-background-color: rgba(255,255,255,0.2); -fx-background-radius: 20;" text="👤 admin" textFill="white" />
+                    <Label style="-fx-font-size: 13px; -fx-padding: 8 15;
+                    -fx-background-color: rgba(255,255,255,0.2); -fx-background-radius: 20;"
+                           text="👤 admin" textFill="white" />
                 </HBox>
             </HBox>
 
             <!-- Secondary navigation bar -->
-            <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: white; -fx-padding: 12 40; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
-                <Label fx:id="accueil" style="-fx-font-size: 13px; -fx-text-fill: #666; -fx-padding: 5 15; -fx-cursor: hand;" text="🏠 Accueil" />
+            <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: white;
+            -fx-padding: 12 40; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+                <Label fx:id="accueil" style="-fx-font-size: 13px; -fx-text-fill: #666;
+                -fx-padding: 5 15; -fx-cursor: hand;" text="🏠 Accueil" />
                 <Label style="-fx-text-fill: #ccc;" text="&gt;" />
                 <Label fx:id="notifpage" style="-fx-font-size: 13px; -fx-text-fill: #FF6B35; -fx-font-weight: bold; -fx-padding: 5 15;" text="Notifications" />
             </HBox>
@@ -65,10 +77,7 @@
 
             <!-- Filter Row -->
             <HBox spacing="10">
-                <Button text="Filtrer par : Tous" />
-                <ComboBox promptText="Trier par : Plus Récent" />
-                <Region HBox.hgrow="ALWAYS" />
-                <TextField promptText="Rechercher..." />
+
             </HBox>
 
             <!-- Today -->
