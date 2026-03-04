@@ -14,67 +14,44 @@
     <!-- ================= TOP HEADER ================= -->
     <top>
         <VBox spacing="0">
-            <!-- Barre supérieure avec logo et titre -->
             <HBox alignment="CENTER_LEFT" spacing="15"
                   style="-fx-background-color: linear-gradient(to right, #FF6B35, #F7931E);
                          -fx-padding: 20 40 20 40;">
-
-                <!-- Logo -->
-                <StackPane
-                        prefWidth="55"
-                        prefHeight="55"
-                        style="-fx-background-color: white;
-                               -fx-background-radius: 15;
-                               -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0, 0, 3);">
-                    <ImageView fitHeight="50"
-                               fitWidth="50"
-                               preserveRatio="true"
-                               smooth="true"/>
+                <StackPane prefWidth="55" prefHeight="55"
+                           style="-fx-background-color: white;
+                                  -fx-background-radius: 15;
+                                  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0, 0, 3);">
+                    <ImageView fitHeight="50" fitWidth="50" preserveRatio="true" smooth="true"/>
                 </StackPane>
-
                 <Separator orientation="VERTICAL"
                            style="-fx-background-color: rgba(255,255,255,0.3);"
                            prefHeight="40"/>
-
-                <!-- Titre -->
                 <VBox alignment="CENTER_LEFT" spacing="3" HBox.hgrow="ALWAYS">
-                    <Label text="TripEase"
-                           textFill="white"
-                           style="-fx-font-size: 28px;
-                                  -fx-font-weight: bold;
+                    <Label text="TripEase" textFill="white"
+                           style="-fx-font-size: 28px; -fx-font-weight: bold;
                                   -fx-font-family: 'Segoe UI', Arial;
                                   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);"/>
-                    <Label text="Gestion des Offres"
-                           textFill="rgba(255,255,255,0.95)">
-                        <font>
-                            <Font name="Segoe UI Semibold" size="15"/>
-                        </font>
+                    <Label text="Gestion des Offres" textFill="rgba(255,255,255,0.95)">
+                        <font><Font name="Segoe UI Semibold" size="15"/></font>
                     </Label>
                 </VBox>
-
                 <HBox alignment="CENTER_RIGHT" spacing="15">
-                    <Label text="👤 Admin"
-                           textFill="white"
-                           style="-fx-font-size: 13px;
-                                  -fx-padding: 8 15;
+                    <Label text="👤 Admin" textFill="white"
+                           style="-fx-font-size: 13px; -fx-padding: 8 15;
                                   -fx-background-color: rgba(255,255,255,0.2);
                                   -fx-background-radius: 20;"/>
                 </HBox>
             </HBox>
 
-            <!-- Barre secondaire -->
             <HBox alignment="CENTER_LEFT" spacing="10"
-                  style="-fx-background-color: white;
-                         -fx-padding: 12 40;
+                  style="-fx-background-color: white; -fx-padding: 12 40;
                          -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
                 <Label text="🏠 Accueil"
-                       style="-fx-font-size: 13px; -fx-text-fill: #666;
-                              -fx-padding: 5 15;"/>
+                       style="-fx-font-size: 13px; -fx-text-fill: #666; -fx-padding: 5 15;"/>
                 <Label text=">" style="-fx-text-fill: #ccc;"/>
                 <Label text="🎫 Offres"
                        style="-fx-font-size: 13px; -fx-text-fill: #FF6B35;
-                              -fx-font-weight: bold;
-                              -fx-padding: 5 15;"/>
+                              -fx-font-weight: bold; -fx-padding: 5 15;"/>
             </HBox>
         </VBox>
     </top>
@@ -93,9 +70,7 @@
                     </padding>
 
                     <Label text="📝 Ajouter une Offre" textFill="#FF6B35">
-                        <font>
-                            <Font name="Segoe UI Bold" size="22"/>
-                        </font>
+                        <font><Font name="Segoe UI Bold" size="22"/></font>
                     </Label>
 
                     <Separator/>
@@ -122,7 +97,7 @@
 
                     <!-- Description -->
                     <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Label text="📝" style="-fx-font-size: 18px;"/>
+                        <Label text="📄" style="-fx-font-size: 18px;"/>
                         <TextArea fx:id="descriptionArea"
                                   promptText="Description de l'offre..."
                                   prefWidth="280"
@@ -136,10 +111,38 @@
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <Label text="✅" style="-fx-font-size: 18px;"/>
                         <CheckBox fx:id="disponibiliteCheck" text="Disponible">
-                            <font>
-                                <Font name="Segoe UI" size="13"/>
-                            </font>
+                            <font><Font name="Segoe UI" size="13"/></font>
                         </CheckBox>
+                    </HBox>
+
+                    <Separator/>
+
+                    <!-- Date Début -->
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="📅" style="-fx-font-size: 18px;"/>
+                        <VBox spacing="3" HBox.hgrow="ALWAYS">
+                            <Label text="Date de début"
+                                   style="-fx-font-size: 11px; -fx-text-fill: #888; -fx-font-weight: bold;"/>
+                            <DatePicker fx:id="dateDebutPicker"
+                                        promptText="jj/mm/aaaa"
+                                        prefWidth="280"
+                                        style="-fx-background-radius: 8; -fx-border-color: #ddd;
+                                               -fx-border-radius: 8; -fx-font-size: 13px;"/>
+                        </VBox>
+                    </HBox>
+
+                    <!-- Date Fin -->
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="🏁" style="-fx-font-size: 18px;"/>
+                        <VBox spacing="3" HBox.hgrow="ALWAYS">
+                            <Label text="Date de fin"
+                                   style="-fx-font-size: 11px; -fx-text-fill: #888; -fx-font-weight: bold;"/>
+                            <DatePicker fx:id="dateFinPicker"
+                                        promptText="jj/mm/aaaa"
+                                        prefWidth="280"
+                                        style="-fx-background-radius: 8; -fx-border-color: #ddd;
+                                               -fx-border-radius: 8; -fx-font-size: 13px;"/>
+                        </VBox>
                     </HBox>
 
                     <Separator/>
@@ -200,16 +203,14 @@
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <Label text="🖼" style="-fx-font-size: 18px;"/>
                         <VBox spacing="8" HBox.hgrow="ALWAYS">
-
-                            <!-- Champ chemin + bouton parcourir -->
                             <HBox spacing="8" alignment="CENTER_LEFT">
                                 <TextField fx:id="imagePathField"
                                            promptText="Chemin de l'image..."
                                            prefWidth="190"
                                            editable="false"
                                            style="-fx-background-radius: 8; -fx-border-color: #ddd;
-                                                  -fx-border-radius: 8; -fx-padding: 9; -fx-font-size: 11px;
-                                                  -fx-text-fill: #555;"/>
+                                                  -fx-border-radius: 8; -fx-padding: 9;
+                                                  -fx-font-size: 11px; -fx-text-fill: #555;"/>
                                 <Button fx:id="browseImageBtn"
                                         text="Parcourir"
                                         onAction="#browseImage"
@@ -228,7 +229,6 @@
                                               -fx-border-radius: 10;
                                               -fx-border-style: dashed;
                                               -fx-border-width: 2;">
-                                <!-- Placeholder affiché quand aucune image -->
                                 <VBox alignment="CENTER" spacing="6">
                                     <Label fx:id="imagePlaceholderLabel"
                                            text="📷"
@@ -236,14 +236,11 @@
                                     <Label text="Aucune image sélectionnée"
                                            style="-fx-text-fill: #bbb; -fx-font-size: 11px;"/>
                                 </VBox>
-                                <!-- ImageView caché par défaut -->
                                 <ImageView fx:id="imagePreview"
-                                           fitWidth="276"
-                                           fitHeight="146"
+                                           fitWidth="276" fitHeight="146"
                                            preserveRatio="true"
                                            smooth="true"
-                                           visible="false"
-                                           style="-fx-background-radius: 10;"/>
+                                           visible="false"/>
                             </StackPane>
 
                             <!-- Bouton effacer image -->
@@ -252,12 +249,9 @@
                                     onAction="#clearImage"
                                     prefWidth="280"
                                     style="-fx-background-color: transparent;
-                                           -fx-border-color: #ddd;
-                                           -fx-border-radius: 8;
-                                           -fx-text-fill: #999;
-                                           -fx-font-size: 11px;
-                                           -fx-cursor: hand;
-                                           -fx-padding: 6;"/>
+                                           -fx-border-color: #ddd; -fx-border-radius: 8;
+                                           -fx-text-fill: #999; -fx-font-size: 11px;
+                                           -fx-cursor: hand; -fx-padding: 6;"/>
                         </VBox>
                     </HBox>
 
@@ -313,8 +307,7 @@
 
             <!-- Search Bar -->
             <HBox spacing="10" alignment="CENTER_LEFT"
-                  style="-fx-background-color: white;
-                         -fx-background-radius: 10;
+                  style="-fx-background-color: white; -fx-background-radius: 10;
                          -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
                 <padding>
                     <Insets top="10" right="10" bottom="10" left="10"/>
@@ -339,16 +332,18 @@
                        style="-fx-background-color: white; -fx-background-radius: 10;
                               -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 5);">
                 <columns>
-                    <TableColumn fx:id="typeCol"         text="Type"          prefWidth="100"/>
-                    <TableColumn fx:id="prixCol"         text="Prix (€)"      prefWidth="80"/>
-                    <TableColumn fx:id="descriptionCol"  text="Description"   prefWidth="180"/>
+                    <TableColumn fx:id="typeCol"          text="Type"          prefWidth="100"/>
+                    <TableColumn fx:id="prixCol"          text="Prix (€)"      prefWidth="80"/>
+                    <TableColumn fx:id="descriptionCol"   text="Description"   prefWidth="150"/>
                     <TableColumn fx:id="disponibiliteCol" text="Disponibilité" prefWidth="90"/>
-                    <TableColumn fx:id="voyageCol"       text="Voyage"        prefWidth="160"/>
-                    <TableColumn fx:id="destinationCol"  text="Destination"   prefWidth="130"/>
-                    <TableColumn fx:id="volCol"          text="Vol"           prefWidth="130"/>
-                    <TableColumn fx:id="hotelCol"        text="Hôtel"         prefWidth="130"/>
-                    <TableColumn fx:id="activiteCol"     text="Activité"      prefWidth="130"/>
-                    <TableColumn fx:id="imageCol"        text="Image"         prefWidth="80"/>
+                    <TableColumn fx:id="dateDebutCol"     text="Date début"    prefWidth="100"/>
+                    <TableColumn fx:id="dateFinCol"       text="Date fin"      prefWidth="100"/>
+                    <TableColumn fx:id="voyageCol"        text="Voyage"        prefWidth="120"/>
+                    <TableColumn fx:id="destinationCol"   text="Destination"   prefWidth="110"/>
+                    <TableColumn fx:id="volCol"           text="Vol"           prefWidth="110"/>
+                    <TableColumn fx:id="hotelCol"         text="Hôtel"         prefWidth="110"/>
+                    <TableColumn fx:id="activiteCol"      text="Activité"      prefWidth="110"/>
+                    <TableColumn fx:id="imageCol"         text="Image"         prefWidth="70"/>
                 </columns>
                 <placeholder>
                     <Label text="Aucune offre trouvée"/>
@@ -362,7 +357,6 @@
                 <padding>
                     <Insets top="15" right="15" bottom="15" left="15"/>
                 </padding>
-
                 <HBox spacing="5">
                     <Label text="📊 Total des offres: ">
                         <font><Font name="Segoe UI Bold" size="14"/></font>
@@ -371,7 +365,6 @@
                         <font><Font name="Segoe UI Bold" size="18"/></font>
                     </Label>
                 </HBox>
-
                 <HBox spacing="5">
                     <Label text="✅ Disponibles: ">
                         <font><Font name="Segoe UI Bold" size="14"/></font>
@@ -380,7 +373,6 @@
                         <font><Font name="Segoe UI Bold" size="18"/></font>
                     </Label>
                 </HBox>
-
                 <HBox spacing="5">
                     <Label text="❌ Non disponibles: ">
                         <font><Font name="Segoe UI Bold" size="14"/></font>

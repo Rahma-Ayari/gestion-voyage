@@ -17,6 +17,7 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -28,6 +29,11 @@ public class OffreController implements Initializable {
     @FXML private TextArea   descriptionArea;
     @FXML private CheckBox   disponibiliteCheck;
 
+    // ── Dates ──────────────────────────────────────────────────────────────
+    @FXML private DatePicker dateDebutPicker;
+    @FXML private DatePicker dateFinPicker;
+
+    // ── ComboBoxes ─────────────────────────────────────────────────────────
     @FXML private ComboBox<Voyage>      voyageCombo;
     @FXML private ComboBox<Destination> destinationCombo;
     @FXML private ComboBox<Vol>         volCombo;
@@ -42,12 +48,14 @@ public class OffreController implements Initializable {
     @FXML private ImageView  imagePreview;
     @FXML private Label      imagePlaceholderLabel;
 
-    // ── Table ──────────────────────────────────────────────────────────────
+    // ── Table & colonnes ───────────────────────────────────────────────────
     @FXML private TableView<Offre>           tableView;
     @FXML private TableColumn<Offre, String>  typeCol;
     @FXML private TableColumn<Offre, Double>  prixCol;
     @FXML private TableColumn<Offre, String>  descriptionCol;
     @FXML private TableColumn<Offre, Boolean> disponibiliteCol;
+    @FXML private TableColumn<Offre, String>  dateDebutCol;
+    @FXML private TableColumn<Offre, String>  dateFinCol;
     @FXML private TableColumn<Offre, String>  voyageCol;
     @FXML private TableColumn<Offre, String>  destinationCol;
     @FXML private TableColumn<Offre, String>  volCol;
@@ -93,10 +101,22 @@ public class OffreController implements Initializable {
         descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
         disponibiliteCol.setCellValueFactory(new PropertyValueFactory<>("disponibilite"));
 
+        // Dates formatées en String
+        dateDebutCol.setCellValueFactory(cell ->
+                new SimpleStringProperty(
+                        cell.getValue().getDateDebut() != null
+                                ? cell.getValue().getDateDebut().toString() : "—"));
+
+        dateFinCol.setCellValueFactory(cell ->
+                new SimpleStringProperty(
+                        cell.getValue().getDateFin() != null
+                                ? cell.getValue().getDateFin().toString() : "—"));
+
+        // Relations
         voyageCol.setCellValueFactory(cell ->
                 new SimpleStringProperty(
-                        cell.getValue().getvoyage() != null
-                                ? cell.getValue().getvoyage().toString() : "—"));
+                        cell.getValue().getVoyage() != null
+                                ? cell.getValue().getVoyage().toString() : "—"));
 
         destinationCol.setCellValueFactory(cell ->
                 new SimpleStringProperty(
@@ -118,27 +138,21 @@ public class OffreController implements Initializable {
                         cell.getValue().getActivite() != null
                                 ? cell.getValue().getActivite().toString() : "—"));
 
-        // Colonne image : affiche "✔" si une image est définie, "—" sinon
+        // Image : ✔ si présente, — sinon
         imageCol.setCellValueFactory(cell ->
                 new SimpleStringProperty(
                         cell.getValue().getImagePath() != null
-                                && !cell.getValue().getImagePath().isEmpty()
-                                ? "✔" : "—"));
+                                && !cell.getValue().getImagePath().isEmpty() ? "✔" : "—"));
     }
 
     // ── Chargement des ComboBoxes ──────────────────────────────────────────
     private void loadCombos() {
         try {
-            voyageCombo.setItems(FXCollections.observableArrayList(
-                    serviceVoyage.readAll()));
-            volCombo.setItems(FXCollections.observableArrayList(
-                    serviceVol.readAll()));
-            hotelCombo.setItems(FXCollections.observableArrayList(
-                    serviceHotel.readAll()));
-            destinationCombo.setItems(FXCollections.observableArrayList(
-                    serviceDestination.readAll()));
-            activiteCombo.setItems(FXCollections.observableArrayList(
-                    serviceActivite.readAll()));
+            voyageCombo.setItems(FXCollections.observableArrayList(serviceVoyage.readAll()));
+            volCombo.setItems(FXCollections.observableArrayList(serviceVol.readAll()));
+            hotelCombo.setItems(FXCollections.observableArrayList(serviceHotel.readAll()));
+            destinationCombo.setItems(FXCollections.observableArrayList(serviceDestination.readAll()));
+            activiteCombo.setItems(FXCollections.observableArrayList(serviceActivite.readAll()));
         } catch (SQLException e) {
             showAlert(Alert.AlertType.ERROR, "Erreur chargement des listes : " + e.getMessage());
         }
@@ -191,12 +205,19 @@ public class OffreController implements Initializable {
         prixField.setText(String.valueOf(o.getPrix()));
         descriptionArea.setText(o.getDescription());
         disponibiliteCheck.setSelected(o.isDisponibilite());
-        voyageCombo.setValue(o.getvoyage());
+
+        // Dates
+        dateDebutPicker.setValue(o.getDateDebut());
+        dateFinPicker.setValue(o.getDateFin());
+
+        // ComboBoxes
+        voyageCombo.setValue(o.getVoyage());
         volCombo.setValue(o.getVol());
         hotelCombo.setValue(o.getHotel());
         destinationCombo.setValue(o.getDestination());
         activiteCombo.setValue(o.getActivite());
 
+        // Image
         if (o.getImagePath() != null && !o.getImagePath().isEmpty()) {
             imagePathField.setText(o.getImagePath());
             showImagePreview(o.getImagePath());
@@ -304,6 +325,8 @@ public class OffreController implements Initializable {
         prixField.clear();
         descriptionArea.clear();
         disponibiliteCheck.setSelected(false);
+        dateDebutPicker.setValue(null);
+        dateFinPicker.setValue(null);
         voyageCombo.setValue(null);
         volCombo.setValue(null);
         hotelCombo.setValue(null);
@@ -326,7 +349,9 @@ public class OffreController implements Initializable {
         o.setPrix(Double.parseDouble(prixField.getText().trim()));
         o.setDescription(descriptionArea.getText().trim());
         o.setDisponibilite(disponibiliteCheck.isSelected());
-        o.setvoyage(voyageCombo.getValue());
+        o.setDateDebut(dateDebutPicker.getValue());
+        o.setDateFin(dateFinPicker.getValue());
+        o.setVoyage(voyageCombo.getValue());
         o.setVol(volCombo.getValue());
         o.setHotel(hotelCombo.getValue());
         o.setDestination(destinationCombo.getValue());
@@ -387,6 +412,14 @@ public class OffreController implements Initializable {
         if (voyageCombo.getValue() == null) {
             showAlert(Alert.AlertType.WARNING, "⚠ Veuillez sélectionner un voyage.");
             voyageCombo.requestFocus();
+            return false;
+        }
+        // Validation des dates
+        LocalDate debut = dateDebutPicker.getValue();
+        LocalDate fin   = dateFinPicker.getValue();
+        if (debut != null && fin != null && fin.isBefore(debut)) {
+            showAlert(Alert.AlertType.WARNING, "⚠ La date de fin doit être après la date de début.");
+            dateFinPicker.requestFocus();
             return false;
         }
         return true;

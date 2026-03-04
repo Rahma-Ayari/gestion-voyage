@@ -1,5 +1,7 @@
 package Entite;
 
+import java.time.LocalDate;
+
 public class Offre {
     private int id_offre;
     private String type;
@@ -9,16 +11,19 @@ public class Offre {
     private Voyage idVoyage;
     private Vol vol;
     private Hotel hotel;
-    private Destination destination;  // Ajouté
-    private Activite activite;        // Ajouté
-    private String imagePath;         // Nouveau: chemin de l'image
+    private Destination destination;
+    private Activite activite;
+    private String imagePath;
+    private LocalDate dateDebut;  // Nouvelle
+    private LocalDate dateFin;    // Nouvelle
 
     public Offre() {}
 
     // Constructeur complet avec tous les attributs
     public Offre(int id_offre, String type, double prix, String description,
                  boolean disponibilite, Voyage idVoyage, Vol vol, Hotel hotel,
-                 Destination destination, Activite activite, String imagePath) {
+                 Destination destination, Activite activite, String imagePath,
+                 LocalDate dateDebut, LocalDate dateFin) {
         this.id_offre = id_offre;
         this.type = type;
         this.prix = prix;
@@ -30,16 +35,20 @@ public class Offre {
         this.destination = destination;
         this.activite = activite;
         this.imagePath = imagePath;
+        this.dateDebut = dateDebut;
+        this.dateFin = dateFin;
     }
 
     // Constructeur sans image
     public Offre(int id_offre, String type, double prix, String description,
                  boolean disponibilite, Voyage idVoyage, Vol vol, Hotel hotel,
-                 Destination destination, Activite activite) {
-        this(id_offre, type, prix, description, disponibilite, idVoyage, vol, hotel, destination, activite, null);
+                 Destination destination, Activite activite,
+                 LocalDate dateDebut, LocalDate dateFin) {
+        this(id_offre, type, prix, description, disponibilite, idVoyage, vol, hotel,
+                destination, activite, null, dateDebut, dateFin);
     }
 
-    // Getters et Setters existants
+    // Getters et setters
     public int getId_offre() {
         return id_offre;
     }
@@ -80,11 +89,11 @@ public class Offre {
         this.disponibilite = disponibilite;
     }
 
-    public Voyage getvoyage() {
+    public Voyage getVoyage() {
         return idVoyage;
     }
 
-    public void setvoyage(Voyage idVoyage) {
+    public void setVoyage(Voyage idVoyage) {
         this.idVoyage = idVoyage;
     }
 
@@ -120,13 +129,28 @@ public class Offre {
         this.activite = activite;
     }
 
-    // Getter/Setter pour l'image
     public String getImagePath() {
         return imagePath;
     }
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public LocalDate getDateDebut() {
+        return dateDebut;
+    }
+
+    public void setDateDebut(LocalDate dateDebut) {
+        this.dateDebut = dateDebut;
+    }
+
+    public LocalDate getDateFin() {
+        return dateFin;
+    }
+
+    public void setDateFin(LocalDate dateFin) {
+        this.dateFin = dateFin;
     }
 
     @Override
@@ -143,6 +167,8 @@ public class Offre {
                 ", destination=" + destination +
                 ", activite=" + activite +
                 ", imagePath='" + imagePath + '\'' +
+                ", dateDebut=" + dateDebut +
+                ", dateFin=" + dateFin +
                 '}';
     }
 }
