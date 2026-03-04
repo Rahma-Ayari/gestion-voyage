@@ -1,4 +1,11 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package Entite;
+
+import java.time.LocalDate;
 
 public class Offre {
     private int id_offre;
@@ -7,19 +14,39 @@ public class Offre {
     private String description;
     private boolean disponibilite;
     private Voyage idVoyage;
-    public Offre() {}
+    private Vol vol;
+    private Hotel hotel;
+    private Destination destination;
+    private Activite activite;
+    private String imagePath;
+    private LocalDate dateDebut;
+    private LocalDate dateFin;
 
-    public Offre(int id_offre, String type, double prix, String description, boolean disponibilite, Voyage idVoyage) {
+    public Offre() {
+    }
+
+    public Offre(int id_offre, String type, double prix, String description, boolean disponibilite, Voyage idVoyage, Vol vol, Hotel hotel, Destination destination, Activite activite, String imagePath, LocalDate dateDebut, LocalDate dateFin) {
         this.id_offre = id_offre;
         this.type = type;
         this.prix = prix;
         this.description = description;
         this.disponibilite = disponibilite;
         this.idVoyage = idVoyage;
+        this.vol = vol;
+        this.hotel = hotel;
+        this.destination = destination;
+        this.activite = activite;
+        this.imagePath = imagePath;
+        this.dateDebut = dateDebut;
+        this.dateFin = dateFin;
+    }
+
+    public Offre(int id_offre, String type, double prix, String description, boolean disponibilite, Voyage idVoyage, Vol vol, Hotel hotel, Destination destination, Activite activite, LocalDate dateDebut, LocalDate dateFin) {
+        this(id_offre, type, prix, description, disponibilite, idVoyage, vol, hotel, destination, activite, (String)null, dateDebut, dateFin);
     }
 
     public int getId_offre() {
-        return id_offre;
+        return this.id_offre;
     }
 
     public void setId_offre(int id_offre) {
@@ -27,7 +54,7 @@ public class Offre {
     }
 
     public String getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(String type) {
@@ -35,7 +62,7 @@ public class Offre {
     }
 
     public double getPrix() {
-        return prix;
+        return this.prix;
     }
 
     public void setPrix(double prix) {
@@ -43,7 +70,7 @@ public class Offre {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public void setDescription(String description) {
@@ -51,30 +78,79 @@ public class Offre {
     }
 
     public boolean isDisponibilite() {
-        return disponibilite;
+        return this.disponibilite;
     }
 
     public void setDisponibilite(boolean disponibilite) {
         this.disponibilite = disponibilite;
     }
 
-    public Voyage getvoyage() {
-        return idVoyage;
+    public Voyage getVoyage() {
+        return this.idVoyage;
     }
 
-    public void setvoyage(Voyage idVoyage) {
+    public void setVoyage(Voyage idVoyage) {
         this.idVoyage = idVoyage;
     }
 
-    @Override
+    public Vol getVol() {
+        return this.vol;
+    }
+
+    public void setVol(Vol vol) {
+        this.vol = vol;
+    }
+
+    public Hotel getHotel() {
+        return this.hotel;
+    }
+
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
+    }
+
+    public Destination getDestination() {
+        return this.destination;
+    }
+
+    public void setDestination(Destination destination) {
+        this.destination = destination;
+    }
+
+    public Activite getActivite() {
+        return this.activite;
+    }
+
+    public void setActivite(Activite activite) {
+        this.activite = activite;
+    }
+
+    public String getImagePath() {
+        return this.imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public LocalDate getDateDebut() {
+        return this.dateDebut;
+    }
+
+    public void setDateDebut(LocalDate dateDebut) {
+        this.dateDebut = dateDebut;
+    }
+
+    public LocalDate getDateFin() {
+        return this.dateFin;
+    }
+
+    public void setDateFin(LocalDate dateFin) {
+        this.dateFin = dateFin;
+    }
+
     public String toString() {
-        return "Offre{" +
-                "id_offre=" + id_offre +
-                ", type='" + type + '\'' +
-                ", prix=" + prix +
-                ", description='" + description + '\'' +
-                ", disponibilite=" + disponibilite +
-                ", idVoyage=" + idVoyage +
-                '}';
+        int var10000 = this.id_offre;
+        return "Offre{id_offre=" + var10000 + ", type='" + this.type + "', prix=" + this.prix + ", description='" + this.description + "', disponibilite=" + this.disponibilite + ", idVoyage=" + String.valueOf(this.idVoyage) + ", vol=" + String.valueOf(this.vol) + ", hotel=" + String.valueOf(this.hotel) + ", destination=" + String.valueOf(this.destination) + ", activite=" + String.valueOf(this.activite) + ", imagePath='" + this.imagePath + "', dateDebut=" + String.valueOf(this.dateDebut) + ", dateFin=" + String.valueOf(this.dateFin) + "}";
     }
 }
