@@ -11,13 +11,14 @@ public class Offre {
     private Hotel hotel;
     private Destination destination;  // Ajouté
     private Activite activite;        // Ajouté
+    private String imagePath;         // Nouveau: chemin de l'image
 
     public Offre() {}
 
     // Constructeur complet avec tous les attributs
     public Offre(int id_offre, String type, double prix, String description,
                  boolean disponibilite, Voyage idVoyage, Vol vol, Hotel hotel,
-                 Destination destination, Activite activite) {
+                 Destination destination, Activite activite, String imagePath) {
         this.id_offre = id_offre;
         this.type = type;
         this.prix = prix;
@@ -28,36 +29,14 @@ public class Offre {
         this.hotel = hotel;
         this.destination = destination;
         this.activite = activite;
+        this.imagePath = imagePath;
     }
 
-    // Constructeur avec vol et hotel (pour compatibilité)
+    // Constructeur sans image
     public Offre(int id_offre, String type, double prix, String description,
-                 boolean disponibilite, Voyage idVoyage, Vol vol, Hotel hotel) {
-        this.id_offre = id_offre;
-        this.type = type;
-        this.prix = prix;
-        this.description = description;
-        this.disponibilite = disponibilite;
-        this.idVoyage = idVoyage;
-        this.vol = vol;
-        this.hotel = hotel;
-        this.destination = null;
-        this.activite = null;
-    }
-
-    // Constructeur sans vol et hotel (pour compatibilité)
-    public Offre(int id_offre, String type, double prix, String description,
-                 boolean disponibilite, Voyage idVoyage) {
-        this.id_offre = id_offre;
-        this.type = type;
-        this.prix = prix;
-        this.description = description;
-        this.disponibilite = disponibilite;
-        this.idVoyage = idVoyage;
-        this.vol = null;
-        this.hotel = null;
-        this.destination = null;
-        this.activite = null;
+                 boolean disponibilite, Voyage idVoyage, Vol vol, Hotel hotel,
+                 Destination destination, Activite activite) {
+        this(id_offre, type, prix, description, disponibilite, idVoyage, vol, hotel, destination, activite, null);
     }
 
     // Getters et Setters existants
@@ -125,7 +104,6 @@ public class Offre {
         this.hotel = hotel;
     }
 
-    // Getters et Setters pour Destination
     public Destination getDestination() {
         return destination;
     }
@@ -134,13 +112,21 @@ public class Offre {
         this.destination = destination;
     }
 
-    // Getters et Setters pour Activite
     public Activite getActivite() {
         return activite;
     }
 
     public void setActivite(Activite activite) {
         this.activite = activite;
+    }
+
+    // Getter/Setter pour l'image
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     @Override
@@ -156,6 +142,7 @@ public class Offre {
                 ", hotel=" + hotel +
                 ", destination=" + destination +
                 ", activite=" + activite +
+                ", imagePath='" + imagePath + '\'' +
                 '}';
     }
 }

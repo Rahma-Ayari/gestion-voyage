@@ -81,7 +81,8 @@
 
     <!-- ================= LEFT FORM ================= -->
     <left>
-        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" style="-fx-background-color: transparent; -fx-padding: 10;">
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                    style="-fx-background-color: transparent; -fx-padding: 10;">
             <content>
                 <VBox spacing="11" maxWidth="350" alignment="TOP_CENTER"
                       style="-fx-background-color: white;
@@ -105,7 +106,8 @@
                         <TextField fx:id="typeField"
                                    promptText="Type d'offre"
                                    prefWidth="280"
-                                   style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
+                                   style="-fx-background-radius: 8; -fx-border-color: #ddd;
+                                          -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
                     </HBox>
 
                     <!-- Prix -->
@@ -114,7 +116,8 @@
                         <TextField fx:id="prixField"
                                    promptText="Prix (€)"
                                    prefWidth="280"
-                                   style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
+                                   style="-fx-background-radius: 8; -fx-border-color: #ddd;
+                                          -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
                     </HBox>
 
                     <!-- Description -->
@@ -125,7 +128,8 @@
                                   prefWidth="280"
                                   prefRowCount="3"
                                   wrapText="true"
-                                  style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
+                                  style="-fx-background-radius: 8; -fx-border-color: #ddd;
+                                         -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
                     </HBox>
 
                     <!-- Disponibilité -->
@@ -146,7 +150,8 @@
                         <ComboBox fx:id="voyageCombo"
                                   promptText="Voyage associé"
                                   prefWidth="280"
-                                  style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
+                                  style="-fx-background-radius: 8; -fx-border-color: #ddd;
+                                         -fx-border-radius: 8; -fx-padding: 5; -fx-font-size: 13px;"/>
                     </HBox>
 
                     <!-- Destination -->
@@ -155,7 +160,8 @@
                         <ComboBox fx:id="destinationCombo"
                                   promptText="Destination (optionnel)"
                                   prefWidth="280"
-                                  style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
+                                  style="-fx-background-radius: 8; -fx-border-color: #ddd;
+                                         -fx-border-radius: 8; -fx-padding: 5; -fx-font-size: 13px;"/>
                     </HBox>
 
                     <!-- Vol -->
@@ -164,7 +170,8 @@
                         <ComboBox fx:id="volCombo"
                                   promptText="Vol (optionnel)"
                                   prefWidth="280"
-                                  style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
+                                  style="-fx-background-radius: 8; -fx-border-color: #ddd;
+                                         -fx-border-radius: 8; -fx-padding: 5; -fx-font-size: 13px;"/>
                     </HBox>
 
                     <!-- Hotel -->
@@ -173,7 +180,8 @@
                         <ComboBox fx:id="hotelCombo"
                                   promptText="Hôtel (optionnel)"
                                   prefWidth="280"
-                                  style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
+                                  style="-fx-background-radius: 8; -fx-border-color: #ddd;
+                                         -fx-border-radius: 8; -fx-padding: 5; -fx-font-size: 13px;"/>
                     </HBox>
 
                     <!-- Activité -->
@@ -182,7 +190,75 @@
                         <ComboBox fx:id="activiteCombo"
                                   promptText="Activité (optionnel)"
                                   prefWidth="280"
-                                  style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
+                                  style="-fx-background-radius: 8; -fx-border-color: #ddd;
+                                         -fx-border-radius: 8; -fx-padding: 5; -fx-font-size: 13px;"/>
+                    </HBox>
+
+                    <Separator/>
+
+                    <!-- ================= IMAGE ================= -->
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="🖼" style="-fx-font-size: 18px;"/>
+                        <VBox spacing="8" HBox.hgrow="ALWAYS">
+
+                            <!-- Champ chemin + bouton parcourir -->
+                            <HBox spacing="8" alignment="CENTER_LEFT">
+                                <TextField fx:id="imagePathField"
+                                           promptText="Chemin de l'image..."
+                                           prefWidth="190"
+                                           editable="false"
+                                           style="-fx-background-radius: 8; -fx-border-color: #ddd;
+                                                  -fx-border-radius: 8; -fx-padding: 9; -fx-font-size: 11px;
+                                                  -fx-text-fill: #555;"/>
+                                <Button fx:id="browseImageBtn"
+                                        text="Parcourir"
+                                        onAction="#browseImage"
+                                        style="-fx-background-color: #FF6B35; -fx-text-fill: white;
+                                               -fx-font-weight: bold; -fx-font-size: 12px;
+                                               -fx-background-radius: 8; -fx-cursor: hand;
+                                               -fx-padding: 9 12;"/>
+                            </HBox>
+
+                            <!-- Zone de prévisualisation -->
+                            <StackPane fx:id="imagePreviewPane"
+                                       prefWidth="280" prefHeight="150"
+                                       style="-fx-background-color: #f9f9f9;
+                                              -fx-background-radius: 10;
+                                              -fx-border-color: #ddd;
+                                              -fx-border-radius: 10;
+                                              -fx-border-style: dashed;
+                                              -fx-border-width: 2;">
+                                <!-- Placeholder affiché quand aucune image -->
+                                <VBox alignment="CENTER" spacing="6">
+                                    <Label fx:id="imagePlaceholderLabel"
+                                           text="📷"
+                                           style="-fx-font-size: 32px;"/>
+                                    <Label text="Aucune image sélectionnée"
+                                           style="-fx-text-fill: #bbb; -fx-font-size: 11px;"/>
+                                </VBox>
+                                <!-- ImageView caché par défaut -->
+                                <ImageView fx:id="imagePreview"
+                                           fitWidth="276"
+                                           fitHeight="146"
+                                           preserveRatio="true"
+                                           smooth="true"
+                                           visible="false"
+                                           style="-fx-background-radius: 10;"/>
+                            </StackPane>
+
+                            <!-- Bouton effacer image -->
+                            <Button fx:id="clearImageBtn"
+                                    text="✕  Effacer l'image"
+                                    onAction="#clearImage"
+                                    prefWidth="280"
+                                    style="-fx-background-color: transparent;
+                                           -fx-border-color: #ddd;
+                                           -fx-border-radius: 8;
+                                           -fx-text-fill: #999;
+                                           -fx-font-size: 11px;
+                                           -fx-cursor: hand;
+                                           -fx-padding: 6;"/>
+                        </VBox>
                     </HBox>
 
                     <Separator/>
@@ -191,27 +267,35 @@
                     <HBox spacing="10" alignment="CENTER">
                         <VBox spacing="10">
                             <Button fx:id="ajouterBtn"
-                                    text="Ajouter"
+                                    text="➕  Ajouter"
                                     prefWidth="130" prefHeight="40"
                                     onAction="#ajouterOffre"
-                                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                                    style="-fx-background-color: #4CAF50; -fx-text-fill: white;
+                                           -fx-font-weight: bold; -fx-font-size: 13px;
+                                           -fx-background-radius: 8; -fx-cursor: hand;"/>
                             <Button fx:id="modifierBtn"
-                                    text="Modifier"
+                                    text="✏  Modifier"
                                     prefWidth="130" prefHeight="40"
                                     onAction="#modifierOffre"
-                                    style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                                    style="-fx-background-color: #2196F3; -fx-text-fill: white;
+                                           -fx-font-weight: bold; -fx-font-size: 13px;
+                                           -fx-background-radius: 8; -fx-cursor: hand;"/>
                         </VBox>
                         <VBox spacing="10">
                             <Button fx:id="supprimerBtn"
-                                    text="Supprimer"
+                                    text="🗑  Supprimer"
                                     prefWidth="130" prefHeight="40"
                                     onAction="#supprimerOffre"
-                                    style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                                    style="-fx-background-color: #f44336; -fx-text-fill: white;
+                                           -fx-font-weight: bold; -fx-font-size: 13px;
+                                           -fx-background-radius: 8; -fx-cursor: hand;"/>
                             <Button fx:id="clearBtn"
-                                    text="Effacer"
+                                    text="🔄  Effacer"
                                     prefWidth="130" prefHeight="40"
                                     onAction="#clearFields"
-                                    style="-fx-background-color: #9E9E9E; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                                    style="-fx-background-color: #9E9E9E; -fx-text-fill: white;
+                                           -fx-font-weight: bold; -fx-font-size: 13px;
+                                           -fx-background-radius: 8; -fx-cursor: hand;"/>
                         </VBox>
                     </HBox>
 
@@ -235,34 +319,37 @@
                 <padding>
                     <Insets top="10" right="10" bottom="10" left="10"/>
                 </padding>
-
                 <Label text="🔍" style="-fx-font-size: 18px;"/>
                 <TextField fx:id="searchField"
                            promptText="Rechercher une offre..."
                            prefWidth="300"
-                           style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
+                           style="-fx-background-radius: 8; -fx-border-color: #ddd;
+                                  -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
                 <Button fx:id="refreshBtn"
                         text="🔄"
                         onAction="#refreshTable"
-                        style="-fx-background-color: #FF6B35; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 50%; -fx-padding: 8 12; -fx-cursor: hand;"/>
+                        style="-fx-background-color: #FF6B35; -fx-text-fill: white;
+                               -fx-font-size: 16px; -fx-background-radius: 50%;
+                               -fx-padding: 8 12; -fx-cursor: hand;"/>
             </HBox>
 
             <!-- Table -->
             <TableView fx:id="tableView"
                        VBox.vgrow="ALWAYS"
-                       style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 5);">
+                       style="-fx-background-color: white; -fx-background-radius: 10;
+                              -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 5);">
                 <columns>
-                    <TableColumn fx:id="typeCol" text="Type" prefWidth="100"/>
-                    <TableColumn fx:id="prixCol" text="Prix (€)" prefWidth="80"/>
-                    <TableColumn fx:id="descriptionCol" text="Description" prefWidth="180"/>
+                    <TableColumn fx:id="typeCol"         text="Type"          prefWidth="100"/>
+                    <TableColumn fx:id="prixCol"         text="Prix (€)"      prefWidth="80"/>
+                    <TableColumn fx:id="descriptionCol"  text="Description"   prefWidth="180"/>
                     <TableColumn fx:id="disponibiliteCol" text="Disponibilité" prefWidth="90"/>
-                    <TableColumn fx:id="voyageCol" text="Voyage" prefWidth="280"/>
-                    <TableColumn fx:id="destinationCol" text="Destination" prefWidth="200"/>
-                    <TableColumn fx:id="volCol" text="Vol" prefWidth="220"/>
-                    <TableColumn fx:id="hotelCol" text="Hôtel" prefWidth="220"/>
-                    <TableColumn fx:id="activiteCol" text="Activité" prefWidth="200"/>
+                    <TableColumn fx:id="voyageCol"       text="Voyage"        prefWidth="160"/>
+                    <TableColumn fx:id="destinationCol"  text="Destination"   prefWidth="130"/>
+                    <TableColumn fx:id="volCol"          text="Vol"           prefWidth="130"/>
+                    <TableColumn fx:id="hotelCol"        text="Hôtel"         prefWidth="130"/>
+                    <TableColumn fx:id="activiteCol"     text="Activité"      prefWidth="130"/>
+                    <TableColumn fx:id="imageCol"        text="Image"         prefWidth="80"/>
                 </columns>
-
                 <placeholder>
                     <Label text="Aucune offre trouvée"/>
                 </placeholder>
@@ -270,47 +357,36 @@
 
             <!-- Stats -->
             <HBox spacing="30" alignment="CENTER"
-                  style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                  style="-fx-background-color: white; -fx-background-radius: 10;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
                 <padding>
                     <Insets top="15" right="15" bottom="15" left="15"/>
                 </padding>
 
                 <HBox spacing="5">
                     <Label text="📊 Total des offres: ">
-                        <font>
-                            <Font name="Segoe UI Bold" size="14"/>
-                        </font>
+                        <font><Font name="Segoe UI Bold" size="14"/></font>
                     </Label>
                     <Label fx:id="countLabel" text="0" textFill="#FF6B35">
-                        <font>
-                            <Font name="Segoe UI Bold" size="18"/>
-                        </font>
+                        <font><Font name="Segoe UI Bold" size="18"/></font>
                     </Label>
                 </HBox>
 
                 <HBox spacing="5">
                     <Label text="✅ Disponibles: ">
-                        <font>
-                            <Font name="Segoe UI Bold" size="14"/>
-                        </font>
+                        <font><Font name="Segoe UI Bold" size="14"/></font>
                     </Label>
                     <Label fx:id="disponiblesLabel" text="0" textFill="#4CAF50">
-                        <font>
-                            <Font name="Segoe UI Bold" size="18"/>
-                        </font>
+                        <font><Font name="Segoe UI Bold" size="18"/></font>
                     </Label>
                 </HBox>
 
                 <HBox spacing="5">
                     <Label text="❌ Non disponibles: ">
-                        <font>
-                            <Font name="Segoe UI Bold" size="14"/>
-                        </font>
+                        <font><Font name="Segoe UI Bold" size="14"/></font>
                     </Label>
                     <Label fx:id="nonDisponiblesLabel" text="0" textFill="#f44336">
-                        <font>
-                            <Font name="Segoe UI Bold" size="18"/>
-                        </font>
+                        <font><Font name="Segoe UI Bold" size="18"/></font>
                     </Label>
                 </HBox>
             </HBox>
