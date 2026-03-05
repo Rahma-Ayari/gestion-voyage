@@ -4,6 +4,7 @@ import Entite.Reservation;
 import Entite.Personne;
 import Entite.Voyage;
 import Entite.StatutReservation;
+import Entite.Offre;
 import Utils.DataSource;
 
 import java.sql.*;
@@ -25,13 +26,14 @@ public class ServiceReservation implements IService<Reservation> {
 
     @Override
     public boolean ajouter(Reservation r) throws SQLException {
-        String req = "INSERT INTO reservation(date_reservation, prix_reservation, etat, id_personne, id_voyage, id_statut) VALUES ('"
+        String req = "INSERT INTO reservation(date_reservation, prix_reservation, etat, id_personne, id_voyage, id_statut, id_offre) VALUES ('"
                 + r.getDate_reservation() + "',"
                 + r.getPrix_reservation() + ",'"
                 + r.getEtat() + "',"
                 + r.getId_personne().getIdUtilisateur() + ","
                 + r.getId_voyage().getIdVoyage() + ","
-                + r.getId_statut().getId_statut() + ")";
+                + r.getId_statut().getId_statut() + ","
+                + r.getId_offre().getId_offre() + ")";
         return st.executeUpdate(req) > 0;
     }
 
@@ -49,7 +51,8 @@ public class ServiceReservation implements IService<Reservation> {
                 + "etat='" + r.getEtat() + "', "
                 + "id_personne=" + r.getId_personne().getIdUtilisateur() + ", "
                 + "id_voyage=" + r.getId_voyage().getIdVoyage() + ", "
-                + "id_statut=" + r.getId_statut().getId_statut() + " "
+                + "id_statut=" + r.getId_statut().getId_statut() + ", "
+                + "id_offre=" + r.getId_offre().getId_offre() + " "
                 + "WHERE id_reservation=" + r.getId_reservation();
         return st.executeUpdate(req) > 0;
     }
@@ -66,7 +69,6 @@ public class ServiceReservation implements IService<Reservation> {
             r.setPrix_reservation(rs.getDouble("prix_reservation"));
             r.setEtat(rs.getString("etat"));
 
-            // Crée les objets liés
             Personne p = new Personne();
             p.setIdUtilisateur(rs.getInt("id_personne"));
             r.setId_personne(p);
@@ -78,6 +80,10 @@ public class ServiceReservation implements IService<Reservation> {
             StatutReservation s = new StatutReservation();
             s.setId_statut(rs.getInt("id_statut"));
             r.setId_statut(s);
+
+            Offre o = new Offre();
+            o.setId_offre(rs.getInt("id_offre"));
+            r.setId_offre(o);
 
             return r;
         }
@@ -108,6 +114,10 @@ public class ServiceReservation implements IService<Reservation> {
             StatutReservation s = new StatutReservation();
             s.setId_statut(rs.getInt("id_statut"));
             r.setId_statut(s);
+
+            Offre o = new Offre();
+            o.setId_offre(rs.getInt("id_offre"));
+            r.setId_offre(o);
 
             list.add(r);
         }

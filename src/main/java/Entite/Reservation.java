@@ -10,9 +10,12 @@ public class Reservation {
     private Personne id_personne;
     private Voyage id_voyage;
     private StatutReservation id_statut;
+    private Offre id_offre;   // nouveau champ
+
     public Reservation() {}
 
-    public Reservation(int id_reservation, Date date_reservation, double prix_reservation, String etat, Personne id_personne, Voyage id_voyage, StatutReservation id_statut) {
+    public Reservation(int id_reservation, Date date_reservation, double prix_reservation, String etat,
+                       Personne id_personne, Voyage id_voyage, StatutReservation id_statut, Offre id_offre) {
         this.id_reservation = id_reservation;
         this.date_reservation = date_reservation;
         this.prix_reservation = prix_reservation;
@@ -20,6 +23,7 @@ public class Reservation {
         this.id_personne = id_personne;
         this.id_voyage = id_voyage;
         this.id_statut = id_statut;
+        this.id_offre = id_offre;
     }
 
     public int getId_reservation() {
@@ -78,6 +82,14 @@ public class Reservation {
         this.id_statut = id_statut;
     }
 
+    public Offre getId_offre() {
+        return id_offre;
+    }
+
+    public void setId_offre(Offre id_offre) {
+        this.id_offre = id_offre;
+    }
+
     @Override
     public String toString() {
         return "Reservation{" +
@@ -88,7 +100,7 @@ public class Reservation {
                 ", id_personne=" + id_personne +
                 ", id_voyage=" + id_voyage +
                 ", id_statut=" + id_statut +
+                ", id_offre=" + id_offre +
                 '}';
     }
 }
-
