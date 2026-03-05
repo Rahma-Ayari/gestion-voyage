@@ -101,7 +101,6 @@ public class OffreController implements Initializable {
         descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
         disponibiliteCol.setCellValueFactory(new PropertyValueFactory<>("disponibilite"));
 
-        // Dates formatées en String
         dateDebutCol.setCellValueFactory(cell ->
                 new SimpleStringProperty(
                         cell.getValue().getDateDebut() != null
@@ -112,7 +111,6 @@ public class OffreController implements Initializable {
                         cell.getValue().getDateFin() != null
                                 ? cell.getValue().getDateFin().toString() : "—"));
 
-        // Relations
         voyageCol.setCellValueFactory(cell ->
                 new SimpleStringProperty(
                         cell.getValue().getVoyage() != null
@@ -138,7 +136,6 @@ public class OffreController implements Initializable {
                         cell.getValue().getActivite() != null
                                 ? cell.getValue().getActivite().toString() : "—"));
 
-        // Image : ✔ si présente, — sinon
         imageCol.setCellValueFactory(cell ->
                 new SimpleStringProperty(
                         cell.getValue().getImagePath() != null
@@ -206,21 +203,20 @@ public class OffreController implements Initializable {
         descriptionArea.setText(o.getDescription());
         disponibiliteCheck.setSelected(o.isDisponibilite());
 
-        // Dates
         dateDebutPicker.setValue(o.getDateDebut());
         dateFinPicker.setValue(o.getDateFin());
 
-        // ComboBoxes
         voyageCombo.setValue(o.getVoyage());
         volCombo.setValue(o.getVol());
         hotelCombo.setValue(o.getHotel());
         destinationCombo.setValue(o.getDestination());
         activiteCombo.setValue(o.getActivite());
 
-        // Image
         if (o.getImagePath() != null && !o.getImagePath().isEmpty()) {
-            imagePathField.setText(o.getImagePath());
-            showImagePreview(o.getImagePath());
+            // Normaliser le chemin lors du chargement aussi
+            String normalizedPath = o.getImagePath().replace("\\", "/");
+            imagePathField.setText(normalizedPath);
+            showImagePreview(normalizedPath);
         } else {
             imagePathField.clear();
             hideImagePreview();
@@ -240,8 +236,10 @@ public class OffreController implements Initializable {
                         "Images", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.webp"));
         File file = fc.showOpenDialog(browseImageBtn.getScene().getWindow());
         if (file != null) {
-            imagePathField.setText(file.getAbsolutePath());
-            showImagePreview(file.getAbsolutePath());
+            // ✅ Correction : normaliser les backslashes Windows en forward slashes
+            String path = file.getAbsolutePath().replace("\\", "/");
+            imagePathField.setText(path);
+            showImagePreview(path);
         }
     }
 
@@ -357,14 +355,16 @@ public class OffreController implements Initializable {
         o.setDestination(destinationCombo.getValue());
         o.setActivite(activiteCombo.getValue());
         String imgPath = imagePathField.getText().trim();
-        o.setImagePath(imgPath.isEmpty() ? null : imgPath);
+        // ✅ Correction : s'assurer que le chemin est bien normalisé avant sauvegarde
+        o.setImagePath(imgPath.isEmpty() ? null : imgPath.replace("\\", "/"));
         return o;
     }
 
     /** Affiche l'image dans le StackPane de prévisualisation. */
     private void showImagePreview(String path) {
         try {
-            File f = new File(path);
+            // ✅ Correction : normaliser le chemin avant de créer le File
+            File f = new File(path.replace("\\", "/"));
             if (f.exists()) {
                 Image img = new Image(f.toURI().toString());
                 imagePreview.setImage(img);
@@ -414,7 +414,6 @@ public class OffreController implements Initializable {
             voyageCombo.requestFocus();
             return false;
         }
-        // Validation des dates
         LocalDate debut = dateDebutPicker.getValue();
         LocalDate fin   = dateFinPicker.getValue();
         if (debut != null && fin != null && fin.isBefore(debut)) {
