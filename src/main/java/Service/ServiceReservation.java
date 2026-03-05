@@ -26,14 +26,23 @@ public class ServiceReservation implements IService<Reservation> {
 
     @Override
     public boolean ajouter(Reservation r) throws SQLException {
-        String req = "INSERT INTO reservation(date_reservation, prix_reservation, etat, id_personne, id_voyage, id_statut, id_offre) VALUES ('"
+        // id_voyage et id_offre sont optionnels (nullable)
+        String voyageVal = (r.getId_voyage() != null)
+                ? String.valueOf(r.getId_voyage().getIdVoyage()) : "NULL";
+        String offreVal  = (r.getId_offre() != null)
+                ? String.valueOf(r.getId_offre().getId_offre()) : "NULL";
+
+        String req = "INSERT INTO reservation("
+                + "date_reservation, prix_reservation, etat, id_personne, id_statut, id_voyage, id_offre"
+                + ") VALUES ('"
                 + r.getDate_reservation() + "',"
                 + r.getPrix_reservation() + ",'"
                 + r.getEtat() + "',"
                 + r.getId_personne().getIdUtilisateur() + ","
-                + r.getId_voyage().getIdVoyage() + ","
                 + r.getId_statut().getId_statut() + ","
-                + r.getId_offre().getId_offre() + ")";
+                + voyageVal + ","
+                + offreVal  + ")";
+
         return st.executeUpdate(req) > 0;
     }
 
@@ -45,15 +54,21 @@ public class ServiceReservation implements IService<Reservation> {
 
     @Override
     public boolean modifier(Reservation r) throws SQLException {
+        String voyageVal = (r.getId_voyage() != null)
+                ? String.valueOf(r.getId_voyage().getIdVoyage()) : "NULL";
+        String offreVal  = (r.getId_offre() != null)
+                ? String.valueOf(r.getId_offre().getId_offre()) : "NULL";
+
         String req = "UPDATE reservation SET "
-                + "date_reservation='" + r.getDate_reservation() + "', "
-                + "prix_reservation=" + r.getPrix_reservation() + ", "
-                + "etat='" + r.getEtat() + "', "
-                + "id_personne=" + r.getId_personne().getIdUtilisateur() + ", "
-                + "id_voyage=" + r.getId_voyage().getIdVoyage() + ", "
-                + "id_statut=" + r.getId_statut().getId_statut() + ", "
-                + "id_offre=" + r.getId_offre().getId_offre() + " "
-                + "WHERE id_reservation=" + r.getId_reservation();
+                + "date_reservation='"  + r.getDate_reservation()  + "', "
+                + "prix_reservation="   + r.getPrix_reservation()   + ", "
+                + "etat='"              + r.getEtat()               + "', "
+                + "id_personne="        + r.getId_personne().getIdUtilisateur() + ", "
+                + "id_statut="          + r.getId_statut().getId_statut() + ", "
+                + "id_voyage="          + voyageVal + ", "
+                + "id_offre="           + offreVal
+                + " WHERE id_reservation=" + r.getId_reservation();
+
         return st.executeUpdate(req) > 0;
     }
 
@@ -63,29 +78,7 @@ public class ServiceReservation implements IService<Reservation> {
         ResultSet rs = st.executeQuery(req);
 
         if (rs.next()) {
-            Reservation r = new Reservation();
-            r.setId_reservation(rs.getInt("id_reservation"));
-            r.setDate_reservation(rs.getDate("date_reservation"));
-            r.setPrix_reservation(rs.getDouble("prix_reservation"));
-            r.setEtat(rs.getString("etat"));
-
-            Personne p = new Personne();
-            p.setIdUtilisateur(rs.getInt("id_personne"));
-            r.setId_personne(p);
-
-            Voyage v = new Voyage();
-            v.setIdVoyage(rs.getInt("id_voyage"));
-            r.setId_voyage(v);
-
-            StatutReservation s = new StatutReservation();
-            s.setId_statut(rs.getInt("id_statut"));
-            r.setId_statut(s);
-
-            Offre o = new Offre();
-            o.setId_offre(rs.getInt("id_offre"));
-            r.setId_offre(o);
-
-            return r;
+            return mapRow(rs);
         }
         return null;
     }
@@ -93,34 +86,45 @@ public class ServiceReservation implements IService<Reservation> {
     @Override
     public List<Reservation> readAll() throws SQLException {
         List<Reservation> list = new ArrayList<>();
-        String req = "SELECT * FROM reservation";
-        ResultSet rs = st.executeQuery(req);
-
+        ResultSet rs = st.executeQuery("SELECT * FROM reservation");
         while (rs.next()) {
-            Reservation r = new Reservation();
-            r.setId_reservation(rs.getInt("id_reservation"));
-            r.setDate_reservation(rs.getDate("date_reservation"));
-            r.setPrix_reservation(rs.getDouble("prix_reservation"));
-            r.setEtat(rs.getString("etat"));
-
-            Personne p = new Personne();
-            p.setIdUtilisateur(rs.getInt("id_personne"));
-            r.setId_personne(p);
-
-            Voyage v = new Voyage();
-            v.setIdVoyage(rs.getInt("id_voyage"));
-            r.setId_voyage(v);
-
-            StatutReservation s = new StatutReservation();
-            s.setId_statut(rs.getInt("id_statut"));
-            r.setId_statut(s);
-
-            Offre o = new Offre();
-            o.setId_offre(rs.getInt("id_offre"));
-            r.setId_offre(o);
-
-            list.add(r);
+            list.add(mapRow(rs));
         }
         return list;
+    }
+
+    // ── Helper mapping ResultSet → Reservation ────────
+    private Reservation mapRow(ResultSet rs) throws SQLException {
+        Reservation r = new Reservation();
+        r.setId_reservation(rs.getInt("id_reservation"));
+        r.setDate_reservation(rs.getDate("date_reservation"));
+        r.setPrix_reservation(rs.getDouble("prix_reservation"));
+        r.setEtat(rs.getString("etat"));
+
+        Personne p = new Personne();
+        p.setIdUtilisateur(rs.getInt("id_personne"));
+        r.setId_personne(p);
+
+        // id_voyage nullable
+        int idVoyage = rs.getInt("id_voyage");
+        if (!rs.wasNull()) {
+            Voyage v = new Voyage();
+            v.setIdVoyage(idVoyage);
+            r.setId_voyage(v);
+        }
+
+        StatutReservation s = new StatutReservation();
+        s.setId_statut(rs.getInt("id_statut"));
+        r.setId_statut(s);
+
+        // id_offre nullable
+        int idOffre = rs.getInt("id_offre");
+        if (!rs.wasNull()) {
+            Offre o = new Offre();
+            o.setId_offre(idOffre);
+            r.setId_offre(o);
+        }
+
+        return r;
     }
 }
