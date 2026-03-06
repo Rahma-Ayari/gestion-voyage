@@ -5,169 +5,415 @@ import Service.ServiceHotel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.web.WebView;
+import javafx.util.Callback;
 
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
-public class HotelController {
+public class HotelController implements Initializable {
 
-    @FXML
-    private TextField nomField, villeField, adresseField, searchField;
-    @FXML
-    private Button ajouterBtn, modifierBtn, supprimerBtn, clearBtn, refreshBtn;
-    @FXML
-    private TableView<Hotel> tableView;
-    @FXML
-    private TableColumn<Hotel, Integer> idCol;
-    @FXML
-    private TableColumn<Hotel, String> nomCol, villeCol, adresseCol;
-    @FXML
-    private Label countLabel;
+    // ─────────────────────────────────────────────
+    // FXML - Formulaire
+    // ─────────────────────────────────────────────
+    @FXML private TextField nomField;
+    @FXML private TextField villeField;
+    @FXML private TextField adresseField;
+    @FXML private TextField starsField;
+    @FXML private TextField capaciteField;
+    @FXML private TextField typeChambreField;
+    @FXML private TextField prixParNuitField;
+    @FXML private TextField latitudeField;
+    @FXML private TextField longitudeField;
+    @FXML private CheckBox  disponibiliteCheckBox;
 
-    private ServiceHotel serviceHotel;
-    private ObservableList<Hotel> hotelList;
+    // ─────────────────────────────────────────────
+    // FXML - Table
+    // ─────────────────────────────────────────────
+    @FXML private TableView<Hotel>            tableView;
+    @FXML private TableColumn<Hotel, String>  nomCol;
+    @FXML private TableColumn<Hotel, String>  villeCol;
+    @FXML private TableColumn<Hotel, String>  adresseCol;
+    @FXML private TableColumn<Hotel, Integer> starsCol;
+    @FXML private TableColumn<Hotel, Integer> capaciteCol;
+    @FXML private TableColumn<Hotel, String>  typeChambreCol;
+    @FXML private TableColumn<Hotel, Double>  prixParNuitCol;
+    @FXML private TableColumn<Hotel, Double>  latitudeCol;
+    @FXML private TableColumn<Hotel, Double>  longitudeCol;
+    @FXML private TableColumn<Hotel, Boolean> disponibiliteCol;
+    @FXML private TableColumn<Hotel, Void>    carteCol;
 
-    @FXML
-    public void initialize() {
-        serviceHotel = new ServiceHotel();
+    // ─────────────────────────────────────────────
+    // FXML - Autres
+    // ─────────────────────────────────────────────
+    @FXML private TextField searchField;
+    @FXML private WebView   mapView;
+    @FXML private Label     countLabel;
 
-        // Configurer les colonnes de la table
+    // ─────────────────────────────────────────────
+    // SERVICE & DONNÉES
+    // ─────────────────────────────────────────────
+    private ServiceHotel service = new ServiceHotel();
+    private ObservableList<Hotel> hotelList = FXCollections.observableArrayList();
+    private Hotel hotelSelectionne = null;
+
+    // ─────────────────────────────────────────────
+    // INITIALIZE
+    // ─────────────────────────────────────────────
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+
+        // Activer JavaScript et user agent pour WebView
+        mapView.getEngine().setJavaScriptEnabled(true);
+        mapView.getEngine().setUserAgent(
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+                        "Chrome/100.0.4896.127 Safari/537.36"
+        );
+
+        // Logger les erreurs WebView
+        mapView.getEngine().setOnError(event ->
+                System.out.println("WebView error: " + event.getMessage())
+        );
+        mapView.getEngine().getLoadWorker().stateProperty().addListener(
+                (obs, oldState, newState) -> {
+                    System.out.println("WebView state: " + newState);
+                    if (newState == javafx.concurrent.Worker.State.FAILED) {
+                        System.out.println("Echec: " +
+                                mapView.getEngine().getLoadWorker().getException());
+                    }
+                }
+        );
+
+        // Lier les colonnes aux propriétés
         nomCol.setCellValueFactory(new PropertyValueFactory<>("nom"));
         villeCol.setCellValueFactory(new PropertyValueFactory<>("ville"));
         adresseCol.setCellValueFactory(new PropertyValueFactory<>("adresse"));
+        starsCol.setCellValueFactory(new PropertyValueFactory<>("stars"));
+        capaciteCol.setCellValueFactory(new PropertyValueFactory<>("capacite"));
+        typeChambreCol.setCellValueFactory(new PropertyValueFactory<>("typeChambre"));
+        prixParNuitCol.setCellValueFactory(new PropertyValueFactory<>("prixParNuit"));
+        latitudeCol.setCellValueFactory(new PropertyValueFactory<>("latitude"));
+        longitudeCol.setCellValueFactory(new PropertyValueFactory<>("longitude"));
+        disponibiliteCol.setCellValueFactory(new PropertyValueFactory<>("disponibilite"));
+
+        // Colonne bouton carte
+        ajouterColonneCarte();
 
         // Charger les données
-        loadHotels();
+        chargerHotels();
 
-        // Listener pour la recherche
-        searchField.textProperty().addListener((obs, oldText, newText) -> searchHotels(newText));
+        // Sélection dans la table → remplir formulaire + afficher carte
+        tableView.getSelectionModel().selectedItemProperty().addListener(
+                (obs, ancien, selectionne) -> {
+                    if (selectionne != null) {
+                        hotelSelectionne = selectionne;
+                        remplirFormulaire(selectionne);
+                        mapView.getEngine().loadContent(
+                                service.genererHtmlCarte(selectionne), "text/html"
+                        );
+                    }
+                }
+        );
 
-        // Listener pour sélectionner un hôtel dans la table
-        tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
-            if (newSel != null) {
-                nomField.setText(newSel.getNom());
-                villeField.setText(newSel.getVille());
-                adresseField.setText(newSel.getAdresse());
-            }
-        });
+        // Recherche en temps réel
+        searchField.textProperty().addListener(
+                (obs, ancien, nouveau) -> filtrerHotels(nouveau)
+        );
     }
 
-    private void loadHotels() {
+    // ─────────────────────────────────────────────
+    // COLONNE BOUTON CARTE
+    // ─────────────────────────────────────────────
+    private void ajouterColonneCarte() {
+        Callback<TableColumn<Hotel, Void>, TableCell<Hotel, Void>> cellFactory =
+                param -> new TableCell<>() {
+                    private final Button btn = new Button("🗺️ Carte");
+                    {
+                        btn.setStyle(
+                                "-fx-background-color: #FF9800;" +
+                                        "-fx-text-fill: white;" +
+                                        "-fx-background-radius: 6;" +
+                                        "-fx-padding: 4 10;" +
+                                        "-fx-font-size: 12px;" +
+                                        "-fx-cursor: hand;"
+                        );
+                        btn.setOnAction(event -> {
+                            Hotel h = getTableView().getItems().get(getIndex());
+                            mapView.getEngine().loadContent(
+                                    service.genererHtmlCarte(h), "text/html"
+                            );
+                        });
+                    }
+
+                    @Override
+                    protected void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setGraphic(empty ? null : btn);
+                    }
+                };
+
+        carteCol.setCellFactory(cellFactory);
+    }
+
+    // ─────────────────────────────────────────────
+    // CHARGER tous les hôtels
+    // ─────────────────────────────────────────────
+    private void chargerHotels() {
         try {
-            List<Hotel> hotels = serviceHotel.readAll();
-            hotelList = FXCollections.observableArrayList(hotels);
+            hotelList.setAll(service.readAll());
             tableView.setItems(hotelList);
-            countLabel.setText(String.valueOf(hotels.size()));
+            countLabel.setText(String.valueOf(hotelList.size()));
         } catch (SQLException e) {
-            e.printStackTrace();
-            showAlert("Erreur", "Impossible de charger les hôtels : " + e.getMessage());
+            afficherAlerte(Alert.AlertType.ERROR, "Erreur",
+                    "Impossible de charger les hôtels : " + e.getMessage());
         }
     }
 
+    // ─────────────────────────────────────────────
+    // FILTRER par recherche
+    // ─────────────────────────────────────────────
+    private void filtrerHotels(String recherche) {
+        if (recherche == null || recherche.trim().isEmpty()) {
+            tableView.setItems(hotelList);
+            countLabel.setText(String.valueOf(hotelList.size()));
+            return;
+        }
+        String lower = recherche.toLowerCase();
+        List<Hotel> filtres = hotelList.stream()
+                .filter(h ->
+                        h.getNom().toLowerCase().contains(lower) ||
+                                h.getVille().toLowerCase().contains(lower) ||
+                                h.getAdresse().toLowerCase().contains(lower) ||
+                                h.getTypeChambre().toLowerCase().contains(lower)
+                )
+                .collect(Collectors.toList());
+
+        tableView.setItems(FXCollections.observableArrayList(filtres));
+        countLabel.setText(String.valueOf(filtres.size()));
+    }
+
+    // ─────────────────────────────────────────────
+    // AJOUTER
+    // ─────────────────────────────────────────────
     @FXML
     private void ajouterHotel() {
-        String nom = nomField.getText().trim();
-        String ville = villeField.getText().trim();
-        String adresse = adresseField.getText().trim();
+        if (!validerFormulaire()) return;
 
-        if (nom.isEmpty() || ville.isEmpty() || adresse.isEmpty()) {
-            showAlert("Attention", "Veuillez remplir tous les champs !");
-            return;
+        Hotel h = construireHotelDepuisFormulaire(0);
+
+        if (h.getLatitude() == 0.0 && h.getLongitude() == 0.0) {
+            double[] coords = service.geocoderAdresse(h.getAdresse(), h.getVille());
+            if (coords != null) {
+                h.setLatitude(coords[0]);
+                h.setLongitude(coords[1]);
+                latitudeField.setText(String.valueOf(coords[0]));
+                longitudeField.setText(String.valueOf(coords[1]));
+            } else {
+                afficherAlerte(Alert.AlertType.WARNING, "Carte",
+                        "Impossible de géolocaliser l'adresse. L'hôtel sera ajouté sans position.");
+            }
         }
 
-        Hotel hotel = new Hotel(0, nom, ville, adresse);
         try {
-            if (serviceHotel.ajouter(hotel)) {
-                showAlert("Succès", "Hôtel ajouté avec succès !");
+            if (service.ajouter(h)) {
+                afficherAlerte(Alert.AlertType.INFORMATION, "Succès",
+                        "Hôtel \"" + h.getNom() + "\" ajouté avec succès !");
+                chargerHotels();
                 clearFields();
-                loadHotels();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            showAlert("Erreur", "Impossible d'ajouter l'hôtel : " + e.getMessage());
+            afficherAlerte(Alert.AlertType.ERROR, "Erreur",
+                    "Ajout échoué : " + e.getMessage());
         }
     }
 
+    // ─────────────────────────────────────────────
+    // MODIFIER
+    // ─────────────────────────────────────────────
     @FXML
     private void modifierHotel() {
-        Hotel selected = tableView.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            showAlert("Attention", "Sélectionnez un hôtel pour modifier !");
+        if (hotelSelectionne == null) {
+            afficherAlerte(Alert.AlertType.WARNING, "Attention",
+                    "Veuillez sélectionner un hôtel dans la liste.");
             return;
         }
+        if (!validerFormulaire()) return;
 
-        selected.setNom(nomField.getText().trim());
-        selected.setVille(villeField.getText().trim());
-        selected.setAdresse(adresseField.getText().trim());
+        Hotel h = construireHotelDepuisFormulaire(hotelSelectionne.getIdHotel());
+
+        if (h.getLatitude() == 0.0 && h.getLongitude() == 0.0) {
+            double[] coords = service.geocoderAdresse(h.getAdresse(), h.getVille());
+            if (coords != null) {
+                h.setLatitude(coords[0]);
+                h.setLongitude(coords[1]);
+                latitudeField.setText(String.valueOf(coords[0]));
+                longitudeField.setText(String.valueOf(coords[1]));
+            }
+        }
 
         try {
-            if (serviceHotel.modifier(selected)) {
-                showAlert("Succès", "Hôtel modifié avec succès !");
+            if (service.modifier(h)) {
+                afficherAlerte(Alert.AlertType.INFORMATION, "Succès",
+                        "Hôtel \"" + h.getNom() + "\" modifié avec succès !");
+                chargerHotels();
                 clearFields();
-                loadHotels();
+                hotelSelectionne = null;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            showAlert("Erreur", "Impossible de modifier l'hôtel : " + e.getMessage());
+            afficherAlerte(Alert.AlertType.ERROR, "Erreur",
+                    "Modification échouée : " + e.getMessage());
         }
     }
 
+    // ─────────────────────────────────────────────
+    // SUPPRIMER
+    // ─────────────────────────────────────────────
     @FXML
     private void supprimerHotel() {
-        Hotel selected = tableView.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            showAlert("Attention", "Sélectionnez un hôtel pour supprimer !");
+        if (hotelSelectionne == null) {
+            afficherAlerte(Alert.AlertType.WARNING, "Attention",
+                    "Veuillez sélectionner un hôtel dans la liste.");
             return;
         }
 
-        try {
-            if (serviceHotel.supprimer(selected)) {
-                showAlert("Succès", "Hôtel supprimé avec succès !");
-                clearFields();
-                loadHotels();
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+                "Supprimer l'hôtel \"" + hotelSelectionne.getNom() + "\" ?",
+                ButtonType.YES, ButtonType.NO);
+        confirm.setTitle("Confirmation");
+        confirm.setHeaderText(null);
+        confirm.showAndWait();
+
+        if (confirm.getResult() == ButtonType.YES) {
+            try {
+                if (service.supprimer(hotelSelectionne)) {
+                    afficherAlerte(Alert.AlertType.INFORMATION, "Succès",
+                            "Hôtel supprimé avec succès !");
+                    chargerHotels();
+                    clearFields();
+                    mapView.getEngine().loadContent("", "text/html");
+                    hotelSelectionne = null;
+                }
+            } catch (SQLException e) {
+                afficherAlerte(Alert.AlertType.ERROR, "Erreur",
+                        "Suppression échouée : " + e.getMessage());
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            showAlert("Erreur", "Impossible de supprimer l'hôtel : " + e.getMessage());
         }
     }
 
+    // ─────────────────────────────────────────────
+    // REFRESH TABLE
+    // ─────────────────────────────────────────────
+    @FXML
+    private void refreshTable() {
+        searchField.clear();
+        chargerHotels();
+    }
+
+    // ─────────────────────────────────────────────
+    // EFFACER le formulaire
+    // ─────────────────────────────────────────────
     @FXML
     private void clearFields() {
         nomField.clear();
         villeField.clear();
         adresseField.clear();
-        tableView.getSelectionModel().clearSelection();
+        starsField.clear();
+        capaciteField.clear();
+        typeChambreField.clear();
+        prixParNuitField.clear();
+        latitudeField.clear();
+        longitudeField.clear();
+        disponibiliteCheckBox.setSelected(false);
+        hotelSelectionne = null;
     }
 
-    @FXML
-    private void refreshTable() {
-        loadHotels();
-        searchField.clear();
+    // ─────────────────────────────────────────────
+    // REMPLIR formulaire depuis hôtel sélectionné
+    // ─────────────────────────────────────────────
+    private void remplirFormulaire(Hotel h) {
+        nomField.setText(h.getNom());
+        villeField.setText(h.getVille());
+        adresseField.setText(h.getAdresse());
+        starsField.setText(String.valueOf(h.getStars()));
+        capaciteField.setText(String.valueOf(h.getCapacite()));
+        typeChambreField.setText(h.getTypeChambre());
+        prixParNuitField.setText(String.valueOf(h.getPrixParNuit()));
+        latitudeField.setText(String.valueOf(h.getLatitude()));
+        longitudeField.setText(String.valueOf(h.getLongitude()));
+        disponibiliteCheckBox.setSelected(h.isDisponibilite());
     }
 
-    private void searchHotels(String query) {
-        if (query == null || query.isEmpty()) {
-            tableView.setItems(hotelList);
-            return;
+    // ─────────────────────────────────────────────
+    // CONSTRUIRE Hotel depuis le formulaire
+    // ─────────────────────────────────────────────
+    private Hotel construireHotelDepuisFormulaire(int id) {
+        double lat = 0.0, lng = 0.0;
+        try {
+            if (!latitudeField.getText().trim().isEmpty())
+                lat = Double.parseDouble(latitudeField.getText().trim());
+            if (!longitudeField.getText().trim().isEmpty())
+                lng = Double.parseDouble(longitudeField.getText().trim());
+        } catch (NumberFormatException ignored) {}
+
+        return new Hotel(
+                id,
+                nomField.getText().trim(),
+                villeField.getText().trim(),
+                adresseField.getText().trim(),
+                Integer.parseInt(starsField.getText().trim()),
+                Integer.parseInt(capaciteField.getText().trim()),
+                typeChambreField.getText().trim(),
+                Double.parseDouble(prixParNuitField.getText().trim()),
+                disponibiliteCheckBox.isSelected(),
+                lat,
+                lng
+        );
+    }
+
+    // ─────────────────────────────────────────────
+    // VALIDER le formulaire
+    // ─────────────────────────────────────────────
+    private boolean validerFormulaire() {
+        if (nomField.getText().trim().isEmpty() ||
+                villeField.getText().trim().isEmpty() ||
+                adresseField.getText().trim().isEmpty() ||
+                starsField.getText().trim().isEmpty() ||
+                capaciteField.getText().trim().isEmpty() ||
+                typeChambreField.getText().trim().isEmpty() ||
+                prixParNuitField.getText().trim().isEmpty()) {
+            afficherAlerte(Alert.AlertType.WARNING, "Validation",
+                    "Veuillez remplir tous les champs obligatoires.");
+            return false;
         }
-
-        ObservableList<Hotel> filtered = FXCollections.observableArrayList();
-        for (Hotel h : hotelList) {
-            if (h.getNom().toLowerCase().contains(query.toLowerCase()) ||
-                    h.getVille().toLowerCase().contains(query.toLowerCase()) ||
-                    h.getAdresse().toLowerCase().contains(query.toLowerCase())) {
-                filtered.add(h);
+        try {
+            int stars = Integer.parseInt(starsField.getText().trim());
+            if (stars < 1 || stars > 5) {
+                afficherAlerte(Alert.AlertType.WARNING, "Validation",
+                        "Le nombre d'étoiles doit être entre 1 et 5.");
+                return false;
             }
+            Integer.parseInt(capaciteField.getText().trim());
+            Double.parseDouble(prixParNuitField.getText().trim());
+        } catch (NumberFormatException e) {
+            afficherAlerte(Alert.AlertType.WARNING, "Validation",
+                    "Stars, capacité et prix doivent être des nombres valides.");
+            return false;
         }
-        tableView.setItems(filtered);
+        return true;
     }
 
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
+    // ─────────────────────────────────────────────
+    // HELPER - Afficher une alerte
+    // ─────────────────────────────────────────────
+    private void afficherAlerte(Alert.AlertType type, String titre, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(titre);
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
