@@ -11,12 +11,16 @@ public class Vol {
     private LocalDateTime dateArrivee;
     private double prix;
     private Destination destination;
+    private Destination villeDepart;
+    private int id_destination;
+    private int	ville_depart_id;
+
 
     public Vol() {}
 
     public Vol(int idVol, String numeroVol, String compagnie,
                LocalDateTime dateDepart, LocalDateTime dateArrivee,
-               double prix, Destination destination) {
+               double prix, Destination destination, Destination villeDepart) {
         this.idVol = idVol;
         this.numeroVol = numeroVol;
         this.compagnie = compagnie;
@@ -24,14 +28,7 @@ public class Vol {
         this.dateArrivee = dateArrivee;
         this.prix = prix;
         this.destination = destination;
-    }
-
-    public int getIdVol() {
-        return idVol;
-    }
-
-    public void setIdVol(int idVol) {
-        this.idVol = idVol;
+        this.villeDepart = villeDepart ;
     }
 
     public String getNumeroVol() {
@@ -40,6 +37,14 @@ public class Vol {
 
     public void setNumeroVol(String numeroVol) {
         this.numeroVol = numeroVol;
+    }
+
+    public int getIdVol() {
+        return idVol;
+    }
+
+    public void setIdVol(int idVol) {
+        this.idVol = idVol;
     }
 
     public String getCompagnie() {
@@ -82,10 +87,44 @@ public class Vol {
         this.destination = destination;
     }
 
-    @Override
-    public String toString() {
-        return "Vol{id=" + idVol + ", numeroVol='" + numeroVol + "', compagnie='" + compagnie + "', prix=" + prix + "}";
+    public Destination getVilleDepart() {
+        return villeDepart;
     }
 
+    public void setVilleDepart(Destination villeDepart) {
+        this.villeDepart = villeDepart;
+    }
+
+    public int getId_destination() {
+        return id_destination;
+    }
+
+    public void setId_destination(int id_destination) {
+        this.id_destination = id_destination;
+    }
+
+    public int getVille_depart_id() {
+        return ville_depart_id;
+    }
+
+    public void setVille_depart_id(int ville_depart_id) {
+        this.ville_depart_id = ville_depart_id;
+    }
+
+    @Override
+    public String toString() {
+        return "Vol{" +
+                "idVol=" + idVol +
+                ", numeroVol='" + numeroVol + '\'' +
+                ", compagnie='" + compagnie + '\'' +
+                ", dateDepart=" + dateDepart +
+                ", dateArrivee=" + dateArrivee +
+                ", prix=" + prix +
+                ", destination=" + destination +
+                ", villeDepart=" + villeDepart +
+                ", id_destination=" + id_destination +
+                ", ville_depart_id=" + ville_depart_id +
+                '}';
+    }
 }
 
