@@ -28,8 +28,6 @@ public class MainApp extends Application {
             // Configuration du Stage (Fenêtre)
             primaryStage.setTitle("TripEase - Gestion des Destinations");
 
-            // Ajout d'une icône à la fenêtre (optionnel)
-            // primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/tripease_logo2.png")));
 
             primaryStage.setScene(scene);
             primaryStage.show();

@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controller.HomeAdminController"
+            prefWidth="1200" prefHeight="780"
+            style="-fx-background-color: #F5F6FA;">
+
+    <!-- ══════════════════════════════════════
+         TOP HEADER
+    ══════════════════════════════════════ -->
+    <top>
+        <VBox>
+            <HBox alignment="CENTER_LEFT" spacing="0"
+                  style="-fx-background-color: linear-gradient(to right, #FF6B00, #FF9A3C); -fx-padding: 0;">
+
+                <!-- Logo + titre -->
+                <HBox alignment="CENTER_LEFT" spacing="14"
+                      style="-fx-padding: 22 40 22 40;" HBox.hgrow="ALWAYS">
+                    <Label text="✈"
+                           style="-fx-font-size: 30px; -fx-text-fill: white; -fx-rotate: -15;"/>
+                    <VBox spacing="1">
+                        <Label text="TripEase Admin"
+                               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white; -fx-font-family: 'Segoe UI';"/>
+                        <Label text="Panneau d'administration"
+                               style="-fx-font-size: 12px; -fx-text-fill: rgba(255,255,255,0.80); -fx-font-family: 'Segoe UI';"/>
+                    </VBox>
+                    <Region HBox.hgrow="ALWAYS"/>
+
+                    <!-- Admin info -->
+                    <HBox alignment="CENTER" spacing="10"
+                          style="-fx-background-color: rgba(255,255,255,0.18); -fx-background-radius: 30; -fx-padding: 8 18 8 14;">
+                        <Label text="👤"
+                               style="-fx-font-size: 18px;"/>
+                        <VBox spacing="0">
+                            <Label fx:id="adminNameLabel" text="Administrateur"
+                                   style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: white; -fx-font-family: 'Segoe UI';"/>
+                            <Label text="Super Admin"
+                                   style="-fx-font-size: 11px; -fx-text-fill: rgba(255,255,255,0.75); -fx-font-family: 'Segoe UI';"/>
+                        </VBox>
+                    </HBox>
+
+                    <Button onAction="#handleLogout" text="⏻  Déconnexion"
+                            style="-fx-background-color: rgba(255,255,255,0.15); -fx-text-fill: white; -fx-border-color: rgba(255,255,255,0.5); -fx-border-width: 1; -fx-border-radius: 20; -fx-background-radius: 20; -fx-padding: 8 18; -fx-cursor: hand; -fx-font-size: 13px; -fx-font-family: 'Segoe UI';"/>
+                </HBox>
+            </HBox>
+
+            <!-- Fil d'Ariane -->
+            <HBox spacing="6" alignment="CENTER_LEFT"
+                  style="-fx-background-color: white; -fx-padding: 10 40; -fx-border-color: #E8E8E8; -fx-border-width: 0 0 1 0;">
+                <Label text="🏠" style="-fx-font-size: 13px;"/>
+                <Label text="Accueil"
+                       style="-fx-font-size: 13px; -fx-text-fill: #FF6B00; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- ══════════════════════════════════════
+         CONTENU PRINCIPAL
+    ══════════════════════════════════════ -->
+    <center>
+        <ScrollPane fitToWidth="true"
+                    style="-fx-background: transparent; -fx-background-color: transparent; -fx-border-color: transparent;">
+            <VBox spacing="30" style="-fx-padding: 36 50 36 50;">
+
+                <!-- Titre de bienvenue -->
+                <VBox spacing="6">
+                    <Label fx:id="welcomeLabel" text="Bienvenue, Administrateur 👋"
+                           style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #1A1A2E; -fx-font-family: 'Segoe UI';"/>
+                    <Label text="Gérez l'ensemble des modules de la plateforme TripEase depuis ce tableau de bord."
+                           style="-fx-font-size: 14px; -fx-text-fill: #888; -fx-font-family: 'Segoe UI';"/>
+                </VBox>
+
+                <!-- Ligne 1 : 4 cartes -->
+                <HBox spacing="18">
+
+                    <!-- Gestion Inscriptions -->
+                    <VBox fx:id="cardInscriptions" spacing="14" alignment="TOP_LEFT"
+                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);"
+                          HBox.hgrow="ALWAYS"
+                          onMouseClicked="#handleInscriptions">
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label text="👥"
+                                   style="-fx-font-size: 26px; -fx-background-color: #FFF3E0; -fx-background-radius: 12; -fx-padding: 10;"/>
+                            <VBox spacing="3">
+                                <Label text="Inscriptions"
+                                       style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1A1A2E; -fx-font-family: 'Segoe UI';"/>
+                                <Label text="Gestion des comptes"
+                                       style="-fx-font-size: 11px; -fx-text-fill: #AAA; -fx-font-family: 'Segoe UI';"/>
+                            </VBox>
+                        </HBox>
+                        <Label text="Approuver, refuser et gérer les demandes d'inscription des utilisateurs."
+                               wrapText="true"
+                               style="-fx-font-size: 12px; -fx-text-fill: #999; -fx-font-family: 'Segoe UI';"/>
+                        <HBox alignment="CENTER_RIGHT">
+                            <Label text="Accéder →"
+                                   style="-fx-font-size: 12px; -fx-text-fill: #FF6B00; -fx-font-weight: bold;"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Gestion Avis -->
+                    <VBox fx:id="cardAvis" spacing="14" alignment="TOP_LEFT"
+                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);"
+                          HBox.hgrow="ALWAYS"
+                          onMouseClicked="#handleAvis">
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label text="⭐"
+                                   style="-fx-font-size: 26px; -fx-background-color: #FFFDE7; -fx-background-radius: 12; -fx-padding: 10;"/>
+                            <VBox spacing="3">
+                                <Label text="Avis"
+                                       style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1A1A2E; -fx-font-family: 'Segoe UI';"/>
+                                <Label text="Modération des avis"
+                                       style="-fx-font-size: 11px; -fx-text-fill: #AAA; -fx-font-family: 'Segoe UI';"/>
+                            </VBox>
+                        </HBox>
+                        <Label text="Publier ou supprimer les avis laissés par les voyageurs sur la plateforme."
+                               wrapText="true"
+                               style="-fx-font-size: 12px; -fx-text-fill: #999; -fx-font-family: 'Segoe UI';"/>
+                        <HBox alignment="CENTER_RIGHT">
+                            <Label text="Accéder →"
+                                   style="-fx-font-size: 12px; -fx-text-fill: #FF6B00; -fx-font-weight: bold;"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Gestion Destinations -->
+                    <VBox fx:id="cardDestinations" spacing="14" alignment="TOP_LEFT"
+                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);"
+                          HBox.hgrow="ALWAYS"
+                          onMouseClicked="#handleDestinations">
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label text="🗺"
+                                   style="-fx-font-size: 26px; -fx-background-color: #E8F5E9; -fx-background-radius: 12; -fx-padding: 10;"/>
+                            <VBox spacing="3">
+                                <Label text="Destinations"
+                                       style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1A1A2E; -fx-font-family: 'Segoe UI';"/>
+                                <Label text="Gestion des lieux"
+                                       style="-fx-font-size: 11px; -fx-text-fill: #AAA; -fx-font-family: 'Segoe UI';"/>
+                            </VBox>
+                        </HBox>
+                        <Label text="Ajouter, modifier et supprimer les destinations touristiques disponibles."
+                               wrapText="true"
+                               style="-fx-font-size: 12px; -fx-text-fill: #999; -fx-font-family: 'Segoe UI';"/>
+                        <HBox alignment="CENTER_RIGHT">
+                            <Label text="Accéder →"
+                                   style="-fx-font-size: 12px; -fx-text-fill: #FF6B00; -fx-font-weight: bold;"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Gestion Activités -->
+                    <VBox fx:id="cardActivites" spacing="14" alignment="TOP_LEFT"
+                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);"
+                          HBox.hgrow="ALWAYS"
+                          onMouseClicked="#handleActivites">
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label text="🎯"
+                                   style="-fx-font-size: 26px; -fx-background-color: #FCE4EC; -fx-background-radius: 12; -fx-padding: 10;"/>
+                            <VBox spacing="3">
+                                <Label text="Activités"
+                                       style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1A1A2E; -fx-font-family: 'Segoe UI';"/>
+                                <Label text="Gestion des activités"
+                                       style="-fx-font-size: 11px; -fx-text-fill: #AAA; -fx-font-family: 'Segoe UI';"/>
+                            </VBox>
+                        </HBox>
+                        <Label text="Gérer le catalogue d'activités proposées aux voyageurs par destination."
+                               wrapText="true"
+                               style="-fx-font-size: 12px; -fx-text-fill: #999; -fx-font-family: 'Segoe UI';"/>
+                        <HBox alignment="CENTER_RIGHT">
+                            <Label text="Accéder →"
+                                   style="-fx-font-size: 12px; -fx-text-fill: #FF6B00; -fx-font-weight: bold;"/>
+                        </HBox>
+                    </VBox>
+
+                </HBox>
+
+                <!-- Ligne 2 : 4 cartes -->
+                <HBox spacing="18">
+
+                    <!-- Gestion Hôtels -->
+                    <VBox fx:id="cardHotels" spacing="14" alignment="TOP_LEFT"
+                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);"
+                          HBox.hgrow="ALWAYS"
+                          onMouseClicked="#handleHotels">
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label text="🏨"
+                                   style="-fx-font-size: 26px; -fx-background-color: #E3F2FD; -fx-background-radius: 12; -fx-padding: 10;"/>
+                            <VBox spacing="3">
+                                <Label text="Hôtels"
+                                       style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1A1A2E; -fx-font-family: 'Segoe UI';"/>
+                                <Label text="Gestion hébergements"
+                                       style="-fx-font-size: 11px; -fx-text-fill: #AAA; -fx-font-family: 'Segoe UI';"/>
+                            </VBox>
+                        </HBox>
+                        <Label text="Administrer les hôtels partenaires, leurs chambres et disponibilités."
+                               wrapText="true"
+                               style="-fx-font-size: 12px; -fx-text-fill: #999; -fx-font-family: 'Segoe UI';"/>
+                        <HBox alignment="CENTER_RIGHT">
+                            <Label text="Accéder →"
+                                   style="-fx-font-size: 12px; -fx-text-fill: #FF6B00; -fx-font-weight: bold;"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Gestion Réservations -->
+                    <VBox fx:id="cardReservations" spacing="14" alignment="TOP_LEFT"
+                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);"
+                          HBox.hgrow="ALWAYS"
+                          onMouseClicked="#handleReservations">
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label text="📅"
+                                   style="-fx-font-size: 26px; -fx-background-color: #EDE7F6; -fx-background-radius: 12; -fx-padding: 10;"/>
+                            <VBox spacing="3">
+                                <Label text="Réservations"
+                                       style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1A1A2E; -fx-font-family: 'Segoe UI';"/>
+                                <Label text="Suivi des réservations"
+                                       style="-fx-font-size: 11px; -fx-text-fill: #AAA; -fx-font-family: 'Segoe UI';"/>
+                            </VBox>
+                        </HBox>
+                        <Label text="Consulter et gérer toutes les réservations effectuées par les utilisateurs."
+                               wrapText="true"
+                               style="-fx-font-size: 12px; -fx-text-fill: #999; -fx-font-family: 'Segoe UI';"/>
+                        <HBox alignment="CENTER_RIGHT">
+                            <Label text="Accéder →"
+                                   style="-fx-font-size: 12px; -fx-text-fill: #FF6B00; -fx-font-weight: bold;"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Gestion Offres -->
+                    <VBox fx:id="cardOffres" spacing="14" alignment="TOP_LEFT"
+                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);"
+                          HBox.hgrow="ALWAYS"
+                          onMouseClicked="#handleOffres">
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label text="🏷"
+                                   style="-fx-font-size: 26px; -fx-background-color: #FFF3E0; -fx-background-radius: 12; -fx-padding: 10;"/>
+                            <VBox spacing="3">
+                                <Label text="Offres"
+                                       style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1A1A2E; -fx-font-family: 'Segoe UI';"/>
+                                <Label text="Promotions &amp; deals"
+                                       style="-fx-font-size: 11px; -fx-text-fill: #AAA; -fx-font-family: 'Segoe UI';"/>
+                            </VBox>
+                        </HBox>
+                        <Label text="Créer et publier des offres promotionnelles et des packages voyages."
+                               wrapText="true"
+                               style="-fx-font-size: 12px; -fx-text-fill: #999; -fx-font-family: 'Segoe UI';"/>
+                        <HBox alignment="CENTER_RIGHT">
+                            <Label text="Accéder →"
+                                   style="-fx-font-size: 12px; -fx-text-fill: #FF6B00; -fx-font-weight: bold;"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Gestion Vols -->
+                    <VBox fx:id="cardVols" spacing="14" alignment="TOP_LEFT"
+                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);"
+                          HBox.hgrow="ALWAYS"
+                          onMouseClicked="#handleVols">
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label text="✈"
+                                   style="-fx-font-size: 26px; -fx-background-color: #E0F7FA; -fx-background-radius: 12; -fx-padding: 10;"/>
+                            <VBox spacing="3">
+                                <Label text="Vols"
+                                       style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1A1A2E; -fx-font-family: 'Segoe UI';"/>
+                                <Label text="Gestion des vols"
+                                       style="-fx-font-size: 11px; -fx-text-fill: #AAA; -fx-font-family: 'Segoe UI';"/>
+                            </VBox>
+                        </HBox>
+                        <Label text="Gérer les vols disponibles, leurs horaires et leurs disponibilités."
+                               wrapText="true"
+                               style="-fx-font-size: 12px; -fx-text-fill: #999; -fx-font-family: 'Segoe UI';"/>
+                        <HBox alignment="CENTER_RIGHT">
+                            <Label text="Accéder →"
+                                   style="-fx-font-size: 12px; -fx-text-fill: #FF6B00; -fx-font-weight: bold;"/>
+                        </HBox>
+                    </VBox>
+
+                </HBox>
+
+                <!-- Ligne 3 : 2 cartes larges + 1 bannière stats -->
+                <HBox spacing="18">
+
+                    <!-- Gestion Paiements -->
+                    <VBox fx:id="cardPaiements" spacing="14" alignment="TOP_LEFT"
+                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);"
+                          HBox.hgrow="ALWAYS"
+                          onMouseClicked="#handlePaiements">
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label text="💳"
+                                   style="-fx-font-size: 26px; -fx-background-color: #E8F5E9; -fx-background-radius: 12; -fx-padding: 10;"/>
+                            <VBox spacing="3">
+                                <Label text="Paiements"
+                                       style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1A1A2E; -fx-font-family: 'Segoe UI';"/>
+                                <Label text="Transactions &amp; finances"
+                                       style="-fx-font-size: 11px; -fx-text-fill: #AAA; -fx-font-family: 'Segoe UI';"/>
+                            </VBox>
+                        </HBox>
+                        <Label text="Suivre les transactions, remboursements et rapports financiers."
+                               wrapText="true"
+                               style="-fx-font-size: 12px; -fx-text-fill: #999; -fx-font-family: 'Segoe UI';"/>
+                        <HBox alignment="CENTER_RIGHT">
+                            <Label text="Accéder →"
+                                   style="-fx-font-size: 12px; -fx-text-fill: #FF6B00; -fx-font-weight: bold;"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Gestion Notifications -->
+                    <VBox fx:id="cardNotifications" spacing="14" alignment="TOP_LEFT"
+                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);"
+                          HBox.hgrow="ALWAYS"
+                          onMouseClicked="#handleNotifications">
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label text="🔔"
+                                   style="-fx-font-size: 26px; -fx-background-color: #FFF8E1; -fx-background-radius: 12; -fx-padding: 10;"/>
+                            <VBox spacing="3">
+                                <Label text="Notifications"
+                                       style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1A1A2E; -fx-font-family: 'Segoe UI';"/>
+                                <Label text="Alertes &amp; messages"
+                                       style="-fx-font-size: 11px; -fx-text-fill: #AAA; -fx-font-family: 'Segoe UI';"/>
+                            </VBox>
+                        </HBox>
+                        <Label text="Envoyer et gérer les notifications et alertes destinées aux utilisateurs."
+                               wrapText="true"
+                               style="-fx-font-size: 12px; -fx-text-fill: #999; -fx-font-family: 'Segoe UI';"/>
+                        <HBox alignment="CENTER_RIGHT">
+                            <Label text="Accéder →"
+                                   style="-fx-font-size: 12px; -fx-text-fill: #FF6B00; -fx-font-weight: bold;"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Bannière infos plateforme -->
+                    <VBox spacing="16" alignment="CENTER_LEFT"
+                          style="-fx-background-color: linear-gradient(to bottom right, #FF6B00, #FF9A3C); -fx-background-radius: 16; -fx-padding: 28 26; -fx-pref-width: 300; -fx-min-width: 280;"
+                          HBox.hgrow="NEVER">
+                        <Label text="🚀 TripEase Admin"
+                               style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: white; -fx-font-family: 'Segoe UI';"/>
+                        <Label text="Vous gérez l'ensemble de la plateforme depuis ce tableau de bord centralisé."
+                               wrapText="true"
+                               style="-fx-font-size: 12.5px; -fx-text-fill: rgba(255,255,255,0.88); -fx-font-family: 'Segoe UI';"/>
+                        <Region prefHeight="6"/>
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <Label text="✔"
+                                   style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+                            <Label text="10 modules disponibles"
+                                   style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 12px;"/>
+                        </HBox>
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <Label text="✔"
+                                   style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+                            <Label text="Gestion complète en temps réel"
+                                   style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 12px;"/>
+                        </HBox>
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <Label text="✔"
+                                   style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+                            <Label text="Interface sécurisée &amp; intuitive"
+                                   style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 12px;"/>
+                        </HBox>
+                    </VBox>
+
+                </HBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>
