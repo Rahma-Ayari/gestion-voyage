@@ -3,6 +3,7 @@ package Controller;
 import Entite.Destination;
 import Entite.Vol;
 import Service.ServiceVol;
+import Service.AmadeusFlightService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 public class VolController {
 
+    private AmadeusFlightService amadeusService = new AmadeusFlightService();
 
     @FXML private ComboBox<String> compagnieCombo;
     @FXML private DatePicker datedepartPicker;
@@ -82,7 +84,7 @@ public class VolController {
         loadFromDatabase();
     }
 
-    /** Load all vols from DB */
+
     private void loadFromDatabase() {
         try {
             list.clear();
@@ -95,7 +97,7 @@ public class VolController {
         }
     }
 
-    /** Add new Vol */
+
     @FXML
     public void ajouterVol() {
         try {
@@ -127,7 +129,7 @@ public class VolController {
         }
     }
 
-    /** Modify selected Vol */
+
     @FXML
     public void modifierVol() {
         Vol selected = table.getSelectionModel().getSelectedItem();
@@ -150,7 +152,6 @@ public class VolController {
         }
     }
 
-    /** Delete selected Vol */
     @FXML
     public void supprimerVol() {
         Vol selected = table.getSelectionModel().getSelectedItem();
@@ -165,7 +166,6 @@ public class VolController {
         }
     }
 
-    /** Clear all input fields */
     @FXML
     public void clearFields() {
 
@@ -178,7 +178,6 @@ public class VolController {
     }
 
 
-    /** Filter and search vols based on filter ComboBoxes & DatePickers */
     @FXML
     private void searchFlights() {
         try {
@@ -236,7 +235,7 @@ public class VolController {
             prix.setText(String.valueOf(selected.getPrix()));
         }
     }
-    /** Refresh table and reset filters */
+
     @FXML
     private void refreshAllTable() {
         filterCompagnie.setValue(null);
