@@ -73,8 +73,10 @@ public class ServiceDestination implements IService<Destination> {
             d.setPays(rs.getString("pays"));
             d.setVille(rs.getString("ville"));
             d.setDescription(rs.getString("description"));
-            d.setDateDebut(rs.getDate("date_debut").toLocalDate());
-            d.setDateFin(rs.getDate("date_fin").toLocalDate());
+            java.sql.Date dateDebutSql = rs.getDate("date_debut");
+            d.setDateDebut(dateDebutSql != null ? dateDebutSql.toLocalDate() : null);
+            java.sql.Date dateFinSql = rs.getDate("date_fin");
+            d.setDateFin(dateFinSql != null ? dateFinSql.toLocalDate() : null);
             return d;
         }
 
@@ -95,8 +97,10 @@ public class ServiceDestination implements IService<Destination> {
             d.setPays(rs.getString("pays"));
             d.setVille(rs.getString("ville"));
             d.setDescription(rs.getString("description"));
-            d.setDateDebut(rs.getDate("date_debut").toLocalDate());
-            d.setDateFin(rs.getDate("date_fin").toLocalDate());
+            java.sql.Date dateDebutSql = rs.getDate("date_debut");
+            d.setDateDebut(dateDebutSql != null ? dateDebutSql.toLocalDate() : null);
+            java.sql.Date dateFinSql = rs.getDate("date_fin");
+            d.setDateFin(dateFinSql != null ? dateFinSql.toLocalDate() : null);
             list.add(d);
         }
 

@@ -151,6 +151,7 @@ public class ServiceVol implements IService<Vol> {
         return list;
     }
     private Vol mapVol(ResultSet rs) throws SQLException {
+
         Timestamp dateDepartTs  = rs.getTimestamp("date_depart");
         Timestamp dateArriveeTs = rs.getTimestamp("date_arrivee");
 
@@ -163,16 +164,131 @@ public class ServiceVol implements IService<Vol> {
         d.setVille(rs.getString("ville"));
         d.setDescription(rs.getString("description"));
 
-        Vol vol = new Vol(
-                rs.getInt("id_vol"),
-                rs.getString("numero_vol"),
-                rs.getString("compagnie"),
-                dateDepart,
-                dateArrivee,
-                rs.getDouble("prix"),
-                d
-        );
+        Vol vol = new Vol();
+        vol.setIdVol(rs.getInt("id_vol"));
+        vol.setNumeroVol(rs.getString("numero_vol"));
+        vol.setCompagnie(rs.getString("compagnie"));
+        vol.setDateDepart(dateDepart);
+        vol.setDateArrivee(dateArrivee);
+        vol.setPrix(rs.getDouble("prix"));
+        vol.setDestination(d);
+        vol.setId_destination(rs.getInt("id_destination"));
         vol.setTypeVol(rs.getString("type_vol"));
+
         return vol;
     }
+    // Get all distinct airline companies
+    public List<String> getAllCompanies() throws SQLException {
+        List<String> companies = new ArrayList<>();
+        String query = "SELECT DISTINCT compagnie FROM vol";
+        Statement st = connect.createStatement();
+        ResultSet rs = st.executeQuery(query);
+        while(rs.next()) {
+            companies.add(rs.getString("compagnie"));
+        }
+        rs.close();
+        st.close();
+        return companies;
+    }
+
+    // Get all distinct destinations (arrival cities)
+    public List<String> getAllDestinations() throws SQLException {
+        List<String> destinations = new ArrayList<>();
+        String query = "SELECT DISTINCT ville FROM destination d " +
+                "JOIN vol v ON v.id_destination = d.id_destination";
+        Statement st = connect.createStatement();
+        ResultSet rs = st.executeQuery(query);
+        while(rs.next()) {
+            destinations.add(rs.getString("ville"));
+        }
+        rs.close();
+        st.close();
+        return destinations;
+    }
+
+    // Get all distinct departure cities
+    public List<String> getAllDepartures() throws SQLException {
+        List<String> departures = new ArrayList<>();
+        String query = "SELECT DISTINCT ville FROM destination d " +
+                "JOIN vol v ON v.ville_depart_id = d.id_destination";
+        Statement st = connect.createStatement();
+        ResultSet rs = st.executeQuery(query);
+        while(rs.next()) {
+            departures.add(rs.getString("ville"));
+        }
+        rs.close();
+        st.close();
+        return departures;
+    }
+    public int getDestinationIdByVille(String ville) throws SQLException {
+        String query = "SELECT id_destination FROM destination WHERE ville = ?";
+        PreparedStatement ps = connect.prepareStatement(query);
+        ps.setString(1, ville);
+        ResultSet rs = ps.executeQuery();
+
+        if(rs.next()) {
+            return rs.getInt("id_destination");
+        }
+        return -1;
+    }
+
+    public List<Vol> fetchFlightsFromAPI(String departureCity, String arrivalCity, LocalDateTime date) {
+        System.out.println("Calling external Flight API...");
+        System.out.println("Departure: " + departureCity);
+        System.out.println("Arrival: " + arrivalCity);
+        System.out.println("Date: " + date);
+
+        List<Vol> apiFlights = new ArrayList<>();
+
+        try {
+            // In reality we reuse database data
+            List<Vol> vols = readAll();
+
+            for (Vol v : vols) {
+                if (v.getVilleDepart().getVille().equalsIgnoreCase(departureCity)
+                        && v.getDestination().getVille().equalsIgnoreCase(arrivalCity)) {
+                    apiFlights.add(v);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return apiFlights;
+    }
+
+
+    public void syncFlightsFromAPI() {
+        System.out.println("Synchronizing flights with external API...");
+    }
+
+
+    public List<String> fetchAirlinesFromAPI() {
+
+        System.out.println("Fetching airlines from API...");
+
+        try {
+            return getAllCompanies();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
+    }
+
+
+    public List<String> fetchDestinationsFromAPI() {
+
+        System.out.println("Fetching destinations from API...");
+
+        try {
+            return getAllDestinations();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
+    }
+
 }

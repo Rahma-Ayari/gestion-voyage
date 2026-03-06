@@ -14,6 +14,15 @@ public class Voyage {
     private int       idHotel;
     private LocalDate dateCheckin;
     private LocalDate dateCheckout;
+    private Destination destination;
+
+    public Destination getDestination() {
+        return destination;
+    }
+
+    public void setDestination(Destination destination) {
+        this.destination = destination;
+    }
 
     public Voyage() {}
 
@@ -73,4 +82,6 @@ public class Voyage {
                 + ", idHotel=" + idHotel
                 + ", checkin=" + dateCheckin + ", checkout=" + dateCheckout + "}";
     }
+
+
 }

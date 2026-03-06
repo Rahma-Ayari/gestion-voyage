@@ -158,6 +158,15 @@
                            style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
             </HBox>
 
+            <!-- Destination -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="🌍" style="-fx-font-size: 18px;"/>
+                <ComboBox fx:id="cbDestination"
+                          promptText="Choisir une destination"
+                          prefWidth="280"
+                          style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
+            </HBox>
+
             <!-- Type d'activité -->
             <HBox spacing="10" alignment="CENTER_LEFT">
                 <Label text="📌" style="-fx-font-size: 18px;"/>
@@ -240,6 +249,7 @@
                     <TableColumn fx:id="categorieCol" text="Catégorie" prefWidth="120"/>
                     <TableColumn fx:id="horaireCol" text="Horaire" prefWidth="120"/>
                     <TableColumn fx:id="typeCol" text="Type" prefWidth="150"/>
+                    <TableColumn fx:id="destinationCol" text="Destination" prefWidth="150"/>
                 </columns>
 
                 <placeholder>

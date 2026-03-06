@@ -16,7 +16,23 @@ public class Hotel {
     private double longitude;
 
     // Constructeur vide
-    public Hotel() {}
+    public Hotel(int i, String trim, String trimmed, String s, int parseInt, int anInt, String string, double v, boolean selected) {}
+
+    public Hotel(int idHotel, String nom, String ville, String adresse, int stars, int capacite, String typeChambre, double prixParNuit, boolean disponibilite, int idDestination, String typeReservation, double latitude, double longitude) {
+        this.idHotel = idHotel;
+        this.nom = nom;
+        this.ville = ville;
+        this.adresse = adresse;
+        this.stars = stars;
+        this.capacite = capacite;
+        this.typeChambre = typeChambre;
+        this.prixParNuit = prixParNuit;
+        this.disponibilite = disponibilite;
+        this.idDestination = idDestination;
+        this.typeReservation = typeReservation;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 
     // Constructeur complet
     public Hotel(int idHotel, String nom, String ville, String adresse, int stars,
@@ -47,6 +63,10 @@ public class Hotel {
         this.disponibilite = disponibilite;
         this.idDestination = idDestination;
         this.typeReservation = typeReservation;
+    }
+
+    public Hotel() {
+
     }
 
     public String getTypeReservation() {

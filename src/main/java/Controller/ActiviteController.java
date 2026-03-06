@@ -1,8 +1,10 @@
 package Controller;
 
 import Entite.Activite;
+import Entite.Destination;
 import Entite.TypeActivite;
 import Service.ServiceActivite;
+import Service.ServiceDestination;
 import Service.ServiceTypeActivite;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,6 +24,8 @@ public class ActiviteController {
     @FXML
     private ComboBox<TypeActivite> cbTypeActivite;
     @FXML
+    private ComboBox<Destination> cbDestination;
+    @FXML
     private Button ajouterBtn, modifierBtn, supprimerBtn, clearBtn, refreshBtn;
     @FXML
     private TableView<Activite> tableView;
@@ -36,15 +40,21 @@ public class ActiviteController {
     @FXML
     private Label countLabel;
 
+    @FXML
+    private TableColumn<Activite, String> destinationCol;
+
     private ServiceActivite serviceActivite;
     private ServiceTypeActivite serviceTypeActivite;
+    private ServiceDestination serviceDestination;
     private ObservableList<Activite> activiteList;
     private ObservableList<TypeActivite> typeList;
+    private ObservableList<Destination> destinationList;
 
     @FXML
     public void initialize() {
         serviceActivite = new ServiceActivite();
         serviceTypeActivite = new ServiceTypeActivite();
+        serviceDestination = new ServiceDestination();
 
         // Initialiser les colonnes
         idCol.setCellValueFactory(new PropertyValueFactory<>("idActivite"));
@@ -60,7 +70,26 @@ public class ActiviteController {
             return new javafx.beans.property.SimpleStringProperty(libelle);
         });
 
+        // Lier la colonne Destination à la destination de l'activité
+        destinationCol.setCellValueFactory(cell -> {
+            int idDest = cell.getValue().getIdDestination();
+            Destination d = null;
+
+            if (destinationList != null) {
+                for (Destination dest : destinationList) {
+                    if (dest.getIdDestination() == idDest) {
+                        d = dest;
+                        break;
+                    }
+                }
+            }
+
+            String nomDestination = (d != null) ? d.getVille() + " (" + d.getPays() + ")" : "";
+            return new javafx.beans.property.SimpleStringProperty(nomDestination);
+        });
+
         loadTypeActivites();
+        loadDestinations();
         loadActivites();
 
         // Sélection dans la table
@@ -73,6 +102,16 @@ public class ActiviteController {
                 categorieField.setText(newSel.getCategorie());
                 horaireField.setText(newSel.getHoraire());
                 cbTypeActivite.getSelectionModel().select(newSel.getTypeAct());
+
+                // Sélectionner la destination
+                if (destinationList != null) {
+                    for (Destination d : destinationList) {
+                        if (d.getIdDestination() == newSel.getIdDestination()) {
+                            cbDestination.getSelectionModel().select(d);
+                            break;
+                        }
+                    }
+                }
             }
         });
 
@@ -85,8 +124,22 @@ public class ActiviteController {
             List<TypeActivite> list = serviceTypeActivite.readAll();
             typeList = FXCollections.observableArrayList(list);
             cbTypeActivite.setItems(typeList);
+            System.out.println("✅ " + list.size() + " types chargés");
         } catch (SQLException e) {
+            System.err.println("❌ Erreur chargement types: " + e.getMessage());
             showAlert("Erreur", e.getMessage());
+        }
+    }
+
+    private void loadDestinations() {
+        try {
+            List<Destination> list = serviceDestination.readAll();
+            destinationList = FXCollections.observableArrayList(list);
+            cbDestination.setItems(destinationList);
+            System.out.println("✅ " + list.size() + " destinations chargées");
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur chargement destinations: " + e.getMessage());
+            showAlert("Erreur", "Impossible de charger les destinations : " + e.getMessage());
         }
     }
 
@@ -96,6 +149,7 @@ public class ActiviteController {
             activiteList = FXCollections.observableArrayList(list);
             tableView.setItems(activiteList);
             countLabel.setText(String.valueOf(list.size()));
+            System.out.println("✅ " + list.size() + " activités chargées");
         } catch (SQLException e) {
             showAlert("Erreur", e.getMessage());
         }
@@ -108,6 +162,11 @@ public class ActiviteController {
             return;
         }
 
+        if (cbDestination.getSelectionModel().isEmpty()) {
+            showAlert("Attention", "Veuillez sélectionner une destination !");
+            return;
+        }
+
         Activite a = new Activite();
         a.setNom(nomField.getText());
         a.setDescription(descriptionField.getText());
@@ -117,11 +176,19 @@ public class ActiviteController {
         a.setHoraire(horaireField.getText());
         a.setTypeAct(cbTypeActivite.getSelectionModel().getSelectedItem());
 
+        Destination selectedDest = cbDestination.getSelectionModel().getSelectedItem();
+        a.setIdDestination(selectedDest.getIdDestination());
+
+        System.out.println("Ajout activité - Destination: " + selectedDest.getPays() + " (" + a.getIdDestination() + ")");
+
         try {
             serviceActivite.ajouter(a);
+            System.out.println("✅ Activité ajoutée avec succès");
             clearFields();
             loadActivites();
         } catch (SQLException e) {
+            System.err.println("❌ Erreur SQL: " + e.getMessage());
+            e.printStackTrace();
             showAlert("Erreur", e.getMessage());
         }
     }
@@ -134,6 +201,11 @@ public class ActiviteController {
             return;
         }
 
+        if (cbDestination.getSelectionModel().isEmpty()) {
+            showAlert("Attention", "Veuillez sélectionner une destination !");
+            return;
+        }
+
         selected.setNom(nomField.getText());
         selected.setDescription(descriptionField.getText());
         try { selected.setPrix(Double.parseDouble(prixField.getText())); } catch(Exception e){ selected.setPrix(0); }
@@ -142,11 +214,16 @@ public class ActiviteController {
         selected.setHoraire(horaireField.getText());
         selected.setTypeAct(cbTypeActivite.getSelectionModel().getSelectedItem());
 
+        Destination selectedDest = cbDestination.getSelectionModel().getSelectedItem();
+        selected.setIdDestination(selectedDest.getIdDestination());
+
         try {
             serviceActivite.modifier(selected);
+            System.out.println("✅ Activité modifiée avec succès");
             clearFields();
             loadActivites();
         } catch (SQLException e) {
+            System.err.println("❌ Erreur SQL: " + e.getMessage());
             showAlert("Erreur", e.getMessage());
         }
     }
@@ -161,9 +238,11 @@ public class ActiviteController {
 
         try {
             serviceActivite.supprimer(selected);
+            System.out.println("✅ Activité supprimée avec succès");
             clearFields();
             loadActivites();
         } catch (SQLException e) {
+            System.err.println("❌ Erreur SQL: " + e.getMessage());
             showAlert("Erreur", e.getMessage());
         }
     }
@@ -177,6 +256,7 @@ public class ActiviteController {
         categorieField.clear();
         horaireField.clear();
         cbTypeActivite.getSelectionModel().clearSelection();
+        cbDestination.getSelectionModel().clearSelection();
         tableView.getSelectionModel().clearSelection();
     }
 
