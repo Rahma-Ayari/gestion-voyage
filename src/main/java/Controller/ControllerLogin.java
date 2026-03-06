@@ -45,8 +45,7 @@ public class ControllerLogin implements Initializable {
 
         // 2. Vérification simple : est-ce que c'est vide ?
         if (email.isEmpty() || mdp.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Champs manquants",
-                    "Veuillez remplir tous les champs.");
+            showAlert(Alert.AlertType.WARNING, "Champs manquants", "Veuillez remplir tous les champs.");
             return; // On arrête tout ici si c'est vide
         }
 
@@ -126,9 +125,9 @@ public class ControllerLogin implements Initializable {
         }
     }
 
-    // ─────────────────────────────────────────────────────────────────
+    // ───────────────────────────────────────────────────────────────
     //  Alerte stylisée orange
-    // ─────────────────────────────────────────────────────────────────
+    // ───────────────────────────────────────────────────────────────
     private void showAlert(Alert.AlertType type, String title, String content) {
         Alert alert = new Alert(type); // Crée une petite fenêtre pop-up
         alert.setTitle(title);

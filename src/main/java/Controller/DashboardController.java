@@ -43,7 +43,7 @@ public class DashboardController implements Initializable { // "Initializable" s
     @FXML private HBox       menuApprouves;
     @FXML private HBox       menuRefuses;
 
-    // ─── Services & données ────────────────────────────────────────────────────
+    // ─── Variables de Données ────────────────────────────────────────────────────
     private final ServicePersonne   service  = new ServicePersonne();
     private final SimpleDateFormat  sdf      = new SimpleDateFormat("MMM dd, yyyy");
 
@@ -51,7 +51,7 @@ public class DashboardController implements Initializable { // "Initializable" s
     private List<Personne> filteredData  = new ArrayList<>();
     private String         currentMode   = "pending"; // "pending" | "approved" | "refused"
     private static final int PAGE_SIZE   = 5;
-    private int currentPage = 0;
+    private int currentPage = 0; // On commence à la page numéro 0 (la première)
 
     // ─── Palette couleurs ──────────────────────────────────────────────────────
     private static final String ORANGE         = "#FF6B00";
@@ -102,7 +102,7 @@ public class DashboardController implements Initializable { // "Initializable" s
         menuRefuses.setStyle(SIDEBAR_NORMAL);
         active.setStyle(SIDEBAR_ACTIVE);
 
-        // Ajuste les couleurs des labels enfants
+        // Ajuste les couleurs des labels non sélectionnées
         menuAttente.getChildren().forEach(n -> {
             if (n instanceof VBox vb) {
                 vb.getChildren().forEach(c -> {
@@ -135,6 +135,12 @@ public class DashboardController implements Initializable { // "Initializable" s
                 case "refused"  -> service.getPersonnesRefusees();
                 default         -> new ArrayList<>();
             };
+            // tri alphabétique par Nom + Prénom
+            allData.sort((a, b) -> {
+                String nomA = (a.getNom() + " " + a.getPrenom()).toLowerCase().trim();
+                String nomB = (b.getNom() + " " + b.getPrenom()).toLowerCase().trim();
+                return nomA.compareTo(nomB);
+            });
         } catch (SQLException e) {
             showErrorAlert("Erreur base de données", e.getMessage());
             allData = new ArrayList<>();
@@ -172,32 +178,41 @@ public class DashboardController implements Initializable { // "Initializable" s
         loadAndDisplay();
     }
 
-    // ─── Rendu de la page courante ─────────────────────────────────────────────
+    // ─── Rendu de la page courante : c'est le moteur d'affichage de votre interface ─────────────────────────────────────────────
+    //Son rôle est de transformer vos données Java (la liste d'objets Personne) en éléments visuels concrets (des lignes dans l'interface) en respectant la pagination.
     private void renderPage() {
+
+        // 1. On vide le conteneur visuel
         usersContainer.getChildren().clear();
 
-        int total = filteredData.size();
-        int from  = currentPage * PAGE_SIZE;
-        int to    = Math.min(from + PAGE_SIZE, total);
+        // 2. Calcul des indices pour la pagination
+        int total = filteredData.size(); // Nombre total d'éléments
+        int from  = currentPage * PAGE_SIZE; // Calcul de l'index du premier élément de la page : Ex: Page 0 -> index 0 | Page 1 -> index 5
+        int to    = Math.min(from + PAGE_SIZE, total); // Calcul de l'index de fin
 
+        // 3. Gestion du cas "Aucun résultat"
         if (total == 0) {
             Label empty = new Label("Aucun utilisateur trouvé pour cette section.");
             empty.setStyle("-fx-padding: 40; -fx-text-fill: #BBB; -fx-font-size: 14px;");
             empty.setMaxWidth(Double.MAX_VALUE);
             empty.setAlignment(Pos.CENTER);
             usersContainer.getChildren().add(empty);
-        } else {
+        }
+        // 4. Affichage des données si elles existent
+        else {
             List<Personne> page = filteredData.subList(from, to);
             for (int i = 0; i < page.size(); i++) {
                 usersContainer.getChildren().add(buildRow(page.get(i), i));
             }
         }
 
-        // Label pagination
+        // pagination dynamique
+        // Page 1 → "Affichage de 5 demandes sur 10"
+        // Page 2 → "Affichage de 10 demandes sur 10"
         paginationLabel.setText(
                 total == 0
                         ? "Aucune demande"
-                        : String.format("Affichage de %d demandes sur %d", (to - from), total));
+                        : String.format("Affichage de %d demandes sur %d", to, total));
 
         // Boutons pagination
         btnPrecedent.setDisable(currentPage == 0);
@@ -260,8 +275,9 @@ public class DashboardController implements Initializable { // "Initializable" s
 
         // ── Colonne 4 : Actions ───────────────────────────────────────────────
         HBox actions = new HBox(8);
-        actions.setAlignment(Pos.CENTER_RIGHT);
-        HBox.setHgrow(actions, Priority.ALWAYS);
+        actions.setAlignment(Pos.CENTER_LEFT);
+        actions.setPrefWidth(200);
+        HBox.setHgrow(actions, Priority.NEVER);
 
         switch (currentMode) {
             case "pending" -> {
@@ -416,7 +432,7 @@ public class DashboardController implements Initializable { // "Initializable" s
         });
     }
 
-    // ─── Utilitaires ───────────────────────────────────────────────────────────
+    // ─── avatar textuel : ben nasr safa  -> bs ───────────────────────────────────────────────────────────
     private String getInitiales(Personne p) {
         String n  = (p.getNom()    != null && !p.getNom().isEmpty())    ? String.valueOf(p.getNom().charAt(0)).toUpperCase()    : "";
         String pr = (p.getPrenom() != null && !p.getPrenom().isEmpty()) ? String.valueOf(p.getPrenom().charAt(0)).toUpperCase() : "";

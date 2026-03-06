@@ -42,18 +42,8 @@ public class AvisUserController {
     private final ServiceAvis    serviceAvis    = new ServiceAvis();
     private final ServiceVoyage  serviceVoyage  = new ServiceVoyage();
 
-    // ══════════════════════════════════════════════════════════════════════════
-    //  INJECTION PUBLIQUE  (appelée depuis le contrôleur précédent)
-    // ══════════════════════════════════════════════════════════════════════════
 
-    /**
-     * Point d'entrée principal.
-     * Appelez cette méthode juste après le chargement du FXML :
-     * <pre>
-     *   AvisUserController ctrl = loader.getController();
-     *   ctrl.setUtilisateur(userConnecte);
-     * </pre>
-     */
+    //Point d'entrée principal.
     public void setUtilisateur(Utilisateur user) {
         this.utilisateurConnecte = user;
         refreshUserInfo();
@@ -206,7 +196,7 @@ public class AvisUserController {
     private void showSuccess() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("✓ Merci !");
-        alert.setHeaderText("Votre avis a été publié !");
+        alert.setHeaderText("Votre avis sera publié bientôt !");
         Voyage v = cmbVoyage.getValue();
         String voyageInfo = v != null ? " pour le Voyage #" + v.getIdVoyage() : "";
         alert.setContentText("Votre avis" + voyageInfo + " a bien été enregistré.\nIl aidera d'autres voyageurs.");

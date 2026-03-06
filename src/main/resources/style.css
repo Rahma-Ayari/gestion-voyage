@@ -1,199 +1,304 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   TripEase · style.css
+   Palette : Orange chaleureux #FF7F50 / Corail #FF9A76 / Sable #FFF4EE
+   ═══════════════════════════════════════════════════════════════════════════ */
 
-
+/* ── Base ─────────────────────────────────────────────────────────────────── */
 .root {
-    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-font-family: "Segoe UI Semibold", "Segoe UI", "Arial", sans-serif;
+    -fx-background-color: #FFF4EE;
 }
 
-
-.modern-slider {
-    -fx-pref-height: 8px;
-}
-
-.modern-slider .track {
-    -fx-background-color: #e0e0e0;
-    -fx-background-radius: 4px;
-    -fx-pref-height: 8px;
-}
-
-.modern-slider .thumb {
-    -fx-background-color: white;
-    -fx-background-radius: 50%;
-    -fx-pref-width: 24px;
-    -fx-pref-height: 24px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 6, 0, 0, 2);
-    -fx-cursor: hand;
-}
-
-.modern-slider .thumb:hover {
-    -fx-pref-width: 28px;
-    -fx-pref-height: 28px;
-    -fx-effect: dropshadow(gaussian, rgba(255,127,80,0.4), 8, 0, 0, 3);
-}
-
-.modern-slider:focused .thumb {
-    -fx-effect: dropshadow(gaussian, rgba(255,127,80,0.5), 10, 0, 0, 3);
-}
-
-
-.slider-hebergement .thumb {
-    -fx-background-color: linear-gradient(to bottom, #FF6B6B, #FF8E53);
-    -fx-border-color: white;
-    -fx-border-width: 2px;
-}
-
-.slider-hebergement .thumb:hover {
-    -fx-background-color: linear-gradient(to bottom, #FF5555, #FF7D42);
-}
-
-.slider-hebergement .track {
-    -fx-background-color:
-            linear-gradient(to right,
-            #FF7F50 0%,
-            #FF7F50 0%,
-            #e0e0e0 0%,
-            #e0e0e0 100%);
-}
-
-.slider-transport .thumb {
-    -fx-background-color: linear-gradient(to bottom, #4A90E2, #357ABD);
-    -fx-border-color: white;
-    -fx-border-width: 2px;
-}
-
-.slider-transport .thumb:hover {
-    -fx-background-color: linear-gradient(to bottom, #3A80D2, #2A6AAD);
-}
-
-.slider-transport .track {
-    -fx-background-color:
-            linear-gradient(to right,
-            #4A90E2 0%,
-            #4A90E2 0%,
-            #e0e0e0 0%,
-            #e0e0e0 100%);
-}
-
-.slider-activites .thumb {
-    -fx-background-color: linear-gradient(to bottom, #9B59B6, #8E44AD);
-    -fx-border-color: white;
-    -fx-border-width: 2px;
-}
-
-.slider-activites .thumb:hover {
-    -fx-background-color: linear-gradient(to bottom, #8B49A6, #7E349D);
-}
-
-.slider-activites .track {
-    -fx-background-color:
-            linear-gradient(to right,
-            #9B59B6 0%,
-            #9B59B6 0%,
-            #e0e0e0 0%,
-            #e0e0e0 100%);
-}
-
-.slider-qualiteprix .thumb {
-    -fx-background-color: linear-gradient(to bottom, #F39C12, #E67E22);
-    -fx-border-color: white;
-    -fx-border-width: 2px;
-}
-
-.slider-qualiteprix .thumb:hover {
-    -fx-background-color: linear-gradient(to bottom, #E38C02, #D66E12);
-}
-
-.slider-qualiteprix .track {
-    -fx-background-color:
-            linear-gradient(to right,
-            #F39C12 0%,
-            #F39C12 0%,
-            #e0e0e0 0%,
-            #e0e0e0 100%);
-}
-
-
-.button {
-    -fx-cursor: hand;
-}
-
-.button:hover {
-    -fx-opacity: 0.9;
-}
-
-.button:pressed {
-    -fx-scale-x: 0.98;
-    -fx-scale-y: 0.98;
-}
-
-
-.text-field:focused,
-.text-area:focused {
-    -fx-border-color: #FF7F50;
-    -fx-border-width: 2;
-}
-
-.text-field,
-.text-area {
-    -fx-background-color: white;
-    -fx-background-radius: 8;
-    -fx-border-radius: 8;
-}
-
-.text-area {
-    -fx-background-insets: 0;
-    -fx-padding: 12;
-}
-
-.text-area .content {
-    -fx-background-color: white;
-    -fx-background-radius: 8;
-}
-
-.text-area:focused .content {
-    -fx-background-color: white;
-}
-
-
+/* ── ScrollPane transparent ───────────────────────────────────────────────── */
 .scroll-pane {
     -fx-background-color: transparent;
+    -fx-border-color: transparent;
 }
-
 .scroll-pane > .viewport {
     -fx-background-color: transparent;
 }
-
 .scroll-bar:vertical .thumb {
-    -fx-background-color: #bdc3c7;
-    -fx-background-radius: 4;
+    -fx-background-color: #FFCBB3;
+    -fx-background-radius: 6;
 }
-
 .scroll-bar:vertical .thumb:hover {
-    -fx-background-color: #95a5a6;
+    -fx-background-color: #FF9A76;
 }
-
 .scroll-bar:vertical .track {
-    -fx-background-color: #ecf0f1;
-    -fx-background-radius: 4;
+    -fx-background-color: #FFE8DC;
+    -fx-background-radius: 6;
 }
-
 .scroll-bar:vertical .increment-button,
 .scroll-bar:vertical .decrement-button {
     -fx-background-color: transparent;
     -fx-padding: 0;
 }
 
-
-.button,
-.toggle-button,
-.modern-slider .thumb {
-    -fx-transition: all 0.3s ease;
+/* ── TextField & TextArea ─────────────────────────────────────────────────── */
+.text-field,
+.text-area {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #F0D5C8;
+    -fx-border-width: 1.5;
+    -fx-font-size: 13.5px;
+    -fx-text-fill: #2c3e50;
+    -fx-prompt-text-fill: #C4A090;
+}
+.text-field:focused,
+.text-area:focused {
+    -fx-border-color: #FF7F50;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(255,127,80,0.18), 10, 0, 0, 2);
+}
+.text-field:hover,
+.text-area:hover {
+    -fx-border-color: #FFAE90;
+}
+.text-area {
+    -fx-background-insets: 0;
+    -fx-padding: 12;
+}
+.text-area .content {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+}
+.text-area:focused .content {
+    -fx-background-color: white;
 }
 
+/* ── Buttons global ───────────────────────────────────────────────────────── */
+.button {
+    -fx-cursor: hand;
+}
+.button:hover {
+    -fx-opacity: 0.88;
+}
+.button:pressed {
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+}
 
+/* ── ComboBox ─────────────────────────────────────────────────────────────── */
+.combo-box {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-color: #F0C4A8;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 10;
+    -fx-font-size: 14px;
+    -fx-text-fill: #2c3e50;
+    -fx-cursor: hand;
+    -fx-padding: 4 10 4 10;
+}
+.combo-box:focused,
+.combo-box:showing {
+    -fx-border-color: #FF7F50;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(255,127,80,0.2), 10, 0, 0, 2);
+}
+.combo-box:hover {
+    -fx-border-color: #FF9A76;
+}
+.combo-box .arrow-button {
+    -fx-background-color: transparent;
+}
+.combo-box .arrow {
+    -fx-background-color: #FF7F50;
+}
+.combo-box-popup .list-view {
+    -fx-background-color: white;
+    -fx-border-color: #F0C4A8;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 16, 0, 0, 4);
+}
+.combo-box-popup .list-cell {
+    -fx-padding: 10 14;
+    -fx-font-size: 13.5px;
+    -fx-background-color: white;
+    -fx-text-fill: #2c3e50;
+}
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #FFF0E8;
+    -fx-text-fill: #FF7F50;
+}
+.combo-box-popup .list-cell:selected {
+    -fx-background-color: #FFE4D6;
+    -fx-text-fill: #FF7F50;
+    -fx-font-weight: bold;
+}
+
+/* ── Separator ────────────────────────────────────────────────────────────── */
+.separator {
+    -fx-background-color: transparent;
+    -fx-border-color: #FFE0D0;
+    -fx-border-width: 1 0 0 0;
+    -fx-opacity: 0.8;
+}
+.separator .line {
+    -fx-border-color: #FFE0D0;
+    -fx-border-width: 1 0 0 0;
+}
+
+/* ── Labels ───────────────────────────────────────────────────────────────── */
 .label {
     -fx-text-fill: #2c3e50;
 }
 
-.separator {
-    -fx-background-color: #e0e0e0;
+/* ═══════════════════════════════════════════════════════════════════════════
+   SLIDERS MODERNES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.modern-slider {
+    -fx-pref-height: 10px;
+    -fx-padding: 8 0 8 0;
+}
+.modern-slider .track {
+    -fx-background-color: #F0DDD5;
+    -fx-background-radius: 6px;
+    -fx-pref-height: 8px;
+}
+.modern-slider .thumb {
+    -fx-background-color: white;
+    -fx-background-radius: 50%;
+    -fx-pref-width: 22px;
+    -fx-pref-height: 22px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 8, 0, 0, 2);
+    -fx-cursor: hand;
+    -fx-border-color: #e8e8e8;
+    -fx-border-width: 1;
+    -fx-border-radius: 50%;
+}
+.modern-slider .thumb:hover {
+    -fx-pref-width: 26px;
+    -fx-pref-height: 26px;
+    -fx-effect: dropshadow(gaussian, rgba(255,127,80,0.45), 10, 0, 0, 3);
+}
+.modern-slider:focused .thumb {
+    -fx-effect: dropshadow(gaussian, rgba(255,127,80,0.55), 12, 0, 0, 3);
+}
+
+/* Hébergement — rouge-orangé */
+.slider-hebergement .thumb {
+    -fx-background-color: linear-gradient(to bottom, #FF6B6B, #FF8E53);
+    -fx-border-color: rgba(255,255,255,0.85);
+    -fx-border-width: 2.5px;
+}
+.slider-hebergement .track {
+    -fx-background-color: linear-gradient(to right, #FF8E53 0%, #FF8E53 0%, #F0DDD5 0%, #F0DDD5 100%);
+}
+
+/* Transport — bleu */
+.slider-transport .thumb {
+    -fx-background-color: linear-gradient(to bottom, #4A90E2, #357ABD);
+    -fx-border-color: rgba(255,255,255,0.85);
+    -fx-border-width: 2.5px;
+}
+.slider-transport .track {
+    -fx-background-color: linear-gradient(to right, #4A90E2 0%, #4A90E2 0%, #F0DDD5 0%, #F0DDD5 100%);
+}
+
+/* Activités — violet */
+.slider-activites .thumb {
+    -fx-background-color: linear-gradient(to bottom, #9B59B6, #8E44AD);
+    -fx-border-color: rgba(255,255,255,0.85);
+    -fx-border-width: 2.5px;
+}
+.slider-activites .track {
+    -fx-background-color: linear-gradient(to right, #9B59B6 0%, #9B59B6 0%, #F0DDD5 0%, #F0DDD5 100%);
+}
+
+/* Qualité/Prix — or */
+.slider-qualiteprix .thumb {
+    -fx-background-color: linear-gradient(to bottom, #F39C12, #E67E22);
+    -fx-border-color: rgba(255,255,255,0.85);
+    -fx-border-width: 2.5px;
+}
+.slider-qualiteprix .track {
+    -fx-background-color: linear-gradient(to right, #F39C12 0%, #F39C12 0%, #F0DDD5 0%, #F0DDD5 100%);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TOGGLE BUTTONS (Oui / Non)
+   ═══════════════════════════════════════════════════════════════════════════ */
+.toggle-button {
+    -fx-cursor: hand;
+}
+.toggle-button:hover {
+    -fx-opacity: 0.88;
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+.toggle-button:pressed {
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CARD HOVER SUBTIL
+   ═══════════════════════════════════════════════════════════════════════════ */
+.card-section {
+    -fx-background-color: white;
+    -fx-background-radius: 14;
+    -fx-border-color: #F5E6DF;
+    -fx-border-width: 1;
+    -fx-border-radius: 14;
+}
+.card-section:hover {
+    -fx-border-color: #FFCBB3;
+    -fx-effect: dropshadow(gaussian, rgba(255,127,80,0.08), 12, 0, 0, 3);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HEADER USER BADGE
+   ═══════════════════════════════════════════════════════════════════════════ */
+.user-badge {
+    -fx-background-color: rgba(255,255,255,0.2);
+    -fx-background-radius: 40;
+    -fx-padding: 8 18 8 8;
+}
+.user-badge:hover {
+    -fx-background-color: rgba(255,255,255,0.3);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BREADCRUMB
+   ═══════════════════════════════════════════════════════════════════════════ */
+.breadcrumb-active {
+    -fx-text-fill: #FF7F50;
+    -fx-font-weight: bold;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BOUTON PUBLIER (hover glow)
+   ═══════════════════════════════════════════════════════════════════════════ */
+#btnPublier:hover {
+    -fx-effect: dropshadow(gaussian, rgba(255,127,80,0.65), 20, 0, 0, 6);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+#btnPublier:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+    -fx-effect: dropshadow(gaussian, rgba(255,127,80,0.35), 8, 0, 0, 2);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BOUTON ANNULER
+   ═══════════════════════════════════════════════════════════════════════════ */
+#btnAnnuler:hover {
+    -fx-background-color: #FFF0E8;
+    -fx-border-color: #FF7F50;
+    -fx-text-fill: #FF7F50;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ÉTOILES
+   ═══════════════════════════════════════════════════════════════════════════ */
+#star1:hover, #star2:hover, #star3:hover, #star4:hover, #star5:hover {
+    -fx-scale-x: 1.15;
+    -fx-scale-y: 1.15;
 }

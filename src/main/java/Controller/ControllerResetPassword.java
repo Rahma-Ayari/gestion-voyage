@@ -27,15 +27,12 @@ public class ControllerResetPassword implements Initializable {
     @FXML private PasswordField newPasswordField;
     @FXML private PasswordField confirmPasswordField;
 
-    // Données transmises depuis la page précédente
     private static String emailUtilisateur;
     private static String codeEnvoye;
 
     private ServicePersonne servicePersonne = new ServicePersonne();
 
-    /**
-     * Méthode appelée par le contrôleur précédent pour passer les infos
-     */
+
     public static void setDonnees(String email, String code) {
         emailUtilisateur = email;
         codeEnvoye = code;

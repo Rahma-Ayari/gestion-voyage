@@ -23,8 +23,6 @@ import java.util.ResourceBundle;
 
 public class ControllerInscription implements Initializable {
 
-    // ─── fx:id correspondant exactement à votre Inscription.fxml ─────────────
-    @FXML private StackPane     rootPane;
     @FXML private VBox          mainContainer;
     @FXML private TextField     nomField;
     @FXML private TextField     prenomField;
@@ -118,8 +116,11 @@ public class ControllerInscription implements Initializable {
     // ─────────────────────────────────────────────────────────────────
     private void navigateToLogin(ActionEvent event) {
         try {
+            // Charge le nouveau fichier visuel (.fxml)
             Parent root = FXMLLoader.load(getClass().getResource("/Login.fxml"));
+            // Trouve la fenêtre actuelle (le Stage)
             Stage stage  = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            // Change le contenu de la fenêtre
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
