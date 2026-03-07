@@ -103,6 +103,31 @@ public class ServiceHotel implements IService<Hotel> {
     }
 
     // ─────────────────────────────────────────────
+// FIND BY DESTINATION
+// ─────────────────────────────────────────────
+    public List<Hotel> findByDestination(int idDestination) throws SQLException {
+        List<Hotel> hotels = new ArrayList<>();
+        String req = "SELECT * FROM hotel WHERE id_destination = " + idDestination;
+        ResultSet rs = st.executeQuery(req);
+        while (rs.next()) {
+            hotels.add(new Hotel(
+                    rs.getInt("id_hotel"),
+                    rs.getString("nom"),
+                    rs.getString("ville"),
+                    rs.getString("adresse"),
+                    rs.getInt("stars"),
+                    rs.getInt("capacite"),
+                    rs.getString("type_chambre"),
+                    rs.getDouble("prix_par_nuit"),
+                    rs.getBoolean("disponibilite"),
+                    rs.getDouble("latitude"),
+                    rs.getDouble("longitude")
+            ));
+        }
+        return hotels;
+    }
+
+    // ─────────────────────────────────────────────
     // READ ALL
     // ─────────────────────────────────────────────
     @Override

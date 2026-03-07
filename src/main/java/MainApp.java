@@ -15,28 +15,19 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            // Chargement du fichier FXML
-            // Note : Adaptez le chemin si votre FXML est dans un sous-dossier (ex: "/View/Destination.fxml")
-             ServiceVol serviceVol = new ServiceVol();
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/VolView.fxml"));
+            ServiceVol serviceVol = new ServiceVol();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ActiviteView.fxml"));
             Parent root = loader.load();
 
-            // Création de la scène
             Scene scene = new Scene(root);
-            primaryStage.setMaximized(true); // plein écran
-            // Configuration du Stage (Fenêtre)
+            primaryStage.setMaximized(true);
             primaryStage.setTitle("TripEase - Gestion des Destinations");
-
-
             primaryStage.setScene(scene);
             primaryStage.show();
 
         } catch (IOException e) {
             System.err.println("Erreur lors du chargement du FXML : " + e.getMessage());
             e.printStackTrace();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
     }
 

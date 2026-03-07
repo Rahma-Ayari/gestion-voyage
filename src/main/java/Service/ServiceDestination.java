@@ -4,11 +4,13 @@ import Entite.Destination;
 import Utils.DataSource;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceDestination implements IService<Destination> {
-    private Connection connect = DataSource.getInstance().getCon();
+
+    private final Connection connect = DataSource.getInstance().getCon();
     private Statement st;
 
     public ServiceDestination() {
@@ -19,75 +21,113 @@ public class ServiceDestination implements IService<Destination> {
         }
     }
 
+
     @Override
     public boolean ajouter(Destination d) throws SQLException {
-        boolean test = false;
-        int res = -1;
-        String req = "INSERT INTO `destination` (`pays`, `ville`, `description`) VALUES ('" + d.getPays() + "', '" + d.getVille() + "', '" + d.getDescription() + "');";
-        res = st.executeUpdate(req);
-        if (res > 0)
-            test = true;
-        return test;
+        String req = "INSERT INTO destination (pays, ville, description, date_debut, date_fin) VALUES ('"
+                + d.getPays() + "', '"
+                + d.getVille() + "', '"
+                + d.getDescription() + "', '"
+                + d.getDateDebut() + "', '"
+                + d.getDateFin() + "')";
+
+        int res = st.executeUpdate(req);
+        return res > 0;
     }
+
 
     @Override
     public boolean supprimer(Destination d) throws SQLException {
-        boolean test = false;
-        String req = "DELETE FROM destination WHERE id_destination = " + d.getIdDestination();
+        String req = "DELETE FROM destination WHERE id_destination = "
+                + d.getIdDestination();
+
         int res = st.executeUpdate(req);
-        if (res > 0)
-            test = true;
-        return test;
+        return res > 0;
     }
 
 
     @Override
     public boolean modifier(Destination d) throws SQLException {
-        boolean test = false;
         String req = "UPDATE destination SET "
                 + "pays = '" + d.getPays() + "', "
                 + "ville = '" + d.getVille() + "', "
-                + "description = '" + d.getDescription() + "' "
+                + "description = '" + d.getDescription() + "', "
+                + "date_debut = '" + d.getDateDebut() + "', "
+                + "date_fin = '" + d.getDateFin() + "' "
                 + "WHERE id_destination = " + d.getIdDestination();
 
         int res = st.executeUpdate(req);
-        if (res > 0)
-            test = true;
-        return test;
+        return res > 0;
     }
 
 
     @Override
     public Destination findbyId(int id) throws SQLException {
-        Destination destination = null;
+
         String req = "SELECT * FROM destination WHERE id_destination = " + id;
         ResultSet rs = st.executeQuery(req);
 
         if (rs.next()) {
-            destination = new Destination(
-                    rs.getInt("id_destination"),
-                    rs.getString("pays"),
-                    rs.getString("ville"),
-                    rs.getString("description")
-            );
+            Destination d = new Destination();
+            d.setIdDestination(rs.getInt("id_destination"));
+            d.setPays(rs.getString("pays"));
+            d.setVille(rs.getString("ville"));
+            d.setDescription(rs.getString("description"));
+            java.sql.Date dateDebutSql = rs.getDate("date_debut");
+            d.setDateDebut(dateDebutSql != null ? dateDebutSql.toLocalDate() : null);
+            java.sql.Date dateFinSql = rs.getDate("date_fin");
+            d.setDateFin(dateFinSql != null ? dateFinSql.toLocalDate() : null);
+            return d;
         }
-        return destination;
+
+        return null;
     }
 
 
     @Override
     public List<Destination> readAll() throws SQLException {
+
         List<Destination> list = new ArrayList<>();
-        String query = "SELECT * FROM `destination`";
-        ResultSet rest = st.executeQuery(query);
-        while (rest.next()) {
-            int id = rest.getInt(1);
-            String pays = rest.getString("pays");
-            String ville = rest.getString(3);
-            String description = rest.getString("description");
-            Destination destination = new Destination(id, pays, ville, description);
-            list.add(destination);
+        String req = "SELECT * FROM destination";
+        ResultSet rs = st.executeQuery(req);
+
+        while (rs.next()) {
+            Destination d = new Destination();
+            d.setIdDestination(rs.getInt("id_destination"));
+            d.setPays(rs.getString("pays"));
+            d.setVille(rs.getString("ville"));
+            d.setDescription(rs.getString("description"));
+            java.sql.Date dateDebutSql = rs.getDate("date_debut");
+            d.setDateDebut(dateDebutSql != null ? dateDebutSql.toLocalDate() : null);
+            java.sql.Date dateFinSql = rs.getDate("date_fin");
+            d.setDateFin(dateFinSql != null ? dateFinSql.toLocalDate() : null);
+            list.add(d);
         }
+
+        return list;
+    }
+
+
+    public List<Destination> findByDateRange(LocalDate debut, LocalDate fin) throws SQLException {
+
+        List<Destination> list = new ArrayList<>();
+
+        String req = "SELECT * FROM destination WHERE date_debut <= '"
+                + debut + "' AND date_fin >= '" + fin + "'";
+
+        ResultSet rs = st.executeQuery(req);
+
+        while (rs.next()) {
+            Destination d = new Destination();
+            d.setIdDestination(rs.getInt("id_destination"));
+            d.setPays(rs.getString("pays"));
+            d.setVille(rs.getString("ville"));
+            d.setDescription(rs.getString("description"));
+            d.setDateDebut(rs.getDate("date_debut").toLocalDate());
+            d.setDateFin(rs.getDate("date_fin").toLocalDate());
+            list.add(d);
+        }
+
         return list;
     }
 }

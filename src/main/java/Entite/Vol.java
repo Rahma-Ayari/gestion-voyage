@@ -14,13 +14,13 @@ public class Vol {
     private Destination villeDepart;
     private int id_destination;
     private int	ville_depart_id;
+    private String typeVol;
+
 
 
     public Vol() {}
 
-    public Vol(int idVol, String numeroVol, String compagnie,
-               LocalDateTime dateDepart, LocalDateTime dateArrivee,
-               double prix, Destination destination, Destination villeDepart) {
+    public Vol(int idVol, String numeroVol, String compagnie, LocalDateTime dateDepart, LocalDateTime dateArrivee, double prix, Destination destination, Destination villeDepart, int id_destination, int ville_depart_id, String typeVol) {
         this.idVol = idVol;
         this.numeroVol = numeroVol;
         this.compagnie = compagnie;
@@ -28,15 +28,10 @@ public class Vol {
         this.dateArrivee = dateArrivee;
         this.prix = prix;
         this.destination = destination;
-        this.villeDepart = villeDepart ;
-    }
-
-    public String getNumeroVol() {
-        return numeroVol;
-    }
-
-    public void setNumeroVol(String numeroVol) {
-        this.numeroVol = numeroVol;
+        this.villeDepart = villeDepart;
+        this.id_destination = id_destination;
+        this.ville_depart_id = ville_depart_id;
+        this.typeVol = typeVol;
     }
 
     public int getIdVol() {
@@ -45,6 +40,14 @@ public class Vol {
 
     public void setIdVol(int idVol) {
         this.idVol = idVol;
+    }
+
+    public String getNumeroVol() {
+        return numeroVol;
+    }
+
+    public void setNumeroVol(String numeroVol) {
+        this.numeroVol = numeroVol;
     }
 
     public String getCompagnie() {
@@ -111,6 +114,14 @@ public class Vol {
         this.ville_depart_id = ville_depart_id;
     }
 
+    public String getTypeVol() {
+        return typeVol;
+    }
+
+    public void setTypeVol(String typeVol) {
+        this.typeVol = typeVol;
+    }
+
     @Override
     public String toString() {
         return "Vol{" +
@@ -124,7 +135,7 @@ public class Vol {
                 ", villeDepart=" + villeDepart +
                 ", id_destination=" + id_destination +
                 ", ville_depart_id=" + ville_depart_id +
+                ", typeVol='" + typeVol + '\'' +
                 '}';
     }
 }
-
