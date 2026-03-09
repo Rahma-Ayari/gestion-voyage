@@ -78,8 +78,6 @@
 
                     <!-- ─── Colonne gauche : Résumé offre ─── -->
                     <VBox spacing="16" prefWidth="360" minWidth="320">
-
-                        <!-- Card résumé offre -->
                         <VBox spacing="0"
                               style="-fx-background-color: white; -fx-background-radius: 14;
                                      -fx-border-color: #ECECEC; -fx-border-radius: 14; -fx-border-width: 1;
@@ -87,14 +85,10 @@
 
                             <!-- Image offre -->
                             <StackPane fx:id="imagePane" prefHeight="180"
-                                       style="-fx-background-color: #FFF3E0;
-                                              -fx-background-radius: 14 14 0 0;">
-                                <ImageView fx:id="offreImageView"
-                                           fitWidth="360" fitHeight="180"
+                                       style="-fx-background-color: #FFF3E0; -fx-background-radius: 14 14 0 0;">
+                                <ImageView fx:id="offreImageView" fitWidth="360" fitHeight="180"
                                            preserveRatio="false" smooth="true"/>
-                                <Label fx:id="imagePlaceholder" text="🏖"
-                                       style="-fx-font-size: 48px;"/>
-                                <!-- Badge type -->
+                                <Label fx:id="imagePlaceholder" text="🏖" style="-fx-font-size: 48px;"/>
                                 <VBox alignment="BOTTOM_LEFT" style="-fx-padding: 0 0 12 12;">
                                     <Label fx:id="typeBadge" text="OFFRE"
                                            style="-fx-background-color: #FF6B35; -fx-text-fill: white;
@@ -105,18 +99,12 @@
 
                             <!-- Infos offre -->
                             <VBox spacing="12" style="-fx-padding: 18 20 18 20;">
-                                <Label fx:id="offreTitreLabel"
-                                       text="Chargement..."
+                                <Label fx:id="offreTitreLabel" text="Chargement..."
                                        style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2C2C2C;"
                                        wrapText="true"/>
-                                <Label fx:id="offreDescLabel"
-                                       text=""
-                                       style="-fx-font-size: 12px; -fx-text-fill: #777;"
-                                       wrapText="true"/>
-
+                                <Label fx:id="offreDescLabel" text=""
+                                       style="-fx-font-size: 12px; -fx-text-fill: #777;" wrapText="true"/>
                                 <Separator/>
-
-                                <!-- Destination -->
                                 <HBox spacing="8" alignment="CENTER_LEFT">
                                     <Label text="🌍" style="-fx-font-size: 14px;"/>
                                     <VBox spacing="1">
@@ -126,8 +114,6 @@
                                                style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
                                     </VBox>
                                 </HBox>
-
-                                <!-- Dates -->
                                 <HBox spacing="8" alignment="CENTER_LEFT">
                                     <Label text="📅" style="-fx-font-size: 14px;"/>
                                     <VBox spacing="1">
@@ -137,8 +123,6 @@
                                                style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
                                     </VBox>
                                 </HBox>
-
-                                <!-- Hôtel -->
                                 <HBox spacing="8" alignment="CENTER_LEFT">
                                     <Label text="🏨" style="-fx-font-size: 14px;"/>
                                     <VBox spacing="1">
@@ -148,8 +132,6 @@
                                                style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
                                     </VBox>
                                 </HBox>
-
-                                <!-- Vol -->
                                 <HBox spacing="8" alignment="CENTER_LEFT">
                                     <Label text="✈" style="-fx-font-size: 14px;"/>
                                     <VBox spacing="1">
@@ -159,8 +141,6 @@
                                                style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
                                     </VBox>
                                 </HBox>
-
-                                <!-- Activité -->
                                 <HBox spacing="8" alignment="CENTER_LEFT">
                                     <Label text="🎯" style="-fx-font-size: 14px;"/>
                                     <VBox spacing="1">
@@ -170,10 +150,7 @@
                                                style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
                                     </VBox>
                                 </HBox>
-
                                 <Separator/>
-
-                                <!-- Prix par personne -->
                                 <HBox alignment="CENTER_LEFT" spacing="8">
                                     <Label text="💰 Prix par personne :"
                                            style="-fx-font-size: 13px; -fx-text-fill: #666;"/>
@@ -183,7 +160,6 @@
                                 </HBox>
                             </VBox>
                         </VBox>
-
                     </VBox>
 
                     <!-- ─── Colonne droite : Formulaire ─── -->
@@ -205,7 +181,6 @@
                                 <Label text="Informations de réservation"
                                        style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
                             </HBox>
-
                             <Separator/>
 
                             <!-- Nombre de personnes -->
@@ -218,7 +193,7 @@
                                              editable="true" prefWidth="120"
                                              style="-fx-font-size: 13px; -fx-background-radius: 8;
                                                     -fx-border-color: #DDD; -fx-border-radius: 8;"/>
-                                    <Label text="personne(s) — modifiez pour recalculer le total"
+                                    <Label text="personne(s) — les passeports se mettent à jour automatiquement"
                                            style="-fx-font-size: 11px; -fx-text-fill: #AAA;"/>
                                 </HBox>
                             </VBox>
@@ -232,6 +207,41 @@
                                                    -fx-border-color: #DDD; -fx-border-radius: 8;"/>
                             </VBox>
 
+                            <!-- Email -->
+                            <VBox spacing="6">
+                                <Label text="✉  Adresse e-mail"
+                                       style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555;"/>
+                                <TextField fx:id="emailField" promptText="exemple@email.com"
+                                           style="-fx-font-size: 13px; -fx-background-radius: 8;
+                                                  -fx-border-color: #DDD; -fx-border-radius: 8; -fx-padding: 9 12;"/>
+                            </VBox>
+
+                            <!-- Téléphone -->
+                            <VBox spacing="6">
+                                <Label text="📞  Numéro de téléphone"
+                                       style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555;"/>
+                                <TextField fx:id="numTelField" promptText="+216 XX XXX XXX"
+                                           style="-fx-font-size: 13px; -fx-background-radius: 8;
+                                                  -fx-border-color: #DDD; -fx-border-radius: 8; -fx-padding: 9 12;"/>
+                            </VBox>
+
+                            <!-- ═══ PASSEPORTS DYNAMIQUES ═══
+                                 Le Controller génère autant de champs que de personnes.
+                                 Seul passeportFieldsBox est peuplé dynamiquement.     -->
+                            <VBox fx:id="passeportsContainer" spacing="10"
+                                  style="-fx-background-color: #FAFAFA; -fx-background-radius: 10;
+                                         -fx-border-color: #ECECEC; -fx-border-radius: 10; -fx-border-width: 1;
+                                         -fx-padding: 14 16;">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="🛂" style="-fx-font-size: 16px;"/>
+                                    <Label text="Numéros de passeport"
+                                           style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555;"/>
+                                    <Label fx:id="passeportCountLabel" text="— 1 personne"
+                                           style="-fx-font-size: 11px; -fx-text-fill: #FF6B35; -fx-font-weight: bold;"/>
+                                </HBox>
+                                <!-- Champs injectés dynamiquement par le Controller -->
+                                <VBox fx:id="passeportFieldsBox" spacing="8"/>
+                            </VBox>
 
                             <!-- Commentaire -->
                             <VBox spacing="6">
@@ -251,7 +261,6 @@
                                           -fx-background-color: #FFEBEE; -fx-background-radius: 6;
                                           -fx-padding: 8 14; -fx-font-weight: bold;"
                                    wrapText="true"/>
-
                         </VBox>
 
                         <!-- Card total -->
@@ -269,22 +278,17 @@
                                 <Label text="Récapitulatif du prix"
                                        style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #FF6B35;"/>
                             </HBox>
-
                             <Separator/>
 
-                            <!-- Ligne détail prix -->
                             <HBox alignment="CENTER_LEFT">
-                                <Label fx:id="prixDetailLabel"
-                                       text="0 € × 1 personne"
+                                <Label fx:id="prixDetailLabel" text="0 € × 1 personne"
                                        style="-fx-font-size: 13px; -fx-text-fill: #777;"/>
                                 <Region HBox.hgrow="ALWAYS"/>
                                 <Label fx:id="totalLabel" text="0 €"
                                        style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #FF6B35;"/>
                             </HBox>
-
                             <Separator/>
 
-                            <!-- Boutons -->
                             <HBox spacing="12" alignment="CENTER_RIGHT">
                                 <Button onAction="#retourOffres"
                                         style="-fx-background-color: #F0F0F0; -fx-text-fill: #666;
@@ -299,7 +303,6 @@
                                                -fx-effect: dropshadow(gaussian, rgba(255,107,53,0.4), 10, 0, 0, 3);"
                                         text="✅  Confirmer la réservation"/>
                             </HBox>
-
                         </VBox>
                     </VBox>
 
