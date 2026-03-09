@@ -13,7 +13,6 @@ public class Offre {
     private double prix;
     private String description;
     private boolean disponibilite;
-    private Voyage idVoyage;
     private Vol vol;
     private Hotel hotel;
     private Destination destination;
@@ -25,13 +24,12 @@ public class Offre {
     public Offre() {
     }
 
-    public Offre(int id_offre, String type, double prix, String description, boolean disponibilite, Voyage idVoyage, Vol vol, Hotel hotel, Destination destination, Activite activite, String imagePath, LocalDate dateDebut, LocalDate dateFin) {
+    public Offre(int id_offre, String type, double prix, String description, boolean disponibilite, Vol vol, Hotel hotel, Destination destination, Activite activite, String imagePath, LocalDate dateDebut, LocalDate dateFin) {
         this.id_offre = id_offre;
         this.type = type;
         this.prix = prix;
         this.description = description;
         this.disponibilite = disponibilite;
-        this.idVoyage = idVoyage;
         this.vol = vol;
         this.hotel = hotel;
         this.destination = destination;
@@ -41,8 +39,8 @@ public class Offre {
         this.dateFin = dateFin;
     }
 
-    public Offre(int id_offre, String type, double prix, String description, boolean disponibilite, Voyage idVoyage, Vol vol, Hotel hotel, Destination destination, Activite activite, LocalDate dateDebut, LocalDate dateFin) {
-        this(id_offre, type, prix, description, disponibilite, idVoyage, vol, hotel, destination, activite, (String)null, dateDebut, dateFin);
+    public Offre(int id_offre, String type, double prix, String description, boolean disponibilite, Vol vol, Hotel hotel, Destination destination, Activite activite, LocalDate dateDebut, LocalDate dateFin) {
+        this(id_offre, type, prix, description, disponibilite, vol, hotel, destination, activite, (String)null, dateDebut, dateFin);
     }
 
     public int getId_offre() {
@@ -85,13 +83,7 @@ public class Offre {
         this.disponibilite = disponibilite;
     }
 
-    public Voyage getVoyage() {
-        return this.idVoyage;
-    }
 
-    public void setVoyage(Voyage idVoyage) {
-        this.idVoyage = idVoyage;
-    }
 
     public Vol getVol() {
         return this.vol;
@@ -151,6 +143,6 @@ public class Offre {
 
     public String toString() {
         int var10000 = this.id_offre;
-        return "Offre{id_offre=" + var10000 + ", type='" + this.type + "', prix=" + this.prix + ", description='" + this.description + "', disponibilite=" + this.disponibilite + ", idVoyage=" + String.valueOf(this.idVoyage) + ", vol=" + String.valueOf(this.vol) + ", hotel=" + String.valueOf(this.hotel) + ", destination=" + String.valueOf(this.destination) + ", activite=" + String.valueOf(this.activite) + ", imagePath='" + this.imagePath + "', dateDebut=" + String.valueOf(this.dateDebut) + ", dateFin=" + String.valueOf(this.dateFin) + "}";
+        return "Offre{id_offre=" + var10000 + ", type='" + this.type + "', prix=" + this.prix + ", description='" + this.description + "', disponibilite=" + this.disponibilite +  ", vol=" + String.valueOf(this.vol) + ", hotel=" + String.valueOf(this.hotel) + ", destination=" + String.valueOf(this.destination) + ", activite=" + String.valueOf(this.activite) + ", imagePath='" + this.imagePath + "', dateDebut=" + String.valueOf(this.dateDebut) + ", dateFin=" + String.valueOf(this.dateFin) + "}";
     }
 }

@@ -34,7 +34,6 @@ public class OffreController implements Initializable {
     @FXML private DatePicker dateFinPicker;
 
     // ── ComboBoxes ─────────────────────────────────────────────────────────
-    @FXML private ComboBox<Voyage>      voyageCombo;
     @FXML private ComboBox<Destination> destinationCombo;
     @FXML private ComboBox<Vol>         volCombo;
     @FXML private ComboBox<Hotel>       hotelCombo;
@@ -71,7 +70,6 @@ public class OffreController implements Initializable {
 
     // ── Services ──────────────────────────────────────────────────────────
     private final ServiceOffre       serviceOffre       = new ServiceOffre();
-    private final ServiceVoyage      serviceVoyage      = new ServiceVoyage();
     private final ServiceVol         serviceVol         = new ServiceVol();
     private final ServiceHotel       serviceHotel       = new ServiceHotel();
     private final ServiceDestination serviceDestination = new ServiceDestination();
@@ -113,10 +111,7 @@ public class OffreController implements Initializable {
                                 ? cell.getValue().getDateFin().toString() : "—"));
 
         // Relations
-        voyageCol.setCellValueFactory(cell ->
-                new SimpleStringProperty(
-                        cell.getValue().getVoyage() != null
-                                ? cell.getValue().getVoyage().toString() : "—"));
+
 
         destinationCol.setCellValueFactory(cell ->
                 new SimpleStringProperty(
@@ -148,7 +143,6 @@ public class OffreController implements Initializable {
     // ── Chargement des ComboBoxes ──────────────────────────────────────────
     private void loadCombos() {
         try {
-            voyageCombo.setItems(FXCollections.observableArrayList(serviceVoyage.readAll()));
             volCombo.setItems(FXCollections.observableArrayList(serviceVol.readAll()));
             hotelCombo.setItems(FXCollections.observableArrayList(serviceHotel.readAll()));
             destinationCombo.setItems(FXCollections.observableArrayList(serviceDestination.readAll()));
@@ -211,7 +205,6 @@ public class OffreController implements Initializable {
         dateFinPicker.setValue(o.getDateFin());
 
         // ComboBoxes
-        voyageCombo.setValue(o.getVoyage());
         volCombo.setValue(o.getVol());
         hotelCombo.setValue(o.getHotel());
         destinationCombo.setValue(o.getDestination());
@@ -327,7 +320,6 @@ public class OffreController implements Initializable {
         disponibiliteCheck.setSelected(false);
         dateDebutPicker.setValue(null);
         dateFinPicker.setValue(null);
-        voyageCombo.setValue(null);
         volCombo.setValue(null);
         hotelCombo.setValue(null);
         destinationCombo.setValue(null);
@@ -351,7 +343,6 @@ public class OffreController implements Initializable {
         o.setDisponibilite(disponibiliteCheck.isSelected());
         o.setDateDebut(dateDebutPicker.getValue());
         o.setDateFin(dateFinPicker.getValue());
-        o.setVoyage(voyageCombo.getValue());
         o.setVol(volCombo.getValue());
         o.setHotel(hotelCombo.getValue());
         o.setDestination(destinationCombo.getValue());
@@ -409,11 +400,7 @@ public class OffreController implements Initializable {
             descriptionArea.requestFocus();
             return false;
         }
-        if (voyageCombo.getValue() == null) {
-            showAlert(Alert.AlertType.WARNING, "⚠ Veuillez sélectionner un voyage.");
-            voyageCombo.requestFocus();
-            return false;
-        }
+
         // Validation des dates
         LocalDate debut = dateDebutPicker.getValue();
         LocalDate fin   = dateFinPicker.getValue();

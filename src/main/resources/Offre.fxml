@@ -148,14 +148,7 @@
                     <Separator/>
 
                     <!-- Voyage -->
-                    <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Label text="✈" style="-fx-font-size: 18px;"/>
-                        <ComboBox fx:id="voyageCombo"
-                                  promptText="Voyage associé"
-                                  prefWidth="280"
-                                  style="-fx-background-radius: 8; -fx-border-color: #ddd;
-                                         -fx-border-radius: 8; -fx-padding: 5; -fx-font-size: 13px;"/>
-                    </HBox>
+
 
                     <!-- Destination -->
                     <HBox spacing="10" alignment="CENTER_LEFT">
