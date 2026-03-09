@@ -1,79 +1,65 @@
 package Service;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import Entite.Budget;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import Utils.DataSource;
 
-public class ServiceBudget implements IService<Budget> {
+public class ServiceBudget {
 
-    private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306/gestion_voyage", "root", "");
-    }
+    private final Connection connect = DataSource.getInstance().getCon();
 
-    @Override
-    public boolean ajouter(Budget b) throws SQLException {
-        String sql = "INSERT INTO budget(montant_max, montant_utilise, id_utilisateur) VALUES(?,?,?)";
-        try (PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setDouble(1, b.getMontantMax());
-            ps.setDouble(2, b.getMontantUtilise());
-            ps.setInt(5, b.getIdUtilisateur());
-            int rows = ps.executeUpdate();
+    /**
+     * Enregistre un budget pour un voyage.
+     * Suppose l'existence d'une table:
+     *   budget(id_budget PK AUTO_INCREMENT, id_voyage, total_vol, total_hotel,
+     *          total_activite, total_service, total_global, date_creation TIMESTAMP)
+     */
+    public int enregistrer(Budget b) throws SQLException {
+        String sql = "INSERT INTO budget (id_voyage, total_vol, total_hotel, " +
+                     "total_activite, total_service, total_global) VALUES (?,?,?,?,?,?)";
+        try (PreparedStatement ps = connect.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            ps.setInt   (1, b.getIdVoyage());
+            ps.setDouble(2, b.getTotalVol());
+            ps.setDouble(3, b.getTotalHotel());
+            ps.setDouble(4, b.getTotalActivite());
+            ps.setDouble(5, b.getTotalService());
+            ps.setDouble(6, b.getTotalGlobal());
+            ps.executeUpdate();
+
             ResultSet rs = ps.getGeneratedKeys();
-            if(rs.next()) b.setIdBudget(rs.getInt(1));
-            return rows > 0;
-        }
-    }
-
-    @Override
-    public boolean supprimer(Budget b) throws SQLException {
-        String sql = "DELETE FROM budget WHERE id_budget=?";
-        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
-            ps.setInt(1, b.getIdBudget());
-            return ps.executeUpdate() > 0;
-        }
-    }
-
-    @Override
-    public boolean modifier(Budget b) throws SQLException {
-        String sql = "UPDATE budget SET montant_max=?, montant_utilise=?, id_utilisateur=? WHERE id_budget=?";
-        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
-            ps.setDouble(1, b.getMontantMax());
-            ps.setDouble(2, b.getMontantUtilise());
-            ps.setInt(5, b.getIdUtilisateur());
-            ps.setInt(6, b.getIdBudget());
-            return ps.executeUpdate() > 0;
-        }
-    }
-
-    @Override
-    public List<Budget> readAll() throws SQLException {
-        List<Budget> list = new ArrayList<>();
-        String sql = "SELECT * FROM budget";
-        try (Statement st = getConnection().createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            while(rs.next()) {
-                list.add(findbyId(rs.getInt("id_budget")));
+            if (rs.next()) {
+                return rs.getInt(1); // id_budget
             }
+            return -1;
         }
-        return list;
     }
 
-    @Override
-    public Budget findbyId(int id) throws SQLException {
-        String sql = "SELECT * FROM budget WHERE id_budget=?";
-        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
-            ps.setInt(1, id);
+    /**
+     * Récupère le dernier budget enregistré pour un voyage donné.
+     */
+    public Budget findByVoyage(int idVoyage) throws SQLException {
+        String sql = "SELECT * FROM budget WHERE id_voyage = ? " +
+                     "ORDER BY id_budget DESC LIMIT 1";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, idVoyage);
             ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
+            if (rs.next()) {
                 Budget b = new Budget();
-                b.setIdBudget(rs.getInt("id_budget"));
-                b.setMontantMax(rs.getDouble("montant_max"));
-                b.setMontantUtilise(rs.getDouble("montant_utilise"));
-                b.setIdUtilisateur(rs.getInt("id_utilisateur"));
+                b.setIdBudget    (rs.getInt("id_budget"));
+                b.setIdVoyage    (rs.getInt("id_voyage"));
+                b.setTotalVol    (rs.getDouble("total_vol"));
+                b.setTotalHotel  (rs.getDouble("total_hotel"));
+                b.setTotalActivite(rs.getDouble("total_activite"));
+                b.setTotalService(rs.getDouble("total_service"));
+                b.setTotalGlobal (rs.getDouble("total_global"));
                 return b;
             }
+            return null;
         }
-        return null;
     }
 }
+

@@ -43,6 +43,7 @@ public class Offre {
         this(id_offre, type, prix, description, disponibilite, vol, hotel, destination, activite, (String)null, dateDebut, dateFin);
     }
 
+    // Getters et Setters existants
     public int getId_offre() {
         return this.id_offre;
     }

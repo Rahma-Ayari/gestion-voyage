@@ -1,6 +1,7 @@
 import Entite.*;
 import Service.*;
 import Utils.DataSource;
+
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,10 +11,8 @@ public class Test {
 
     private static Connection con;
     private static Statement stmt;
-    private static List<Vol> vols;
-    private static Utilisateur u;
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         try {
             System.out.println("=== TEST CONNEXION ===");
             con = DataSource.getInstance().getCon();
@@ -21,154 +20,132 @@ public class Test {
                 System.out.println("Connexion OK !");
                 stmt = con.createStatement();
             }
-            
 
+            // ========================
+            // Test Destination
+            // ========================
+            System.out.println("\n--- Test Destination ---");
+            ServiceDestination sd = new ServiceDestination();
 
+            Destination d = new Destination();
+            d.setPays("Tunisie");
+            d.setVille("Tunis");
+            d.setDescription("Destination test");
 
-        System.out.println("\n--- Test Destination ---");
-        ServiceDestination sd = new ServiceDestination();
+            sd.ajouter(d);
 
-        Destination d = new Destination();
-        d.setPays("Tunisie11111");
-        d.setVille("Tunis");
-        d.setDescription("Destination test11111");
+            List<Destination> destinations = sd.readAll();
+            for (Destination dest : destinations) {
+                System.out.println(dest);
+            }
 
-        sd.ajouter(d);
+            // ========================
+            // Test Vol
+            // ========================
+            System.out.println("\n--- Test Vol ---");
+            Destination destForVol = sd.readAll().stream().findFirst().orElse(null);
 
-        List<Destination> destinations = sd.readAll();
-        for (Destination dest : destinations) {
-            System.out.println(dest);
-        }
+            ServiceVol sv = new ServiceVol();
+            Vol vol = new Vol();
+            vol.setNumeroVol("TN123");
+            vol.setCompagnie("TunisAir");
+            vol.setDateDepart(LocalDateTime.now());
+            vol.setDateArrivee(LocalDateTime.now().plusHours(2));
+            vol.setPrix(250.5);
+            if (destForVol != null) vol.setDestination(destForVol);
 
+            boolean resVol = sv.ajouter(vol);
+            System.out.println("Vol ajouté ? " + resVol);
 
-
-        System.out.println("\n--- Test Vol ---");
-
-        Destination destForVol = sd.readAll().stream().findFirst().orElse(null);
-
-        ServiceVol sv = new ServiceVol();
-        Vol vol = new Vol();
-        vol.setNumeroVol("TN123");
-        vol.setCompagnie("TunisAir");
-        vol.setDateDepart(LocalDateTime.now());
-        vol.setDateArrivee(LocalDateTime.now().plusHours(2));
-        vol.setPrix(250.5);
-        if (destForVol != null) vol.setDestination(destForVol);
-
-        boolean resVol = sv.ajouter(vol);
-        System.out.println("Vol ajouté ? " + resVol);
-
-// Affichage propre
-        for (Vol v : sv.readAll()) {
-            System.out.println(v);
-        }
-
-
-
-
-        System.out.println("\n--- Test Voyage ---");
-        ServiceVoyage svy = new ServiceVoyage();  // <- initialisation correcte
-
-        Vol volForVoyage = null;
-        try {
-            List<Vol> vols = sv.readAll();
-            if (!vols.isEmpty()) volForVoyage = vols.get(0);
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-
-        Voyage voyage = new Voyage();
-        voyage.setDuree(5);
-        voyage.setDateDebut(LocalDate.now());
-        voyage.setDateFin(LocalDate.now().plusDays(5));
-        voyage.setRythme("Calme");
-        if (destForVol != null) voyage.setDestination(destForVol);
-        if (volForVoyage != null) voyage.setVol(volForVoyage);
-
-        try {
-            boolean resVoyage = svy.ajouter(voyage);
-            System.out.println("Voyage ajouté ? " + resVoyage);
-
-            List<Voyage> voyages = svy.readAll();
-            for (Voyage v : voyages) {
+            for (Vol v : sv.readAll()) {
                 System.out.println(v);
             }
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
 
-// Test réservation
-        System.out.println("\n--- Test Reservation ---");
-        ServiceStatutReservation ssr = new ServiceStatutReservation(); // <- initialisation
-        ServiceReservation sres = new ServiceReservation();
-        ServicePersonne sp = new ServicePersonne();
+            // ========================
+            // Test Voyage
+            // ========================
+            System.out.println("\n--- Test Voyage ---");
+            ServiceVoyage svy = new ServiceVoyage();
 
+            Vol volForVoyage = sv.readAll().stream().findFirst().orElse(null);
 
-        System.out.println("\n--- Test Hotel ---");
+            Voyage voyage = new Voyage();
+            voyage.setDuree(5);
+            voyage.setDateDebut(LocalDate.now());
+            voyage.setDateFin(LocalDate.now().plusDays(5));
+            voyage.setRythme("Calme");
+            if (destForVol != null)
+                voyage.setIdDestination(destForVol.getIdDestination());
+            if (volForVoyage != null)
+                voyage.setIdVol(volForVoyage.getIdVol());
 
-        ServiceHotel sh = new ServiceHotel();
+            int resVoyage = svy.ajouter(voyage);
+            System.out.println("Voyage ajouté ? " + (resVoyage > 0));
 
-        Hotel h = new Hotel();
-        h.setNom("Hotel Test");
-        h.setVille("Tunis");
-        h.setAdresse("Rue Test");
+            for (Voyage v : svy.readAll()) {
+                System.out.println(v);
+            }
 
-        try {
+            // ========================
+            // Test Hotel
+            // ========================
+            System.out.println("\n--- Test Hotel ---");
+            ServiceHotel sh = new ServiceHotel();
+
+            Hotel h = new Hotel();
+            h.setNom("Hotel Test");
+            h.setVille("Tunis");
+            h.setAdresse("Rue Test");
+            h.setStars(4);
+            h.setCapacite(50);
+            h.setTypeChambre("Standard");
+            h.setPrixParNuit(120.0);
+            h.setDisponibilite(true);
+
             boolean resHotel = sh.ajouter(h);
             System.out.println("Hotel ajouté ? " + resHotel);
 
-            // Affichage via service
-            List<Hotel> hotels = sh.readAll();
-            for (Hotel hotel : hotels) {
+            for (Hotel hotel : sh.readAll()) {
                 System.out.println(hotel);
             }
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
 
+            // ========================
+            // Test Personne et Reservation
+            // ========================
+            System.out.println("\n--- Test Reservation ---");
+            ServicePersonne sp = new ServicePersonne();
+            ServiceReservation sres = new ServiceReservation();
+            ServiceStatutReservation ssr = new ServiceStatutReservation();
 
+            Reservation resv = new Reservation();
+            resv.setDate_reservation(Date.valueOf(LocalDate.now()));
+            resv.setPrix_reservation(180.0);
+            resv.setEtat("Confirmée");
 
-        System.out.println("\n--- Test Reservation ---");
+            Personne p = sp.findbyId(22);        // adapte l'ID selon ta BDD
+            Voyage v = svy.findbyId(1);          // adapte l'ID selon ta BDD
+            StatutReservation st = ssr.findbyId(1);// adapte l'ID selon ta BDD
 
-        sres = new ServiceReservation();
-        sp = new ServicePersonne();
-
-        Reservation resv = new Reservation();
-        resv.setDate_reservation(Date.valueOf(LocalDate.now()));
-        resv.setPrix_reservation(180.0);
-        resv.setEtat("Confirmée");
-
-        try {
-            Personne p = sp.findbyId(22);
-            Voyage v = svy.findbyId(1);
-            StatutReservation st = ssr.findbyId(1);
-
-            if (p == null || v == null || st == null) {
-                System.out.println("Erreur : données liées inexistantes");
-            } else {
+            if (p != null && v != null && st != null) {
                 resv.setId_personne(p);
                 resv.setId_voyage(v);
                 resv.setId_statut(st);
 
                 boolean ok = sres.ajouter(resv);
                 System.out.println("Réservation ajoutée ? " + ok);
+            } else {
+                System.out.println("Erreur : données liées inexistantes pour la réservation.");
             }
 
-        } catch (SQLException e) {
-            System.out.println("Erreur réservation : " + e.getMessage());
-        }
-
-        try {
+            // ========================
+            // Fermeture connexion
+            // ========================
             stmt.close();
             con.close();
             System.out.println("\nConnexion fermée.");
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
-
 }

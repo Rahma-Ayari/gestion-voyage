@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.image.*?>
+
+<StackPane fx:id="rootPane" prefWidth="1200.0" prefHeight="800.0"
+           focusTraversable="true"
+           xmlns="http://javafx.com/javafx/8"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Controller.ControllerLogin">
+
+    <ImageView fitHeight="800.0" fitWidth="1200.0" opacity="0.5" pickOnBounds="true" preserveRatio="false">
+        <image>
+            <Image url="@/images/voyage_bg.jpg" />
+        </image>
+    </ImageView>
+
+    <VBox alignment="CENTER" spacing="20.0" maxWidth="400.0" maxHeight="500.0"
+          style="-fx-background-color: rgba(244, 244, 244, 0.9); -fx-border-color: #FF9800; -fx-border-width: 3; -fx-border-radius: 20; -fx-background-radius: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 0);">
+
+        <padding>
+            <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+        </padding>
+
+        <Label text="Bienvenue sur TripEase" textFill="#FF9800">
+            <font>
+                <Font name="Segoe UI Bold" size="28.0" />
+            </font>
+        </Label>
+
+        <Label text="Connectez-vous à votre compte pour continuer" textFill="#555555" textAlignment="CENTER" wrapText="true">
+            <font>
+                <Font name="Segoe UI" size="14.0" />
+            </font>
+        </Label>
+
+        <VBox spacing="15">
+            <TextField fx:id="emailField" promptText="Adresse email"
+                       style="-fx-background-radius: 20; -fx-padding: 10; -fx-border-color: #FF9800; -fx-border-radius: 20; -fx-background-color: white;" />
+
+            <PasswordField fx:id="passwordField" promptText="Mot de passe"
+                           style="-fx-background-radius: 20; -fx-padding: 10; -fx-border-color: #FF9800; -fx-border-radius: 20; -fx-background-color: white;" />
+        </VBox>
+
+        <VBox alignment="CENTER" spacing="10">
+            <Button text="SE CONNECTER" onAction="#handleLogin"
+                    style="-fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 25; -fx-cursor: hand;"
+                    prefWidth="250.0" prefHeight="45.0">
+                <font>
+                    <Font size="16.0" />
+                </font>
+            </Button>
+
+            <Hyperlink text="Mot de passe oublié ?" onAction="#handleForgotPassword"
+                       style="-fx-text-fill: #555555; -fx-font-size: 12;" />
+        </VBox>
+
+        <Separator maxWidth="200" />
+
+        <HBox alignment="CENTER" spacing="5">
+            <Label text="Pas encore de compte ?" />
+            <Hyperlink text="Créer un compte" onAction="#showInscription"
+                       style="-fx-text-fill: #FF9800; -fx-font-weight: bold;" />
+        </HBox>
+    </VBox>
+</StackPane>

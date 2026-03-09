@@ -5,16 +5,34 @@ public class Hotel {
     private String nom;
     private String ville;
     private String adresse;
-    private int stars;              // Nombre d'étoiles
-    private int capacite;           // Nombre de chambres
-    private String typeChambre;     // Simple, Double, Suite...
+    private int    stars;
+    private int    capacite;
+    private String typeChambre;
     private double prixParNuit;
     private boolean disponibilite;
+    private int    idDestination;   // FK vers la table destination
+    private String  typeReservation;
     private double latitude;        // Latitude de l'hôtel
-    private double longitude;       // Longitude de l'hôtel
+    private double longitude;
 
     // Constructeur vide
-    public Hotel() {}
+    public Hotel(int i, String trim, String trimmed, String s, int parseInt, int anInt, String string, double v, boolean selected) {}
+
+    public Hotel(int idHotel, String nom, String ville, String adresse, int stars, int capacite, String typeChambre, double prixParNuit, boolean disponibilite, int idDestination, String typeReservation, double latitude, double longitude) {
+        this.idHotel = idHotel;
+        this.nom = nom;
+        this.ville = ville;
+        this.adresse = adresse;
+        this.stars = stars;
+        this.capacite = capacite;
+        this.typeChambre = typeChambre;
+        this.prixParNuit = prixParNuit;
+        this.disponibilite = disponibilite;
+        this.idDestination = idDestination;
+        this.typeReservation = typeReservation;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 
     // Constructeur complet
     public Hotel(int idHotel, String nom, String ville, String adresse, int stars,
@@ -33,9 +51,36 @@ public class Hotel {
         this.longitude = longitude;
     }
 
-    // Getters et Setters
-    public int getIdHotel() { return idHotel; }
-    public void setIdHotel(int idHotel) { this.idHotel = idHotel; }
+    public Hotel(int idHotel, String nom, String ville, String adresse, int stars, int capacite, String typeChambre, double prixParNuit, boolean disponibilite, int idDestination, String typeReservation) {
+        this.idHotel = idHotel;
+        this.nom = nom;
+        this.ville = ville;
+        this.adresse = adresse;
+        this.stars = stars;
+        this.capacite = capacite;
+        this.typeChambre = typeChambre;
+        this.prixParNuit = prixParNuit;
+        this.disponibilite = disponibilite;
+        this.idDestination = idDestination;
+        this.typeReservation = typeReservation;
+    }
+
+    public Hotel() {
+
+    }
+
+    public String getTypeReservation() {
+        return typeReservation;
+    }
+
+    public void setTypeReservation(String typeReservation) {
+        this.typeReservation = typeReservation;
+    }
+
+    // ── Getters / Setters ──────────────────────────────────────
+
+    public int     getIdHotel()                        { return idHotel; }
+    public void    setIdHotel(int idHotel)             { this.idHotel = idHotel; }
 
     public String getNom() { return nom; }
     public void setNom(String nom) { this.nom = nom; }
