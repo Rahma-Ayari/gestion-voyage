@@ -1,5 +1,9 @@
 package Controller;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -9,10 +13,6 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class HomeAdminController implements Initializable {
 
@@ -89,7 +89,8 @@ public class HomeAdminController implements Initializable {
 
     @FXML
     private void handleActivites(MouseEvent e) {
-        ouvrirFenetre("/Activites.fxml", "Gestion des Activités");
+        // Nom réel du fichier FXML : ActiviteView.fxml
+        ouvrirFenetre("/ActiviteView.fxml", "Gestion des Activités");
     }
 
     @FXML
@@ -99,17 +100,20 @@ public class HomeAdminController implements Initializable {
 
     @FXML
     private void handleReservations(MouseEvent e) {
-        ouvrirFenetre("/Reservations.fxml", "Gestion des Réservations");
+        // Nom réel du fichier FXML : ReservationAdmin.fxml
+        ouvrirFenetre("/ReservationAdmin.fxml", "Gestion des Réservations");
     }
 
     @FXML
     private void handleOffres(MouseEvent e) {
-        ouvrirFenetre("/Offres.fxml", "Gestion des Offres");
+        // Nom réel du fichier FXML : Offre.fxml
+        ouvrirFenetre("/Offre.fxml", "Gestion des Offres");
     }
 
     @FXML
     private void handleVols(MouseEvent e) {
-        ouvrirFenetre("/Vols.fxml", "Gestion des Vols");
+        // Nom réel du fichier FXML : VolView.fxml
+        ouvrirFenetre("/VolView.fxml", "Gestion des Vols");
     }
 
     @FXML

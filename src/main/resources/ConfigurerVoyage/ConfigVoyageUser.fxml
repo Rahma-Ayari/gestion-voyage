@@ -194,7 +194,9 @@
                            -fx-font-size: 13px; -fx-alignment: CENTER-LEFT;
                            -fx-padding: 11 18; -fx-cursor: hand;"
                     text="⚙   Paramètres"/>
-            <Button maxWidth="Infinity"
+            <Button fx:id="logoutButton"
+                    onAction="#handleLogout"
+                    maxWidth="Infinity"
                     onMouseEntered="#onMouseEnteredButton" onMouseExited="#onMouseExitedButton"
                     style="-fx-background-color: transparent; -fx-text-fill: #E74C3C;
                            -fx-font-size: 13px; -fx-alignment: CENTER-LEFT;

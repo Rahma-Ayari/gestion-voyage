@@ -1,13 +1,18 @@
 package Service;
 
-import Entite.Administrateur;
-import Utils.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import Entite.Administrateur;
+import Utils.DataSource;
+
 public class ServiceAdministrateur implements IService<Administrateur> {
-    private Connection con = DataSource.getInstance().getCon();
+    private final Connection con = DataSource.getInstance().getCon();
 
     @Override
     public boolean ajouter(Administrateur admin) throws SQLException {
@@ -40,12 +45,7 @@ public class ServiceAdministrateur implements IService<Administrateur> {
         String req = "SELECT u.* FROM utilisateur u JOIN administrateur a ON u.id_utilisateur = a.id_admin";
         try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(req)) {
             while (rs.next()) {
-                liste.add(new Administrateur(
-                        rs.getInt("id_utilisateur"),
-                        rs.getString("email"),
-                        rs.getString("motDePasse"),
-                        rs.getDate("dateInscription")
-                ));
+                liste.add(mapAdmin(rs));
             }
         }
         return liste;
@@ -77,14 +77,40 @@ public class ServiceAdministrateur implements IService<Administrateur> {
         try (PreparedStatement ps = con.prepareStatement(req)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return new Administrateur(
-                        rs.getInt("id_utilisateur"),
-                        rs.getString("email"),
-                        rs.getString("motDePasse"),
-                        rs.getDate("dateInscription")
-                );
+                if (rs.next()) {
+                    return mapAdmin(rs);
+                }
             }
         }
         return null;
+    }
+
+    /**
+     * Authentifie un administrateur à partir de son email / mot de passe.
+     * Retourne null si aucun admin ne correspond.
+     */
+    public Administrateur authentifier(String email, String mdp) throws SQLException {
+        String sql = "SELECT u.* FROM utilisateur u " +
+                     "JOIN administrateur a ON u.id_utilisateur = a.id_admin " +
+                     "WHERE u.email = ? AND u.motDePasse = ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.setString(2, mdp);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapAdmin(rs);
+                }
+            }
+        }
+        return null;
+    }
+
+    private Administrateur mapAdmin(ResultSet rs) throws SQLException {
+        return new Administrateur(
+                rs.getInt("id_utilisateur"),
+                rs.getString("email"),
+                rs.getString("motDePasse"),
+                rs.getDate("dateInscription")
+        );
     }
 }
