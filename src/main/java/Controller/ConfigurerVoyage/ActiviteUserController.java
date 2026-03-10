@@ -295,45 +295,50 @@ public class ActiviteUserController {
 
 
     @FXML
-private void passerEtapeSuivante() {
-    if (activitesSelectionnees.isEmpty()) {
-        showAlert("Aucune sélection", "Veuillez sélectionner au moins une activité.");
-        return;
-    }
+    private void passerEtapeSuivante() {
+        // ✅ MODIFIÉ : Les activités ne sont PAS obligatoires
+        // L'utilisateur peut passer sans en sélectionner
 
-    // Enregistrer les activités en BD
-    if (idVoyage > 0) {
-        try {
-            List<Integer> ids = activitesSelectionnees.stream()
-                    .map(Activite::getIdActivite)
-                    .collect(Collectors.toList());
-            serviceVoyage.mettreAJourActivites(idVoyage, ids);
-        } catch (SQLException e) {
-            showAlert("Erreur BD", "Impossible d'enregistrer les activités : " + e.getMessage());
+        // Enregistrer les activités en BD (même si la liste est vide)
+        if (idVoyage > 0) {
+            try {
+                List<Integer> ids = activitesSelectionnees.stream()
+                        .map(Activite::getIdActivite)
+                        .collect(Collectors.toList());
+                serviceVoyage.mettreAJourActivites(idVoyage, ids);
+
+                // Message de confirmation
+                if (ids.isEmpty()) {
+                    System.out.println("ℹ️ Pas d'activités sélectionnées pour le voyage #" + idVoyage);
+                } else {
+                    System.out.println("✅ " + ids.size() + " activité(s) enregistrée(s) pour le voyage #" + idVoyage);
+                }
+            } catch (SQLException e) {
+                showAlert("Erreur BD", "Impossible d'enregistrer les activités : " + e.getMessage());
+                return;
+            }
+        }
+
+        // ── Navigation vers ServicesSupplementaires ──
+        URL url = getClass().getClassLoader().getResource("ConfigurerVoyage/ServicesSuppUser.fxml");
+        if (url == null) url = getClass().getResource("/ConfigurerVoyage/ServicesSuppUser.fxml");
+        if (url == null) {
+            showAlert("Erreur", "ServicesSuppUser.fxml introuvable.");
             return;
         }
+        try {
+            FXMLLoader loader = new FXMLLoader(url);
+            Parent root = loader.load();
+            ((ServicesSuppUserController) loader.getController())
+                    .initDonnees(destination, dateDebut, dateFin, idVoyage);
+            Stage stage = (Stage) suivantButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("TripEase — Services Supplémentaires");
+            stage.show();
+        } catch (IOException ex) {
+            showAlert("Erreur", "Impossible de charger ServicesSupplementaires.fxml : " + ex.getMessage());
+        }
     }
-
-    // ── Navigation vers ServicesSupplementaires ──
-    URL url = getClass().getClassLoader().getResource("ConfigurerVoyage/ServicesSuppUser.fxml");
-    if (url == null) url = getClass().getResource("/ConfigurerVoyage/ServicesSuppUser.fxml");
-    if (url == null) {
-        showAlert("Erreur", "ServicesSuppUser.fxml introuvable.");
-        return;
-    }
-    try {
-        FXMLLoader loader = new FXMLLoader(url);
-        Parent root = loader.load();
-        ((ServicesSuppUserController) loader.getController())
-                .initDonnees(destination, dateDebut, dateFin, idVoyage);
-        Stage stage = (Stage) suivantButton.getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.setTitle("TripEase — Services Supplémentaires");
-        stage.show();
-    } catch (IOException ex) {
-        showAlert("Erreur", "Impossible de charger ServicesSupplementaires.fxml : " + ex.getMessage());
-    }
-}
 
     @FXML
     private void retourEtapePrecedente() {
