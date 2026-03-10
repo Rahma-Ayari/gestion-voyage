@@ -139,12 +139,35 @@ public class ConfigVoyageController {
 
         int idVoyage;
         try {
+            // ✅ ÉTAPE CLIÉ : Récupérer l'ID de l'utilisateur connecté
+            int idUserActuel = SessionManager.getUserId();
+
+            // ✅ Vérification de sécurité (optionnel mais recommandé)
+            if (idUserActuel <= 0) {
+                showAlert("Erreur", "Utilisateur non authentifié. Veuillez vous reconnecter.");
+                return;
+            }
+
+            // Afficher dans la console pour déboguer
+            System.out.println("═══════════════════════════════════════════");
+            System.out.println("🧳 CRÉATION DE VOYAGE");
+            System.out.println("═══════════════════════════════════════════");
+            System.out.println("👤 Utilisateur ID : " + idUserActuel);
+            System.out.println("📍 Destination : " + destinationCombo.getValue().getPays());
+            System.out.println("📅 Du " + debut + " au " + fin);
+            System.out.println("🎒 Rythme : " + rythmeCombo.getValue());
+            System.out.println("═══════════════════════════════════════════");
+
             Voyage v = new Voyage();
             v.setDuree((int) duree);
             v.setDateDebut(debut);
             v.setDateFin(fin);
             v.setRythme(rythmeCombo.getValue());
             v.setIdDestination(destinationCombo.getValue().getIdDestination());
+
+            // ✅ CRUCIAL : Associer le voyage à l'utilisateur connecté
+            v.setIdUser(idUserActuel);
+
             idVoyage = serviceVoyage.ajouter(v);
             if (idVoyage == -1) {
                 showAlert("Erreur", "Impossible de créer le voyage."); return;

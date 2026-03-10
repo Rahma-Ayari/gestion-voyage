@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane prefHeight="900" prefWidth="1400"
+            style="-fx-background-color: #F5F6FA;"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controller.ConfigurerVoyage.MesVoyagesController">
+
+    <!-- TOP : HEADER -->
+    <top>
+        <VBox spacing="0">
+            <!-- Barre principale -->
+            <HBox alignment="CENTER_LEFT" spacing="16"
+                  style="-fx-background-color: linear-gradient(to right, #FF6B35, #F7931E);
+                         -fx-padding: 16 40 16 40;
+                         -fx-effect: dropshadow(gaussian, rgba(255,107,53,0.35), 12, 0, 0, 4);">
+
+                <StackPane prefWidth="46" prefHeight="46"
+                           style="-fx-background-color: rgba(255,255,255,0.2);
+                                  -fx-background-radius: 13;
+                                  -fx-border-color: rgba(255,255,255,0.35);
+                                  -fx-border-radius: 13;
+                                  -fx-border-width: 1.5;">
+                    <Label text="✈️" style="-fx-font-size: 22px;"/>
+                </StackPane>
+
+                <VBox alignment="CENTER_LEFT" spacing="1">
+                    <Label text="TripEase"
+                           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                    <Label text="Gestionnaire de voyages"
+                           style="-fx-font-size: 11px; -fx-text-fill: rgba(255,255,255,0.75); -fx-font-style: italic;"/>
+                </VBox>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- Badge utilisateur -->
+                <HBox alignment="CENTER" spacing="10"
+                      style="-fx-background-color: rgba(255,255,255,0.15);
+                             -fx-background-radius: 10;
+                             -fx-border-color: rgba(255,255,255,0.3);
+                             -fx-border-radius: 10;
+                             -fx-border-width: 1;
+                             -fx-padding: 8 16;">
+                    <StackPane prefWidth="30" prefHeight="30"
+                               style="-fx-background-color: rgba(255,255,255,0.25); -fx-background-radius: 15;">
+                        <Label text="👤" style="-fx-font-size: 13px;"/>
+                    </StackPane>
+                    <VBox alignment="CENTER_LEFT" spacing="1">
+                        <Label fx:id="userNameLabel" text="Utilisateur"
+                               style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                        <Label text="● Connecté"
+                               style="-fx-font-size: 10px; -fx-text-fill: rgba(255,255,255,0.8);"/>
+                    </VBox>
+                </HBox>
+
+                <Button fx:id="logoutButton"
+                        text="🚪  Déconnexion"
+                        style="-fx-background-color: rgba(255,255,255,0.18);
+                               -fx-text-fill: white;
+                               -fx-font-size: 12px;
+                               -fx-font-weight: bold;
+                               -fx-padding: 9 18;
+                               -fx-background-radius: 8;
+                               -fx-cursor: hand;
+                               -fx-border-color: rgba(255,255,255,0.45);
+                               -fx-border-width: 1.5;
+                               -fx-border-radius: 8;"/>
+            </HBox>
+
+            <!-- Breadcrumb -->
+            <HBox alignment="CENTER_LEFT" spacing="6"
+                  style="-fx-background-color: white;
+                         -fx-padding: 9 40;
+                         -fx-border-color: #EAEEF3;
+                         -fx-border-width: 0 0 1 0;">
+                <Label text="🏠" style="-fx-font-size: 11px;"/>
+                <Label text="Accueil" style="-fx-font-size: 11px; -fx-text-fill: #AAB0BC;"/>
+                <Label text="/" style="-fx-text-fill: #D0D5DE; -fx-font-size: 12px;"/>
+                <Label text="Mes Voyages"
+                       style="-fx-font-size: 11px; -fx-text-fill: #FF6B35; -fx-font-weight: bold;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- CENTER : CONTENU -->
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER"
+                    style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;">
+            <VBox spacing="0" style="-fx-background-color: #F5F6FA;">
+
+                <!-- HERO -->
+                <HBox alignment="CENTER_LEFT"
+                      style="-fx-padding: 32 40 28 40;">
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Label text="Mes Voyages"
+                               style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #1E2433;"/>
+                        <Label text="Planifiez, gérez et explorez vos aventures configurées"
+                               style="-fx-font-size: 13px; -fx-text-fill: #8892A4;"/>
+                    </VBox>
+                    <Button fx:id="newVoyageButton"
+                            text="✨  Nouveau Voyage"
+                            style="-fx-background-color: linear-gradient(to bottom right, #FF6B35, #F7931E);
+                                   -fx-text-fill: white;
+                                   -fx-font-size: 13px;
+                                   -fx-font-weight: bold;
+                                   -fx-padding: 13 28;
+                                   -fx-background-radius: 10;
+                                   -fx-cursor: hand;
+                                   -fx-effect: dropshadow(gaussian, rgba(255,107,53,0.40), 10, 0, 0, 4);"/>
+                </HBox>
+
+                <!-- STATS : 3 cards pertinentes -->
+                <HBox spacing="16" style="-fx-padding: 0 40 28 40;">
+
+                    <!-- Total voyages -->
+                    <VBox spacing="0" prefWidth="220"
+                          style="-fx-background-color: white;
+                                 -fx-background-radius: 14;
+                                 -fx-border-color: #EAEEF3;
+                                 -fx-border-radius: 14;
+                                 -fx-border-width: 1.5;
+                                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.055), 10, 0, 0, 3);">
+                        <Region prefHeight="5"
+                                style="-fx-background-color: linear-gradient(to right, #FF6B35, #F7931E);
+                                       -fx-background-radius: 12 12 0 0;"/>
+                        <VBox spacing="10" style="-fx-padding: 18 20 18 20;">
+                            <HBox alignment="CENTER_LEFT" spacing="12">
+                                <StackPane prefWidth="42" prefHeight="42"
+                                           style="-fx-background-color: #FFF0EB; -fx-background-radius: 11;">
+                                    <Label text="🗺️" style="-fx-font-size: 18px;"/>
+                                </StackPane>
+                                <VBox spacing="2">
+                                    <Label text="VOYAGES CRÉÉS"
+                                           style="-fx-font-size: 10px; -fx-text-fill: #8892A4; -fx-font-weight: bold;"/>
+                                    <Label fx:id="voyageCountLabel" text="0"
+                                           style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #FF6B35;"/>
+                                </VBox>
+                            </HBox>
+                            <Label text="Tous vos projets de voyage"
+                                   style="-fx-font-size: 10px; -fx-text-fill: #B8C0CC; -fx-font-style: italic;"/>
+                        </VBox>
+                    </VBox>
+
+                    <!-- Voyages complets -->
+                    <VBox spacing="0" prefWidth="220"
+                          style="-fx-background-color: white;
+                                 -fx-background-radius: 14;
+                                 -fx-border-color: #EAEEF3;
+                                 -fx-border-radius: 14;
+                                 -fx-border-width: 1.5;
+                                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.055), 10, 0, 0, 3);">
+                        <Region prefHeight="5"
+                                style="-fx-background-color: linear-gradient(to right, #27AE60, #2ECC71);
+                                       -fx-background-radius: 12 12 0 0;"/>
+                        <VBox spacing="10" style="-fx-padding: 18 20 18 20;">
+                            <HBox alignment="CENTER_LEFT" spacing="12">
+                                <StackPane prefWidth="42" prefHeight="42"
+                                           style="-fx-background-color: #EAFAF1; -fx-background-radius: 11;">
+                                    <Label text="✅" style="-fx-font-size: 18px;"/>
+                                </StackPane>
+                                <VBox spacing="2">
+                                    <Label text="VOYAGES COMPLETS"
+                                           style="-fx-font-size: 10px; -fx-text-fill: #8892A4; -fx-font-weight: bold;"/>
+                                    <Label fx:id="completeCountLabel" text="0"
+                                           style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #27AE60;"/>
+                                </VBox>
+                            </HBox>
+                            <Label text="Vol + hôtel configurés"
+                                   style="-fx-font-size: 10px; -fx-text-fill: #B8C0CC; -fx-font-style: italic;"/>
+                        </VBox>
+                    </VBox>
+
+                    <!-- En cours -->
+                    <VBox spacing="0" prefWidth="220"
+                          style="-fx-background-color: white;
+                                 -fx-background-radius: 14;
+                                 -fx-border-color: #EAEEF3;
+                                 -fx-border-radius: 14;
+                                 -fx-border-width: 1.5;
+                                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.055), 10, 0, 0, 3);">
+                        <Region prefHeight="5"
+                                style="-fx-background-color: linear-gradient(to right, #3498DB, #5DADE2);
+                                       -fx-background-radius: 12 12 0 0;"/>
+                        <VBox spacing="10" style="-fx-padding: 18 20 18 20;">
+                            <HBox alignment="CENTER_LEFT" spacing="12">
+                                <StackPane prefWidth="42" prefHeight="42"
+                                           style="-fx-background-color: #EBF5FB; -fx-background-radius: 11;">
+                                    <Label text="⏳" style="-fx-font-size: 18px;"/>
+                                </StackPane>
+                                <VBox spacing="2">
+                                    <Label text="EN CONFIGURATION"
+                                           style="-fx-font-size: 10px; -fx-text-fill: #8892A4; -fx-font-weight: bold;"/>
+                                    <Label fx:id="pendingCountLabel" text="0"
+                                           style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #3498DB;"/>
+                                </VBox>
+                            </HBox>
+                            <Label text="À finaliser bientôt"
+                                   style="-fx-font-size: 10px; -fx-text-fill: #B8C0CC; -fx-font-style: italic;"/>
+                        </VBox>
+                    </VBox>
+
+                    <Region HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <!-- ONGLETS : Actifs / Archivés -->
+                <HBox alignment="CENTER_LEFT" spacing="0"
+                      style="-fx-padding: 16 40 0 40;">
+                    <Button fx:id="activeTabButton"
+                            text="📌 Voyages Actifs"
+                            style="-fx-background-color: linear-gradient(to bottom right, #FF6B35, #F7931E);
+                                   -fx-text-fill: white;
+                                   -fx-font-size: 12px;
+                                   -fx-font-weight: bold;
+                                   -fx-padding: 10 20;
+                                   -fx-border-radius: 10 10 0 0;
+                                   -fx-background-radius: 10 10 0 0;
+                                   -fx-cursor: hand;"/>
+                    <Button fx:id="archiveTabButton"
+                            text="📦 Voyages Archivés"
+                            style="-fx-background-color: #E8ECF2;
+                                   -fx-text-fill: #64748B;
+                                   -fx-font-size: 12px;
+                                   -fx-font-weight: bold;
+                                   -fx-padding: 10 20;
+                                   -fx-border-radius: 10 10 0 0;
+                                   -fx-background-radius: 10 10 0 0;
+                                   -fx-cursor: hand;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <!-- SÉPARATEUR TITRÉ -->
+                <HBox alignment="CENTER_LEFT" spacing="14"
+                      style="-fx-padding: 0 40 16 40;
+                             -fx-border-color: #EAEEF3;
+                             -fx-border-width: 1 0 0 0;">
+                    <Label fx:id="sectionTitleLabel" text="VOS VOYAGES"
+                           style="-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #B0B8C8;"/>
+                    <Region HBox.hgrow="ALWAYS"
+                            style="-fx-background-color: #E8ECF2;
+                                   -fx-pref-height: 1; -fx-max-height: 1;"/>
+                </HBox>
+
+                <!-- LISTE DES VOYAGES -->
+                <VBox fx:id="voyagesContainer" spacing="14"
+                      style="-fx-padding: 0 40 40 40;"/>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <!-- FOOTER -->
+    <bottom>
+        <HBox alignment="CENTER"
+              style="-fx-background-color: white;
+                     -fx-border-color: #EAEEF3;
+                     -fx-border-width: 1 0 0 0;
+                     -fx-padding: 14 40;">
+            <Label text="© 2024 TripEase — Explorez le monde avec nous"
+                   style="-fx-font-size: 11px; -fx-text-fill: #B0B8C8;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="v1.0  ·  contact@tripease.com"
+                   style="-fx-font-size: 10px; -fx-text-fill: #D0D5DE;"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
