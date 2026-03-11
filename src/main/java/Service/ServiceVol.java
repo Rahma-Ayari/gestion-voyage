@@ -15,6 +15,7 @@ public class ServiceVol implements IService<Vol> {
     private final Connection connect = DataSource.getInstance().getCon();
     private Statement st;
 
+
     public ServiceVol() {
         try {
             st = connect.createStatement();
@@ -25,6 +26,8 @@ public class ServiceVol implements IService<Vol> {
 
     @Override
     public boolean ajouter(Vol v) throws SQLException {
+        if(flightExists(v.getNumeroVol(), v.getDateDepart()))
+            return false;
         String req = "INSERT INTO vol (numero_vol, compagnie, date_depart, date_arrivee, prix, id_destination, type_vol) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connect.prepareStatement(req)) {
@@ -231,25 +234,67 @@ public class ServiceVol implements IService<Vol> {
         }
         return -1;
     }
+    public int createDestinationIfNotExists(String ville) throws SQLException {
 
-    public List<Vol> fetchFlightsFromAPI(String departureCity, String arrivalCity, LocalDateTime date) {
-        System.out.println("Calling external Flight API...");
-        System.out.println("Departure: " + departureCity);
-        System.out.println("Arrival: " + arrivalCity);
-        System.out.println("Date: " + date);
+        int id = getDestinationIdByVille(ville);
 
+        if(id != -1) {
+            return id;
+        }
+
+        String query = "INSERT INTO destination (ville, pays, description) VALUES (?, 'Unknown', 'API imported')";
+        PreparedStatement ps = connect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+        ps.setString(1, ville);
+        ps.executeUpdate();
+
+        ResultSet rs = ps.getGeneratedKeys();
+        if(rs.next()) {
+            return rs.getInt(1);
+        }
+
+        return -1;
+    }
+
+    public List<Vol> fetchFlightsFromAPI(String departureCity, String arrivalCity, LocalDate date) {
+
+        AmadeusFlightService api = new AmadeusFlightService();
         List<Vol> apiFlights = new ArrayList<>();
 
-        try {
-            // In reality we reuse database data
-            List<Vol> vols = readAll();
+        int insertedCount = 0; // counter for inserted flights
 
-            for (Vol v : vols) {
-                if (v.getVilleDepart().getVille().equalsIgnoreCase(departureCity)
-                        && v.getDestination().getVille().equalsIgnoreCase(arrivalCity)) {
-                    apiFlights.add(v);
+        try {
+
+            // Fetch flights from API
+            apiFlights = api.searchFlights(departureCity, arrivalCity, date.toString());
+            System.out.println("API returned flights: " + apiFlights.size());
+
+            for (Vol v : apiFlights) {
+
+                // Automatically create destination if it does not exist
+                int destId = createDestinationIfNotExists(v.getDestination().getVille());
+                int depId  = createDestinationIfNotExists(v.getVilleDepart().getVille());
+
+                // Set IDs in the flight object
+                v.getDestination().setIdDestination(destId);
+                v.getVilleDepart().setIdDestination(depId);
+
+                v.setTypeVol("ALLER_SIMPLE");
+
+                // Duplicate protection
+                if (!flightExists(v.getNumeroVol(), v.getDateDepart())) {
+
+                    ajouter(v);
+                    insertedCount++; // increment counter
+                    System.out.println("Inserted: " + v.getNumeroVol());
+
+                } else {
+                    System.out.println("Skipped duplicate: " + v.getNumeroVol());
                 }
             }
+
+            // Final console message
+            System.out.println("Total flights inserted into database from API: " + insertedCount);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -257,13 +302,47 @@ public class ServiceVol implements IService<Vol> {
 
         return apiFlights;
     }
-
-
     public void syncFlightsFromAPI() {
-        System.out.println("Synchronizing flights with external API...");
+
+        String[][] routes = {
+                {"CDG","DXB"},
+                {"JFK","LHR"},
+                {"IST","FCO"},
+                {"DXB","HND"},
+                {"LHR","CDG"},
+                {"FCO","IST"}
+        };
+
+        LocalDate today = LocalDate.now();
+
+        for(int d = 0; d < 7; d++) {
+
+            LocalDate date = today.plusDays(d);
+
+            for(String[] route : routes) {
+
+                System.out.println("Route: " + route[0] + " -> " + route[1] + " | Date: " + date);
+
+                List<Vol> flights = fetchFlightsFromAPI(route[0], route[1], date);
+
+                System.out.println("Flights returned: " + flights.size());
+            }
+        }
+
+        System.out.println("Flights synced successfully from API.");
     }
 
+    public boolean flightExists(String numeroVol, LocalDateTime dateDepart) throws SQLException {
 
+        String q = "SELECT id_vol FROM vol WHERE numero_vol=? AND date_depart=?";
+        PreparedStatement ps = connect.prepareStatement(q);
+        ps.setString(1, numeroVol);
+        ps.setTimestamp(2, Timestamp.valueOf(dateDepart));
+
+        ResultSet rs = ps.executeQuery();
+
+        return rs.next();
+    }
     public List<String> fetchAirlinesFromAPI() {
 
         System.out.println("Fetching airlines from API...");
