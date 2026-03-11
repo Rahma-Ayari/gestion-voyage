@@ -103,6 +103,7 @@ public class ControllerResetPassword implements Initializable {
 
     @FXML
     private void handleValiderChangement() {
+        //Vérifie que le code saisi par l'utilisateur correspond au code envoyé par email.
         String codeSaisi = codeField.getText();
 
         // On utilise codeEnvoye car c'est le nom que tu as défini en haut de ta classe

@@ -8,6 +8,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import Entite.Destination;
+import Entite.Utilisateur;
 import Entite.Voyage;
 import Service.ServiceDestination;
 import Service.ServiceVoyage;
@@ -35,6 +36,18 @@ public class ConfigVoyageController {
 
     private final ServiceDestination serviceDestination = new ServiceDestination();
     private final ServiceVoyage      serviceVoyage      = new ServiceVoyage();
+
+    // ← L'utilisateur connecté, reçu depuis ControllerLogin
+    private Utilisateur utilisateurConnecte;
+
+    // ══════════════════════════════════════════════════════════════
+    //  Reçoit l'utilisateur connecté depuis ControllerLogin
+    //  Cette méthode est appelée APRÈS loader.load()
+    // ══════════════════════════════════════════════════════════════
+    public void setUtilisateur(Utilisateur user) {
+        this.utilisateurConnecte = user;
+        System.out.println("✅ Utilisateur reçu dans ConfigVoyage : " + user.getEmail());
+    }
 
     @FXML
     public void initialize() {
@@ -112,11 +125,15 @@ public class ConfigVoyageController {
         }
     }
 
-    /* ══════════════════════════════════════════
-       NAVIGATION → Vol  +  CRÉATION du voyage en BD
-    ══════════════════════════════════════════ */
+    // ══════════════════════════════════════════════════════════════
+    //  BOUTON SUIVANT → créer le voyage et passer à l'écran Vol
+    // ══════════════════════════════════════════════════════════════
     @FXML
     private void passerEtapeSuivante() {
+        // ── Validations ────────────────────────────────────────────
+        if (utilisateurConnecte == null) {
+            showAlert("Erreur", "Aucun utilisateur connecté. Veuillez vous reconnecter."); return;
+        }
         if (dateDebutPicker.getValue() == null) {
             showAlert("Champ requis", "Veuillez sélectionner une date de départ."); return;
         }
@@ -137,6 +154,7 @@ public class ConfigVoyageController {
         LocalDate fin   = dateFinPicker.getValue();
         long duree = ChronoUnit.DAYS.between(debut, fin);
 
+        // ── Créer le voyage en BDD avec l'id_utilisateur ──────────
         int idVoyage;
         try {
             Voyage v = new Voyage();
@@ -145,14 +163,19 @@ public class ConfigVoyageController {
             v.setDateFin(fin);
             v.setRythme(rythmeCombo.getValue());
             v.setIdDestination(destinationCombo.getValue().getIdDestination());
+            v.setIdUtilisateur(utilisateurConnecte.getIdUtilisateur()); // ← clé du problème !
+
             idVoyage = serviceVoyage.ajouter(v);
             if (idVoyage == -1) {
                 showAlert("Erreur", "Impossible de créer le voyage."); return;
             }
+            System.out.println("✅ Voyage créé avec id=" + idVoyage
+                    + " pour utilisateur=" + utilisateurConnecte.getIdUtilisateur());
         } catch (SQLException e) {
             showAlert("Erreur BD", "Erreur lors de la création du voyage : " + e.getMessage()); return;
         }
 
+        // ── Navigation vers l'écran Vol ────────────────────────────
         URL url = getClass().getClassLoader().getResource("ConfigurerVoyage/Vol.fxml");
         if (url == null) url = getClass().getResource("/ConfigurerVoyage/Vol.fxml");
         if (url == null) { showAlert("Erreur", "Vol.fxml introuvable."); return; }
@@ -175,12 +198,9 @@ public class ConfigVoyageController {
 
     @FXML
     private void handleLogout() {
-        // Nettoyer la session et revenir à l'écran de connexion
         SessionManager.clearSession();
         URL url = getClass().getResource("/Login.fxml");
-        if (url == null) {
-            showAlert("Erreur", "Login.fxml introuvable."); return;
-        }
+        if (url == null) { showAlert("Erreur", "Login.fxml introuvable."); return; }
         try {
             Parent root = FXMLLoader.load(url);
             Stage stage = (Stage) suivantButton.getScene().getWindow();

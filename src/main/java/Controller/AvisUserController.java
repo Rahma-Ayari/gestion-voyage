@@ -8,7 +8,6 @@ import Service.ServiceVoyage;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.animation.ScaleTransition;
-import javafx.animation.FadeTransition;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 import java.sql.SQLException;
@@ -16,44 +15,58 @@ import java.util.List;
 
 public class AvisUserController {
 
-    // ─── FXML Bindings ────────────────────────────────────────────────────────
-    @FXML private Button btnAnnuler, btnPublier;
-    @FXML private Label lblRating, lblCharCount;
-    @FXML private Label lblHebergement, lblTransport, lblActivites, lblQualitePrix;
-    @FXML private Button star1, star2, star3, star4, star5;
-    @FXML private Slider sliderHebergement, sliderTransport, sliderActivites, sliderQualitePrix;
-    @FXML private TextField txtTitre;
-    @FXML private TextArea txtCommentaire;
-    @FXML private ToggleButton btnOui, btnNon;
+    // ─── FXML Bindings ─────────────────────────────────────────────
+    @FXML private Button           btnAnnuler, btnPublier;
+    @FXML private Label            lblRating, lblCharCount;
+    @FXML private Label            lblHebergement, lblTransport, lblActivites, lblQualitePrix;
+    @FXML private Button           star1, star2, star3, star4, star5;
+    @FXML private Slider           sliderHebergement, sliderTransport, sliderActivites, sliderQualitePrix;
+    @FXML private TextField        txtTitre;
+    @FXML private TextArea         txtCommentaire;
+    @FXML private ToggleButton     btnOui, btnNon;
+    @FXML private Label            lblUserName;
+    @FXML private Label            lblUserAvatar;
+    @FXML private ComboBox<Voyage> cmbVoyage;
 
-    // ── New : user info labels & voyage selector ───────────────────────────────
-    @FXML private Label lblUserName;       // e.g. "Bonjour, alice@mail.com"
-    @FXML private Label lblUserAvatar;     // initiale de l'email
-    @FXML private ComboBox<Voyage> cmbVoyage;  // sélecteur de voyage
-
-    // ─── State ────────────────────────────────────────────────────────────────
-    private int currentRating = 0;
+    // ─── État interne ──────────────────────────────────────────────
+    private int         currentRating = 0;
     private ToggleGroup recommendationGroup;
 
-    /** Utilisateur actuellement connecté – injecté depuis l'écran de connexion */
+    // L'utilisateur connecté — transmis depuis l'écran précédent
     private Utilisateur utilisateurConnecte;
 
-    // ─── Services ─────────────────────────────────────────────────────────────
-    private final ServiceAvis    serviceAvis    = new ServiceAvis();
-    private final ServiceVoyage  serviceVoyage  = new ServiceVoyage();
+    // ─── Services ──────────────────────────────────────────────────
+    private final ServiceAvis   serviceAvis   = new ServiceAvis();
+    private final ServiceVoyage serviceVoyage = new ServiceVoyage();
 
 
-    //Point d'entrée principal.
+    // ══════════════════════════════════════════════════════════════
+    //  POINT D'ENTRÉE
+    //  Appelé depuis l'écran précédent pour transmettre l'utilisateur
+    // ══════════════════════════════════════════════════════════════
     public void setUtilisateur(Utilisateur user) {
         this.utilisateurConnecte = user;
-        refreshUserInfo();
-        loadVoyages();
+        refreshUserInfo();  // affiche nom/avatar dans le header
+        loadVoyages();      // charge UNIQUEMENT les voyages de cet utilisateur
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
-    //  INITIALISATION FXML
-    // ══════════════════════════════════════════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════
+    //  OPTIONNEL : pré-sélectionner le voyage qu'on vient de configurer
+    //  Appelé depuis BudgetController si on enchaîne les deux écrans
+    // ══════════════════════════════════════════════════════════════
+    public void setVoyagePreselectionne(int idVoyage) {
+        for (Voyage v : cmbVoyage.getItems()) {
+            if (v.getIdVoyage() == idVoyage) {
+                cmbVoyage.getSelectionModel().select(v);
+                cmbVoyage.setDisable(true); // l'utilisateur ne peut pas changer
+                break;
+            }
+        }
+    }
 
+    // ══════════════════════════════════════════════════════════════
+    //  INITIALISATION FXML (automatique par JavaFX)
+    // ══════════════════════════════════════════════════════════════
     @FXML
     public void initialize() {
         setupStarRating();
@@ -65,28 +78,21 @@ public class AvisUserController {
         setRating(0);
     }
 
-    // ──────────────────────────────────────────────────────────────────────────
-    //  User info
-    // ──────────────────────────────────────────────────────────────────────────
-
+    // ──────────────────────────────────────────────────────────────
+    //  Affiche le nom et l'initiale de l'utilisateur dans le header
+    // ──────────────────────────────────────────────────────────────
     private void refreshUserInfo() {
         if (utilisateurConnecte == null) return;
         String email = utilisateurConnecte.getEmail();
-
-        // Initiale pour l'avatar
         lblUserAvatar.setText(String.valueOf(email.charAt(0)).toUpperCase());
-
-        // Nom court
         String displayName = email.contains("@") ? email.substring(0, email.indexOf('@')) : email;
         lblUserName.setText("Bonjour, " + displayName);
     }
 
-    // ──────────────────────────────────────────────────────────────────────────
-    //  Voyage ComboBox
-    // ──────────────────────────────────────────────────────────────────────────
-
+    // ──────────────────────────────────────────────────────────────
+    //  Configure l'affichage du ComboBox de voyages
+    // ──────────────────────────────────────────────────────────────
     private void setupVoyageComboBox() {
-        // Affichage : "Voyage #3 — Paris → Rome (7 jours)"
         cmbVoyage.setConverter(new StringConverter<Voyage>() {
             @Override
             public String toString(Voyage v) {
@@ -100,33 +106,46 @@ public class AvisUserController {
             @Override
             public Voyage fromString(String s) { return null; }
         });
-
-        // Placeholder
         cmbVoyage.setPromptText("Sélectionnez votre voyage...");
     }
 
+    // ──────────────────────────────────────────────────────────────
+    //  Charge UNIQUEMENT les voyages de l'utilisateur connecté
+    // ──────────────────────────────────────────────────────────────
     private void loadVoyages() {
+        if (utilisateurConnecte == null) {
+            showError("Aucun utilisateur connecté.");
+            return;
+        }
         try {
-            List<Voyage> voyages = serviceVoyage.readAll();
+            // findByUtilisateur filtre par id_utilisateur en BDD
+            List<Voyage> voyages = serviceVoyage.findByUtilisateur(
+                    utilisateurConnecte.getIdUtilisateur());
+
+            if (voyages.isEmpty()) {
+                showError("Vous n'avez aucun voyage configuré.\n"
+                        + "Veuillez d'abord créer un voyage depuis le menu principal.");
+                return;
+            }
+
             cmbVoyage.getItems().setAll(voyages);
-            if (!voyages.isEmpty()) cmbVoyage.getSelectionModel().selectFirst();
+            cmbVoyage.getSelectionModel().selectFirst(); // sélectionne le 1er par défaut
+
         } catch (SQLException e) {
-            showError("Impossible de charger les voyages : " + e.getMessage());
+            showError("Impossible de charger vos voyages : " + e.getMessage());
         }
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
-    //  PUBLICATION
-    // ══════════════════════════════════════════════════════════════════════════
 
+    // ══════════════════════════════════════════════════════════════
+    //  PUBLICATION DE L'AVIS
+    // ══════════════════════════════════════════════════════════════
     private void handlePublish() {
         if (!validateForm()) return;
 
         try {
             Avis avis = new Avis();
-            avis.setIdUtilisateur(utilisateurConnecte != null
-                    ? utilisateurConnecte.getIdUtilisateur()
-                    : 1);                                         // fallback dev
+            avis.setIdUtilisateur(utilisateurConnecte.getIdUtilisateur());
             avis.setIdVoyage(cmbVoyage.getValue().getIdVoyage());
             avis.setNote(currentRating);
             avis.setTitre(txtTitre.getText().trim());
@@ -150,31 +169,24 @@ public class AvisUserController {
         }
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════
     //  VALIDATION
-    // ══════════════════════════════════════════════════════════════════════════
-
+    // ══════════════════════════════════════════════════════════════
     private boolean validateForm() {
         StringBuilder err = new StringBuilder();
 
         if (utilisateurConnecte == null)
             err.append("• Aucun utilisateur connecté\n");
-
         if (cmbVoyage.getValue() == null)
             err.append("• Veuillez sélectionner un voyage\n");
-
         if (currentRating == 0)
             err.append("• Veuillez sélectionner une note (étoiles)\n");
-
         if (txtTitre.getText().trim().isEmpty())
             err.append("• Le titre de l'avis est obligatoire\n");
-
         if (txtCommentaire.getText().trim().isEmpty())
             err.append("• Le commentaire est obligatoire\n");
-
         if (txtCommentaire.getText().length() > 1000)
             err.append("• Le commentaire ne doit pas dépasser 1000 caractères\n");
-
         if (recommendationGroup.getSelectedToggle() == null)
             err.append("• Veuillez indiquer si vous recommandez cette destination\n");
 
@@ -189,14 +201,13 @@ public class AvisUserController {
         return true;
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
-    //  UI HELPERS
-    // ══════════════════════════════════════════════════════════════════════════
-
+    // ══════════════════════════════════════════════════════════════
+    //  ALERTES
+    // ══════════════════════════════════════════════════════════════
     private void showSuccess() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("✓ Merci !");
-        alert.setHeaderText("Votre avis sera publié bientôt !");
+        alert.setHeaderText("Votre avis a bien été enregistré !");
         Voyage v = cmbVoyage.getValue();
         String voyageInfo = v != null ? " pour le Voyage #" + v.getIdVoyage() : "";
         alert.setContentText("Votre avis" + voyageInfo + " a bien été enregistré.\nIl aidera d'autres voyageurs.");
@@ -211,10 +222,9 @@ public class AvisUserController {
         alert.showAndWait();
     }
 
-    // ──────────────────────────────────────────────────────────────────────────
-    //  Star rating
-    // ──────────────────────────────────────────────────────────────────────────
-
+    // ══════════════════════════════════════════════════════════════
+    //  ÉTOILES
+    // ══════════════════════════════════════════════════════════════
     private void setupStarRating() {
         Button[] stars = {star1, star2, star3, star4, star5};
         for (int i = 0; i < stars.length; i++) {
@@ -230,10 +240,10 @@ public class AvisUserController {
         highlightStars(rating);
         if (rating == 0) {
             lblRating.setText("Sélectionnez une note");
-            lblRating.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #7f8c8d;");
+            lblRating.setStyle("-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#7f8c8d;");
         } else {
             lblRating.setText(rating + "/5 étoiles");
-            lblRating.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #FF7F50;");
+            lblRating.setStyle("-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#FF7F50;");
         }
     }
 
@@ -241,7 +251,8 @@ public class AvisUserController {
         Button[] stars = {star1, star2, star3, star4, star5};
         for (int i = 0; i < stars.length; i++) {
             String color = (i < rating) ? "#FF7F50" : "#ddd";
-            stars[i].setStyle("-fx-background-color: transparent; -fx-text-fill: " + color + "; -fx-font-size: 50; -fx-cursor: hand;");
+            stars[i].setStyle("-fx-background-color:transparent;-fx-text-fill:" + color
+                    + ";-fx-font-size:50;-fx-cursor:hand;");
         }
     }
 
@@ -249,15 +260,12 @@ public class AvisUserController {
         ScaleTransition st = new ScaleTransition(Duration.millis(150), button);
         st.setFromX(1.0); st.setFromY(1.0);
         st.setToX(1.3);   st.setToY(1.3);
-        st.setAutoReverse(true);
-        st.setCycleCount(2);
-        st.play();
+        st.setAutoReverse(true); st.setCycleCount(2); st.play();
     }
 
-    // ──────────────────────────────────────────────────────────────────────────
-    //  Sliders
-    // ──────────────────────────────────────────────────────────────────────────
-
+    // ══════════════════════════════════════════════════════════════
+    //  SLIDERS
+    // ══════════════════════════════════════════════════════════════
     private void setupSliders() {
         setupSlider(sliderHebergement, lblHebergement, "hebergement");
         setupSlider(sliderTransport,   lblTransport,   "transport");
@@ -275,10 +283,9 @@ public class AvisUserController {
         slider.valueProperty().addListener((obs, o, n) -> label.setText(n.intValue() + "/5"));
     }
 
-    // ──────────────────────────────────────────────────────────────────────────
-    //  Recommendation toggles
-    // ──────────────────────────────────────────────────────────────────────────
-
+    // ══════════════════════════════════════════════════════════════
+    //  BOUTONS OUI / NON
+    // ══════════════════════════════════════════════════════════════
     private void setupRecommendationButtons() {
         recommendationGroup = new ToggleGroup();
         btnOui.setToggleGroup(recommendationGroup);
@@ -295,10 +302,9 @@ public class AvisUserController {
                         : "-fx-font-size:15px;-fx-padding:15 40;-fx-background-color:white;-fx-border-color:#ef4444;-fx-border-width:2;-fx-border-radius:10;-fx-background-radius:10;-fx-text-fill:#ef4444;-fx-font-weight:bold;-fx-cursor:hand;"));
     }
 
-    // ──────────────────────────────────────────────────────────────────────────
-    //  Character counter
-    // ──────────────────────────────────────────────────────────────────────────
-
+    // ══════════════════════════════════════════════════════════════
+    //  COMPTEUR DE CARACTÈRES
+    // ══════════════════════════════════════════════════════════════
     private void setupCharacterCounter() {
         txtCommentaire.textProperty().addListener((obs, o, n) -> {
             int len = n.length();
@@ -312,10 +318,9 @@ public class AvisUserController {
         });
     }
 
-    // ──────────────────────────────────────────────────────────────────────────
-    //  Action buttons
-    // ──────────────────────────────────────────────────────────────────────────
-
+    // ══════════════════════════════════════════════════════════════
+    //  BOUTONS PUBLIER / ANNULER
+    // ══════════════════════════════════════════════════════════════
     private void setupActionButtons() {
         btnPublier.setOnAction(e -> handlePublish());
         btnAnnuler.setOnAction(e -> clearForm());
@@ -326,11 +331,9 @@ public class AvisUserController {
         confirmation.setTitle("Confirmation");
         confirmation.setHeaderText("Annuler votre avis ?");
         confirmation.setContentText("Êtes-vous sûr ? Toutes les informations saisies seront perdues.");
-
         ButtonType btnConfirmer = new ButtonType("Oui, annuler",  ButtonBar.ButtonData.OK_DONE);
         ButtonType btnRetour    = new ButtonType("Non, continuer", ButtonBar.ButtonData.CANCEL_CLOSE);
         confirmation.getButtonTypes().setAll(btnConfirmer, btnRetour);
-
         confirmation.showAndWait().ifPresent(r -> { if (r == btnConfirmer) resetForm(); });
     }
 
@@ -347,6 +350,6 @@ public class AvisUserController {
         lblTransport.setText("0/5");
         lblActivites.setText("0/5");
         lblQualitePrix.setText("0/5");
-        // NB: on conserve le voyage et l'utilisateur
+        // On conserve le voyage sélectionné et l'utilisateur connecté
     }
 }

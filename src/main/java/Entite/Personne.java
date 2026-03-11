@@ -14,6 +14,13 @@ public class Personne extends Utilisateur {
         super(id, email, motDePasse, dateInscription);
         this.nom = nom;
         this.prenom = prenom;
+        this.role = "USER"; // défaut
+    }
+
+    public Personne(int id, String email, String motDePasse, Date dateInscription, String nom, String prenom, String role) {
+        super(id, email, motDePasse, dateInscription, role);
+        this.nom = nom;
+        this.prenom = prenom;
     }
 
     public String getNom() { return nom; }
@@ -25,6 +32,6 @@ public class Personne extends Utilisateur {
 
     @Override
     public String toString() {
-        return "Personne [ID=" + idUtilisateur + ", Nom=" + nom + ", Prenom=" + prenom + ", Email=" + email + "]";
+        return "Personne [ID=" + idUtilisateur + ", Nom=" + nom + ", Prenom=" + prenom + ", Email=" + email + ", Role=" + role + "]";
     }
 }

@@ -8,14 +8,14 @@ import java.util.List;
 
 /**
  * ══════════════════════════════════════════════════════════════════
- *  ServicePersonne — adapté à votre schéma réel TripEase
+ *  ServicePersonne — avec support du champ ROLE
  *
- *  Tables existantes :
- *    utilisateur (id_utilisateur PK AUTO, email, motDePasse, dateInscription)
- *    personne    (id_personne FK → utilisateur, nom, prenom)
+ *  Commande SQL à exécuter UNE SEULE FOIS dans MySQL :
  *
- *  ⚠ UNE SEULE COMMANDE SQL à exécuter une fois dans MySQL :
+ *    ALTER TABLE utilisateur
+ *        ADD COLUMN role ENUM('USER','ADMIN') NOT NULL DEFAULT 'USER';
  *
+ *  (Si statut n'existe pas encore :)
  *    ALTER TABLE utilisateur
  *        ADD COLUMN statut ENUM('EN_ATTENTE','APPROUVE','REFUSE')
  *        NOT NULL DEFAULT 'EN_ATTENTE';
@@ -26,40 +26,39 @@ public class ServicePersonne implements IService<Personne> {
 
     private Connection con = DataSource.getInstance().getCon();
 
+    // ─── SELECT commun avec role ───────────────────────────────────────────────
+    private static final String SELECT_BASE =
+            "SELECT u.id_utilisateur, u.email, u.motDePasse, u.dateInscription, " +
+                    "       u.role, p.nom, p.prenom " +
+                    "FROM utilisateur u " +
+                    "JOIN personne p ON u.id_utilisateur = p.id_personne ";
+
     // ─────────────────────────────────────────────────────────────────
-    //  AJOUTER — Inscription utilisateur
-    //  Insère avec statut 'EN_ATTENTE' → l'admin devra valider ensuite
+    //  AJOUTER
     // ─────────────────────────────────────────────────────────────────
     @Override
     public boolean ajouter(Personne p) throws SQLException {
-        // On ajoute maintenant la colonne statut = 'EN_ATTENTE' par défaut
-        String sqlUser = "INSERT INTO utilisateur (email, motDePasse, dateInscription, statut) "
-                + "VALUES (?, ?, ?, 'EN_ATTENTE')";
+        String sqlUser = "INSERT INTO utilisateur (email, motDePasse, dateInscription, statut, role) "
+                + "VALUES (?, ?, ?, 'EN_ATTENTE', 'USER')";
         String sqlPers = "INSERT INTO personne (id_personne, nom, prenom) VALUES (?, ?, ?)";
 
         try {
             con.setAutoCommit(false);
-
-            // 1. Insertion dans la table UTILISATEUR
             PreparedStatement stUser = con.prepareStatement(sqlUser, Statement.RETURN_GENERATED_KEYS);
             stUser.setString(1, p.getEmail());
             stUser.setString(2, p.getMotDePasse());
             stUser.setDate(3, new java.sql.Date(p.getDateInscription().getTime()));
             stUser.executeUpdate();
 
-            // 2. Récupération de l'ID généré
             ResultSet rs = stUser.getGeneratedKeys();
             if (rs.next()) {
                 int generatedId = rs.getInt(1);
                 p.setIdUtilisateur(generatedId);
-
-                // 3. Insertion dans la table PERSONNE avec le même ID
                 PreparedStatement stPers = con.prepareStatement(sqlPers);
                 stPers.setInt(1, generatedId);
                 stPers.setString(2, p.getNom());
                 stPers.setString(3, p.getPrenom());
                 stPers.executeUpdate();
-
                 con.commit();
                 return true;
             }
@@ -73,20 +72,14 @@ public class ServicePersonne implements IService<Personne> {
     }
 
     // ─────────────────────────────────────────────────────────────────
-    //  READ ALL — Toutes les personnes (toutes tables jointes)
+    //  READ ALL
     // ─────────────────────────────────────────────────────────────────
     @Override
     public List<Personne> readAll() throws SQLException {
         List<Personne> liste = new ArrayList<>();
-        String req = "SELECT u.id_utilisateur, u.email, u.motDePasse, u.dateInscription, "
-                + "       p.nom, p.prenom "
-                + "FROM utilisateur u "
-                + "JOIN personne p ON u.id_utilisateur = p.id_personne "
-                + "ORDER BY u.dateInscription DESC";
+        String req = SELECT_BASE + "ORDER BY u.dateInscription DESC";
         try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(req)) {
-            while (rs.next()) {
-                liste.add(mapPersonne(rs));
-            }
+            while (rs.next()) liste.add(mapPersonne(rs));
         }
         return liste;
     }
@@ -96,7 +89,7 @@ public class ServicePersonne implements IService<Personne> {
     // ─────────────────────────────────────────────────────────────────
     @Override
     public boolean modifier(Personne p) throws SQLException {
-        String req1 = "UPDATE utilisateur SET email=?, motDePasse=? WHERE id_utilisateur=?";
+        String req1 = "UPDATE utilisateur SET email=?, motDePasse=?, role=? WHERE id_utilisateur=?";
         String req2 = "UPDATE personne SET nom=?, prenom=? WHERE id_personne=?";
         try {
             con.setAutoCommit(false);
@@ -104,7 +97,8 @@ public class ServicePersonne implements IService<Personne> {
                  PreparedStatement ps2 = con.prepareStatement(req2)) {
                 ps1.setString(1, p.getEmail());
                 ps1.setString(2, p.getMotDePasse());
-                ps1.setInt(3, p.getIdUtilisateur());
+                ps1.setString(3, p.getRole() != null ? p.getRole() : "USER");
+                ps1.setInt(4, p.getIdUtilisateur());
                 ps2.setString(1, p.getNom());
                 ps2.setString(2, p.getPrenom());
                 ps2.setInt(3, p.getIdUtilisateur());
@@ -122,7 +116,7 @@ public class ServicePersonne implements IService<Personne> {
     }
 
     // ─────────────────────────────────────────────────────────────────
-    //  SUPPRIMER — ON DELETE CASCADE gère personne automatiquement
+    //  SUPPRIMER
     // ─────────────────────────────────────────────────────────────────
     @Override
     public boolean supprimer(Personne p) throws SQLException {
@@ -138,11 +132,7 @@ public class ServicePersonne implements IService<Personne> {
     // ─────────────────────────────────────────────────────────────────
     @Override
     public Personne findbyId(int id) throws SQLException {
-        String req = "SELECT u.id_utilisateur, u.email, u.motDePasse, u.dateInscription, "
-                + "p.nom, p.prenom "
-                + "FROM utilisateur u "
-                + "JOIN personne p ON u.id_utilisateur = p.id_personne "
-                + "WHERE u.id_utilisateur = ?";
+        String req = SELECT_BASE + "WHERE u.id_utilisateur = ?";
         try (PreparedStatement ps = con.prepareStatement(req)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -153,18 +143,20 @@ public class ServicePersonne implements IService<Personne> {
     }
 
     // ─────────────────────────────────────────────────────────────────
-    //  AUTHENTIFICATION — utilisée par ControllerLogin
-    //  ✔ Autorise uniquement statut = 'APPROUVE'
-    //  ✘ Lance une SQLException codée pour EN_ATTENTE et REFUSE
+    //  AUTHENTIFICATION
     // ─────────────────────────────────────────────────────────────────
     public Personne authentifier(String email, String mdp) throws SQLException {
-        String sql = "SELECT u.id_utilisateur, u.email, u.motDePasse, u.dateInscription, "
-                + "       p.nom, p.prenom, u.statut "
-                + "FROM utilisateur u "
-                + "JOIN personne p ON u.id_utilisateur = p.id_personne "
+        String sql = SELECT_BASE.replace("FROM utilisateur u", "FROM utilisateur u")
                 + "WHERE u.email = ? AND u.motDePasse = ?";
+        // On reconstruit proprement :
+        String sqlAuth =
+                "SELECT u.id_utilisateur, u.email, u.motDePasse, u.dateInscription, " +
+                        "       u.role, u.statut, p.nom, p.prenom " +
+                        "FROM utilisateur u " +
+                        "JOIN personne p ON u.id_utilisateur = p.id_personne " +
+                        "WHERE u.email = ? AND u.motDePasse = ?";
 
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = con.prepareStatement(sqlAuth)) {
             ps.setString(1, email);
             ps.setString(2, mdp);
             try (ResultSet rs = ps.executeQuery()) {
@@ -173,7 +165,6 @@ public class ServicePersonne implements IService<Personne> {
                     if ("APPROUVE".equals(statut)) {
                         return mapPersonne(rs);
                     } else if ("EN_ATTENTE".equals(statut)) {
-                        // Message codé récupéré dans ControllerLogin
                         throw new SQLException("STATUT:EN_ATTENTE");
                     } else {
                         throw new SQLException("STATUT:REFUSE");
@@ -181,39 +172,44 @@ public class ServicePersonne implements IService<Personne> {
                 }
             }
         }
-        return null; // Email ou mot de passe incorrect
+        return null;
     }
 
     // ─────────────────────────────────────────────────────────────────
     //  MÉTHODES DASHBOARD ADMIN
-    //  Lecture par statut pour les 3 sections du tableau de bord
     // ─────────────────────────────────────────────────────────────────
 
-    /** Section "Utilisateurs en attente" */
     public List<Personne> getPersonnesEnAttente() throws SQLException {
-        return getByStatut("EN_ATTENTE");
+        return getByStatut("EN_ATTENTE", null);
     }
 
-    /** Section "Utilisateurs approuvés" */
     public List<Personne> getPersonnesApprouvees() throws SQLException {
-        return getByStatut("APPROUVE");
+        return getByStatut("APPROUVE", null);
     }
 
-    /** Section "Utilisateurs refusés" */
     public List<Personne> getPersonnesRefusees() throws SQLException {
-        return getByStatut("REFUSE");
+        return getByStatut("REFUSE", null);
     }
 
-    private List<Personne> getByStatut(String statut) throws SQLException {
+    /** Filtre optionnel par rôle : null = tous, "ADMIN" ou "USER" */
+    public List<Personne> getPersonnesApprouveesByRole(String role) throws SQLException {
+        return getByStatut("APPROUVE", role);
+    }
+
+    private List<Personne> getByStatut(String statut, String role) throws SQLException {
         List<Personne> liste = new ArrayList<>();
-        String sql = "SELECT u.id_utilisateur, u.email, u.motDePasse, u.dateInscription, "
-                + "       p.nom, p.prenom "
-                + "FROM utilisateur u "
-                + "JOIN personne p ON u.id_utilisateur = p.id_personne "
-                + "WHERE u.statut = ? "
-                + "ORDER BY u.dateInscription DESC";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        StringBuilder sql = new StringBuilder(
+                "SELECT u.id_utilisateur, u.email, u.motDePasse, u.dateInscription, " +
+                        "       u.role, p.nom, p.prenom " +
+                        "FROM utilisateur u " +
+                        "JOIN personne p ON u.id_utilisateur = p.id_personne " +
+                        "WHERE u.statut = ? ");
+        if (role != null) sql.append("AND u.role = ? ");
+        sql.append("ORDER BY u.dateInscription DESC");
+
+        try (PreparedStatement ps = con.prepareStatement(sql.toString())) {
             ps.setString(1, statut);
+            if (role != null) ps.setString(2, role);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) liste.add(mapPersonne(rs));
             }
@@ -222,25 +218,22 @@ public class ServicePersonne implements IService<Personne> {
     }
 
     // ─────────────────────────────────────────────────────────────────
-    //  ACTIONS ADMIN — Approuver / Refuser
+    //  CHANGER ROLE
     // ─────────────────────────────────────────────────────────────────
-
-    /**
-     * Admin APPROUVE → statut = 'APPROUVE'
-     * L'utilisateur pourra désormais se connecter.
-     */
-    public void approuverInscription(int idUtilisateur) throws SQLException {
-        changerStatut(idUtilisateur, "APPROUVE");
+    public void changerRole(int idUtilisateur, String role) throws SQLException {
+        String sql = "UPDATE utilisateur SET role = ? WHERE id_utilisateur = ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, role);
+            ps.setInt(2, idUtilisateur);
+            ps.executeUpdate();
+        }
     }
 
-    /**
-     * Admin REFUSE → statut = 'REFUSE'
-     * Les données restent en base pour traçabilité
-     * mais la connexion sera bloquée définitivement.
-     */
-    public void refuserInscription(int idUtilisateur) throws SQLException {
-        changerStatut(idUtilisateur, "REFUSE");
-    }
+    // ─────────────────────────────────────────────────────────────────
+    //  ACTIONS ADMIN
+    // ─────────────────────────────────────────────────────────────────
+    public void approuverInscription(int id) throws SQLException { changerStatut(id, "APPROUVE"); }
+    public void refuserInscription(int id) throws SQLException   { changerStatut(id, "REFUSE"); }
 
     private void changerStatut(int id, String statut) throws SQLException {
         String sql = "UPDATE utilisateur SET statut = ? WHERE id_utilisateur = ?";
@@ -252,16 +245,13 @@ public class ServicePersonne implements IService<Personne> {
     }
 
     // ─────────────────────────────────────────────────────────────────
-    //  MÉTHODES UTILITAIRES (conservées de votre code d'origine)
+    //  UTILITAIRES
     // ─────────────────────────────────────────────────────────────────
-
     public boolean verifierEmailExiste(String email) throws SQLException {
         String sql = "SELECT id_utilisateur FROM utilisateur WHERE email = ?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, email);
-            try (ResultSet rs = ps.executeQuery()) {
-                return rs.next();
-            }
+            try (ResultSet rs = ps.executeQuery()) { return rs.next(); }
         }
     }
 
@@ -275,16 +265,19 @@ public class ServicePersonne implements IService<Personne> {
     }
 
     // ─────────────────────────────────────────────────────────────────
-    //  MAPPER ResultSet → Personne (constructeur existant conservé)
+    //  MAPPER ResultSet → Personne
     // ─────────────────────────────────────────────────────────────────
     private Personne mapPersonne(ResultSet rs) throws SQLException {
+        String role = "USER";
+        try { role = rs.getString("role"); } catch (SQLException ignored) {}
         return new Personne(
                 rs.getInt("id_utilisateur"),
                 rs.getString("email"),
                 rs.getString("motDePasse"),
                 rs.getDate("dateInscription"),
                 rs.getString("nom"),
-                rs.getString("prenom")
+                rs.getString("prenom"),
+                role
         );
     }
 }

@@ -65,8 +65,8 @@ public class HomeAdminController implements Initializable {
 
         for (VBox card : cards) {
             if (card != null) {
-                card.setOnMouseEntered(e -> card.setStyle(CARD_STYLE_HOVER));
-                card.setOnMouseExited(e  -> card.setStyle(CARD_STYLE_BASE));
+                card.setOnMouseEntered(e -> card.setStyle(CARD_STYLE_HOVER)); // Survol → orange
+                card.setOnMouseExited(e  -> card.setStyle(CARD_STYLE_BASE)); // Quitte → blanc
             }
         }
     }
@@ -143,12 +143,10 @@ public class HomeAdminController implements Initializable {
             stage.setScene(new Scene(root));
             stage.show();
 
-            // Optionnel : fermer la fenêtre Home (décommenter si souhaité)
-            // ((Stage) adminNameLabel.getScene().getWindow()).close();
 
         } catch (IOException ex) {
             System.err.println("Impossible d'ouvrir : " + fxmlPath);
-            ex.printStackTrace();
+            ex.printStackTrace(); // Affiche les détails de l'erreur
         }
     }
 }

@@ -7,6 +7,7 @@ public class Utilisateur {
     protected String email;
     protected String motDePasse;
     protected Date dateInscription;
+    protected String role; // "ADMIN" ou "USER"
 
     public Utilisateur() {}
 
@@ -15,6 +16,12 @@ public class Utilisateur {
         this.email = email;
         this.motDePasse = motDePasse;
         this.dateInscription = dateInscription;
+        this.role = "USER"; // défaut
+    }
+
+    public Utilisateur(int idUtilisateur, String email, String motDePasse, Date dateInscription, String role) {
+        this(idUtilisateur, email, motDePasse, dateInscription);
+        this.role = role;
     }
 
     public int getIdUtilisateur() { return idUtilisateur; }
@@ -28,4 +35,9 @@ public class Utilisateur {
 
     public Date getDateInscription() { return dateInscription; }
     public void setDateInscription(Date dateInscription) { this.dateInscription = dateInscription; }
+
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
+
+    public boolean isAdmin() { return "ADMIN".equalsIgnoreCase(role); }
 }

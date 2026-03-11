@@ -33,6 +33,7 @@ public class ControllerInscription implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Empêche le focus automatique sur le champ pour voir le prompt text
         Platform.runLater(() -> mainContainer.requestFocus());
     }
 
