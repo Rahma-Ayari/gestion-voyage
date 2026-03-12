@@ -140,7 +140,7 @@ public class ControllerLogin implements Initializable {
     private void navigateToUser(ActionEvent event) {
         try {
             // Charge l'écran de configuration du voyage
-            Parent root = FXMLLoader.load(getClass().getResource("/ConfigurerVoyage/ConfigVoyageUser.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/MesVoyages.fxml"));
             Stage stage  = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("TripEase - Configuration du voyage");
