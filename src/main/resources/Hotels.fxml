@@ -4,7 +4,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.web.WebView?>
 
 <BorderPane style="-fx-background-color: linear-gradient(to bottom, #f5f7fa, #c3cfe2);"
             xmlns="http://javafx.com/javafx/21"
@@ -94,8 +93,6 @@
             </HBox>
 
             <Separator />
-
-
         </VBox>
     </left>
 
@@ -116,7 +113,7 @@
             </HBox>
 
             <!-- Table -->
-            <TableView fx:id="tableView" prefHeight="280" VBox.vgrow="NEVER">
+            <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="nomCol"          text="Nom"         prefWidth="110" />
                     <TableColumn fx:id="villeCol"        text="Ville"       prefWidth="90"  />
@@ -128,19 +125,11 @@
                     <TableColumn fx:id="latitudeCol"     text="Latitude"    prefWidth="85"  />
                     <TableColumn fx:id="longitudeCol"    text="Longitude"   prefWidth="85"  />
                     <TableColumn fx:id="disponibiliteCol" text="Disponible" prefWidth="75"  />
-                    <TableColumn fx:id="carteCol" text="📍 Carte" prefWidth="90" />
                 </columns>
                 <placeholder>
                     <Label text="Aucun hôtel trouvé" />
                 </placeholder>
             </TableView>
-
-            <!-- Titre carte -->
-            <Label text="🗺️ Localisation sur la carte"
-                   style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #FF9800;" />
-
-            <!-- WebView Carte -->
-            <WebView fx:id="mapView" prefHeight="380" VBox.vgrow="ALWAYS" />
 
         </VBox>
     </center>
