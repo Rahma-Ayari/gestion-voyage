@@ -142,18 +142,18 @@
                 </VBox>
             </HBox>
 
-            <!-- Paiement -->
-            <HBox fx:id="menuPaiement" spacing="12" alignment="CENTER_LEFT"
+            <!-- Mes Voyages -->
+            <HBox fx:id="menuMesVoyages" spacing="12" alignment="CENTER_LEFT"
                   style="-fx-padding: 11 14; -fx-background-radius: 8; -fx-cursor: hand;"
-                  onMouseClicked="#ouvrirPaiement"
+                  onMouseClicked="#ouvrirMesVoyages"
                   onMouseEntered="#onMenuHover"
                   onMouseExited="#onMenuExit">
-                <Label text="💳" style="-fx-font-size: 16px;"/>
+                <Label text="🧳" style="-fx-font-size: 16px;"/>
                 <VBox spacing="1">
-                    <Label text="Effectuer un paiement"
+                    <Label text="Mes voyages"
                            style="-fx-font-size: 12.5px; -fx-text-fill: #4A4035;
-                                  -fx-font-family: 'Segoe UI';"/>
-                    <Label text="Règlements sécurisés"
+                      -fx-font-family: 'Segoe UI';"/>
+                    <Label text="Consulter vos réservations"
                            style="-fx-font-size: 10px; -fx-text-fill: #B0A898;"/>
                 </VBox>
             </HBox>
