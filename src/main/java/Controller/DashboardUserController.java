@@ -467,11 +467,36 @@ public class DashboardUserController implements Initializable {
                 "Le module de paiement sécurisé sera disponible très prochainement.");
     }
 
-    @FXML public void ouvrirNotifications() {
+   @FXML
+    public void ouvrirNotifications() {
+
         activerMenu(menuNotifications);
         mettreAJourBreadcrumb("Accueil", "Mes notifications");
-        afficherSection("🔔", "Mes notifications",
-                "Vous n'avez aucune nouvelle notification pour le moment.");
+
+        try {
+
+            URL url = localiserFXML("/notificationClient.fxml");
+
+            if (url == null) {
+                afficherErreur("notificationClient.fxml introuvable.");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(url);
+            Parent root = loader.load();
+
+            notificationsController controller = loader.getController();
+
+            if(utilisateurConnecte != null){
+                controller.setUserId(utilisateurConnecte.getIdUtilisateur());
+            }
+
+            contenuPrincipal.getChildren().setAll(root);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            afficherErreur("Erreur ouverture notifications : " + e.getMessage());
+        }
     }
 
     @FXML public void ouvrirReservation() {
