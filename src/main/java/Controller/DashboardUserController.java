@@ -475,10 +475,10 @@ public class DashboardUserController implements Initializable {
 
         try {
 
-            URL url = localiserFXML("/notificationClient.fxml");
+            URL url = localiserFXML("/NotificationClient.fxml");
 
             if (url == null) {
-                afficherErreur("notificationClient.fxml introuvable.");
+                afficherErreur("NotificationClient.fxml introuvable.");
                 return;
             }
 
