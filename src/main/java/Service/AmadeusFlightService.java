@@ -12,11 +12,13 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class AmadeusFlightService {
 
-    private final String CLIENT_ID = "YOUR_API_KEY";
-    private final String CLIENT_SECRET = "YOUR_SECRET";
+    private final String CLIENT_ID = "btn8GRiNuJdN8cttsDBTvgg63U5neiqz";
+    private final String CLIENT_SECRET = "Z1E7WGGLYycA8pMB";
 
     private String accessToken;
 

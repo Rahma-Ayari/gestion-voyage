@@ -81,9 +81,21 @@ public class VolController {
             e.printStackTrace();
         }
 
-        loadFromDatabase();
+        syncAPIOnLoad();
+
     }
 
+
+    private void syncAPIOnLoad() {
+        try {
+            System.out.println("Loading weekly flights from API...");
+            serviceVol.syncFlightsFromAPI(); // Make sure this method inserts all flights and commits them
+            System.out.println("API sync finished.");
+            loadFromDatabase(); // Move this here
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void loadFromDatabase() {
         try {
@@ -261,7 +273,7 @@ public class VolController {
             List<Vol> apiFlights = serviceVol.fetchFlightsFromAPI(
                     dep,
                     dest,
-                    LocalDateTime.now()
+                    LocalDate.now()
             );
 
             list.clear();
@@ -276,9 +288,11 @@ public class VolController {
     }
     @FXML
     private void syncFlightsAPI() {
-
-        serviceVol.syncFlightsFromAPI();
-        loadFromDatabase();
-
+        try {
+            serviceVol.syncFlightsFromAPI();
+            loadFromDatabase(); // refresh table
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

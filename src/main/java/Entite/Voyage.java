@@ -4,6 +4,9 @@ import java.time.LocalDate;
 
 public class Voyage {
 
+    // ══════════════════════════════════════════════════════════════════
+    // ATTRIBUTS
+    // ══════════════════════════════════════════════════════════════════
     private int       idVoyage;
     private int       duree;
     private LocalDate dateDebut;
@@ -57,8 +60,20 @@ public class Voyage {
         this.idHotel       = idHotel;
         this.dateCheckin   = dateCheckin;
         this.dateCheckout  = dateCheckout;
+        this.statut        = "ACTIF";
     }
 
+    /** Constructeur pour créer un nouveau voyage (sans ID ni vol/hôtel encore) */
+    public Voyage(int duree, LocalDate dateDebut, LocalDate dateFin,
+                  String rythme, int idDestination, int idUser) {
+        this.duree         = duree;
+        this.dateDebut     = dateDebut;
+        this.dateFin       = dateFin;
+        this.rythme        = rythme;
+        this.idDestination = idDestination;
+        this.idUser        = idUser;
+        this.statut        = "ACTIF";
+    }
 
     public int getIdUser() {
         return idUser;
@@ -71,32 +86,33 @@ public class Voyage {
     public int       getIdVoyage()                        { return idVoyage; }
     public void      setIdVoyage(int idVoyage)            { this.idVoyage = idVoyage; }
 
-    public int       getDuree()                           { return duree; }
-    public void      setDuree(int duree)                  { this.duree = duree; }
+    // ══════════════════════════════════════════════════════════════════
+    // GETTERS & SETTERS
+    // ══════════════════════════════════════════════════════════════════
 
-    public LocalDate getDateDebut()                       { return dateDebut; }
-    public void      setDateDebut(LocalDate dateDebut)    { this.dateDebut = dateDebut; }
+    public int getIdVoyage()                  { return idVoyage; }
+    public void setIdVoyage(int idVoyage)     { this.idVoyage = idVoyage; }
 
-    public LocalDate getDateFin()                         { return dateFin; }
-    public void      setDateFin(LocalDate dateFin)        { this.dateFin = dateFin; }
+    public int getDuree()                     { return duree; }
+    public void setDuree(int duree)           { this.duree = duree; }
 
-    public String    getRythme()                          { return rythme; }
-    public void      setRythme(String rythme)             { this.rythme = rythme; }
+    public LocalDate getDateDebut()           { return dateDebut; }
+    public void setDateDebut(LocalDate d)     { this.dateDebut = d; }
 
-    public int       getIdDestination()                   { return idDestination; }
-    public void      setIdDestination(int idDestination)  { this.idDestination = idDestination; }
+    public LocalDate getDateFin()             { return dateFin; }
+    public void setDateFin(LocalDate d)       { this.dateFin = d; }
 
-    public int       getIdVol()                           { return idVol; }
-    public void      setIdVol(int idVol)                  { this.idVol = idVol; }
+    public String getRythme()                 { return rythme; }
+    public void setRythme(String rythme)      { this.rythme = rythme; }
 
-    public int       getIdHotel()                         { return idHotel; }
-    public void      setIdHotel(int idHotel)              { this.idHotel = idHotel; }
+    public int getIdDestination()             { return idDestination; }
+    public void setIdDestination(int id)      { this.idDestination = id; }
 
-    public LocalDate getDateCheckin()                     { return dateCheckin; }
-    public void      setDateCheckin(LocalDate dateCheckin){ this.dateCheckin = dateCheckin; }
+    public int getIdVol()                     { return idVol; }
+    public void setIdVol(int idVol)           { this.idVol = idVol; }
 
-    public LocalDate getDateCheckout()                     { return dateCheckout; }
-    public void      setDateCheckout(LocalDate d)          { this.dateCheckout = d; }
+    public int getIdHotel()                   { return idHotel; }
+    public void setIdHotel(int idHotel)       { this.idHotel = idHotel; }
 
     public String getStatut()          { return statut; }
     public void   setStatut(String s)  { this.statut = s; }
