@@ -214,7 +214,7 @@ public class ConfigVoyageController {
     @FXML
     private void retourMesVoyages() {
         try {
-            URL url = getClass().getResource("/MesVoyages.fxml");
+            URL url = getClass().getResource("/DashboardUser.fxml");
             if (url == null) {
                 showAlert("Erreur", "MesVoyages.fxml introuvable."); return;
             }
