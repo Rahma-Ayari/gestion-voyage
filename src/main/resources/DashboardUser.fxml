@@ -231,6 +231,7 @@
         </VBox>
     </left>
 
+
     <!-- ══ CONTENU CENTRAL ══ -->
     <center>
         <ScrollPane fx:id="scrollPrincipal" fitToWidth="true"

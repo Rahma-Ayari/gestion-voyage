@@ -443,6 +443,7 @@ public class DashboardUserController implements Initializable {
         }
     }
 
+
     @FXML
     public void ouvrirOffres() {
         try {
