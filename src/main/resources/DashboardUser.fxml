@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controller.DashboardUserController"
+            prefWidth="1140" prefHeight="720"
+            style="-fx-background-color: #F5F0EB;">
+    <top>
+        <VBox>
+            <!-- ══ HEADER ══ -->
+            <HBox alignment="CENTER_LEFT" spacing="0"
+                  style="-fx-background-color: #FF6B00;
+                         -fx-padding: 0 32 0 0;
+                         -fx-pref-height: 68;">
+
+                <!-- Logo bloc -->
+                <HBox alignment="CENTER" spacing="10"
+                      style="-fx-background-color: rgba(0,0,0,0.12);
+                             -fx-padding: 0 28;
+                             -fx-pref-height: 68;">
+                    <Label text="✈"
+                           style="-fx-font-size: 22px; -fx-text-fill: white;"/>
+                    <Label text="TripEase"
+                           style="-fx-font-size: 22px; -fx-font-weight: bold;
+                                  -fx-text-fill: white; -fx-font-family: 'Segoe UI';"/>
+                </HBox>
+
+                <!-- Séparateur vertical -->
+                <Pane style="-fx-background-color: rgba(255,255,255,0.2);
+                             -fx-pref-width: 1; -fx-pref-height: 68;"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- Tagline centre -->
+                <Label text="Votre espace voyage personnalisé"
+                       style="-fx-text-fill: rgba(255,255,255,0.75);
+                              -fx-font-size: 12px; -fx-font-family: 'Segoe UI';"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- Badge utilisateur — DROITE -->
+                <HBox spacing="10" alignment="CENTER"
+                      style="-fx-background-color: rgba(255,255,255,0.15);
+                             -fx-background-radius: 8;
+                             -fx-border-color: rgba(255,255,255,0.25);
+                             -fx-border-width: 1;
+                             -fx-border-radius: 8;
+                             -fx-padding: 8 16 8 10;">
+                    <StackPane style="-fx-background-color: white;
+                                      -fx-background-radius: 6;
+                                      -fx-pref-width: 34; -fx-pref-height: 34;">
+                        <Label fx:id="lblAvatar" text="U"
+                               style="-fx-font-size: 14px; -fx-font-weight: bold;
+                                      -fx-text-fill: #FF6B00;"/>
+                    </StackPane>
+                    <VBox spacing="1" alignment="CENTER_LEFT">
+                        <Label fx:id="lblNomUser" text="Utilisateur"
+                               style="-fx-text-fill: white; -fx-font-size: 13px;
+                                      -fx-font-weight: bold; -fx-font-family: 'Segoe UI';"/>
+                        <Label text="Compte actif"
+                               style="-fx-text-fill: rgba(255,255,255,0.65);
+                                      -fx-font-size: 10px;"/>
+                    </VBox>
+                </HBox>
+            </HBox>
+
+            <!-- ══ FIL D'ARIANE ══ -->
+            <HBox fx:id="hboxBreadcrumb" spacing="8" alignment="CENTER_LEFT"
+                  style="-fx-background-color: white;
+                         -fx-padding: 10 32;
+                         -fx-border-color: #E5E0DA;
+                         -fx-border-width: 0 0 1 0;
+                         -fx-pref-height: 40;"/>
+        </VBox>
+    </top>
+
+    <!-- ══ SIDEBAR ══ -->
+    <left>
+        <VBox prefWidth="252" spacing="2"
+              style="-fx-background-color: white;
+                     -fx-border-color: #E5E0DA;
+                     -fx-border-width: 0 1 0 0;
+                     -fx-padding: 24 10 24 10;">
+
+            <Label text="NAVIGATION"
+                   style="-fx-font-size: 9.5px; -fx-font-weight: bold;
+                          -fx-text-fill: #C0B8AE; -fx-padding: 0 4 10 8;
+                          -fx-font-family: 'Segoe UI';"/>
+
+            <!-- Accueil -->
+            <HBox fx:id="menuAccueil" spacing="12" alignment="CENTER_LEFT"
+                  style="-fx-padding: 11 14; -fx-background-color: #FFF3E0;
+                         -fx-background-radius: 8; -fx-cursor: hand;
+                         -fx-border-color: #FF6B00;
+                         -fx-border-width: 0 0 0 3;
+                         -fx-border-radius: 0 8 8 0;"
+                  onMouseClicked="#ouvrirAccueil"
+                  onMouseEntered="#onMenuHover"
+                  onMouseExited="#onMenuExit">
+                <Label text="🏠" style="-fx-font-size: 16px;"/>
+                <VBox spacing="1">
+                    <Label text="Accueil"
+                           style="-fx-font-size: 12.5px; -fx-font-weight: bold;
+                                  -fx-text-fill: #FF6B00; -fx-font-family: 'Segoe UI';"/>
+                    <Label text="Tableau de bord"
+                           style="-fx-font-size: 10px; -fx-text-fill: #FFB066;"/>
+                </VBox>
+            </HBox>
+
+            <!-- Configurer voyage -->
+            <HBox fx:id="menuConfigurerVoyage" spacing="12" alignment="CENTER_LEFT"
+                  style="-fx-padding: 11 14; -fx-background-radius: 8; -fx-cursor: hand;"
+                  onMouseClicked="#ouvrirConfigurerVoyage"
+                  onMouseEntered="#onMenuHover"
+                  onMouseExited="#onMenuExit">
+                <Label text="🗺" style="-fx-font-size: 16px;"/>
+                <VBox spacing="1">
+                    <Label text="Configurer mon voyage"
+                           style="-fx-font-size: 12.5px; -fx-text-fill: #4A4035;
+                                  -fx-font-family: 'Segoe UI';"/>
+                    <Label text="Planifiez votre séjour"
+                           style="-fx-font-size: 10px; -fx-text-fill: #B0A898;"/>
+                </VBox>
+            </HBox>
+
+            <!-- Offres -->
+            <HBox fx:id="menuOffres" spacing="12" alignment="CENTER_LEFT"
+                  style="-fx-padding: 11 14; -fx-background-radius: 8; -fx-cursor: hand;"
+                  onMouseClicked="#ouvrirOffres"
+                  onMouseEntered="#onMenuHover"
+                  onMouseExited="#onMenuExit">
+                <Label text="🎁" style="-fx-font-size: 16px;"/>
+                <VBox spacing="1">
+                    <Label text="Nos offres spéciales"
+                           style="-fx-font-size: 12.5px; -fx-text-fill: #4A4035;
+                                  -fx-font-family: 'Segoe UI';"/>
+                    <Label text="Promotions et bons plans"
+                           style="-fx-font-size: 10px; -fx-text-fill: #B0A898;"/>
+                </VBox>
+            </HBox>
+
+            <!-- Paiement -->
+            <HBox fx:id="menuPaiement" spacing="12" alignment="CENTER_LEFT"
+                  style="-fx-padding: 11 14; -fx-background-radius: 8; -fx-cursor: hand;"
+                  onMouseClicked="#ouvrirPaiement"
+                  onMouseEntered="#onMenuHover"
+                  onMouseExited="#onMenuExit">
+                <Label text="💳" style="-fx-font-size: 16px;"/>
+                <VBox spacing="1">
+                    <Label text="Effectuer un paiement"
+                           style="-fx-font-size: 12.5px; -fx-text-fill: #4A4035;
+                                  -fx-font-family: 'Segoe UI';"/>
+                    <Label text="Règlements sécurisés"
+                           style="-fx-font-size: 10px; -fx-text-fill: #B0A898;"/>
+                </VBox>
+            </HBox>
+
+            <!-- Notifications -->
+            <HBox fx:id="menuNotifications" spacing="12" alignment="CENTER_LEFT"
+                  style="-fx-padding: 11 14; -fx-background-radius: 8; -fx-cursor: hand;"
+                  onMouseClicked="#ouvrirNotifications"
+                  onMouseEntered="#onMenuHover"
+                  onMouseExited="#onMenuExit">
+                <Label text="🔔" style="-fx-font-size: 16px;"/>
+                <VBox spacing="1">
+                    <Label text="Mes notifications"
+                           style="-fx-font-size: 12.5px; -fx-text-fill: #4A4035;
+                                  -fx-font-family: 'Segoe UI';"/>
+                    <Label text="Alertes et messages"
+                           style="-fx-font-size: 10px; -fx-text-fill: #B0A898;"/>
+                </VBox>
+            </HBox>
+
+            <!-- Avis -->
+            <HBox fx:id="menuAvis" spacing="12" alignment="CENTER_LEFT"
+                  style="-fx-padding: 11 14; -fx-background-radius: 8; -fx-cursor: hand;"
+                  onMouseClicked="#ouvrirAvis"
+                  onMouseEntered="#onMenuHover"
+                  onMouseExited="#onMenuExit">
+                <Label text="⭐" style="-fx-font-size: 16px;"/>
+                <VBox spacing="1">
+                    <Label text="Évaluer mon voyage"
+                           style="-fx-font-size: 12.5px; -fx-text-fill: #4A4035;
+                                  -fx-font-family: 'Segoe UI';"/>
+                    <Label text="Partagez votre expérience"
+                           style="-fx-font-size: 10px; -fx-text-fill: #B0A898;"/>
+                </VBox>
+            </HBox>
+
+            <!-- Réservation -->
+            <HBox fx:id="menuReservation" spacing="12" alignment="CENTER_LEFT"
+                  style="-fx-padding: 11 14; -fx-background-radius: 8; -fx-cursor: hand;"
+                  onMouseClicked="#ouvrirReservation"
+                  onMouseEntered="#onMenuHover"
+                  onMouseExited="#onMenuExit">
+                <Label text="📅" style="-fx-font-size: 16px;"/>
+                <VBox spacing="1">
+                    <Label text="Mes réservations"
+                           style="-fx-font-size: 12.5px; -fx-text-fill: #4A4035;
+                                  -fx-font-family: 'Segoe UI';"/>
+                    <Label text="Hôtels, vols, activités"
+                           style="-fx-font-size: 10px; -fx-text-fill: #B0A898;"/>
+                </VBox>
+            </HBox>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <!-- Ligne séparatrice -->
+            <Pane style="-fx-background-color: #EDE8E2;
+                         -fx-pref-height: 1; -fx-margin: 4 0;"/>
+
+            <!-- Déconnexion -->
+            <HBox spacing="12" alignment="CENTER_LEFT"
+                  style="-fx-padding: 11 14; -fx-background-color: #FEF2F2;
+                         -fx-background-radius: 8; -fx-cursor: hand;
+                         -fx-border-color: #FECACA;
+                         -fx-border-width: 1; -fx-border-radius: 8;"
+                  onMouseClicked="#seDeconnecter">
+                <Label text="🚪" style="-fx-font-size: 16px;"/>
+                <VBox spacing="1">
+                    <Label text="Déconnexion"
+                           style="-fx-font-size: 12.5px; -fx-font-weight: bold;
+                                  -fx-text-fill: #DC2626;"/>
+                    <Label text="Quitter ma session"
+                           style="-fx-font-size: 10px; -fx-text-fill: #F87171;"/>
+                </VBox>
+            </HBox>
+        </VBox>
+    </left>
+
+    <!-- ══ CONTENU CENTRAL ══ -->
+    <center>
+        <ScrollPane fx:id="scrollPrincipal" fitToWidth="true"
+                    style="-fx-background-color: #F5F0EB;
+                           -fx-background: #F5F0EB;
+                           -fx-border-color: transparent;">
+            <VBox fx:id="contenuPrincipal" spacing="0"
+                  style="-fx-background-color: #F5F0EB;"/>
+        </ScrollPane>
+    </center>
+
+</BorderPane>
