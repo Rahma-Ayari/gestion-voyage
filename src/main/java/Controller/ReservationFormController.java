@@ -3,6 +3,7 @@ package Controller;
 import Entite.*;
 import Service.ServiceReservation;
 import Service.ServiceStatutReservation;
+import Utils.SessionManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -50,11 +51,8 @@ public class ReservationFormController implements Initializable {
     @FXML private TextField        emailField;
     @FXML private TextField        numTelField;
 
-    /** Conteneur principal de la section passeports (cadre gris). */
     @FXML private VBox             passeportsContainer;
-    /** Sous-VBox où sont injectés les champs TextField passeport. */
     @FXML private VBox             passeportFieldsBox;
-    /** Label "— N personne(s)" à côté du titre de la section. */
     @FXML private Label            passeportCountLabel;
 
     @FXML private TextArea         commentaireArea;
@@ -62,6 +60,8 @@ public class ReservationFormController implements Initializable {
     @FXML private Label            prixDetailLabel;
     @FXML private Label            totalLabel;
     @FXML private Button           confirmerBtn;
+    @FXML private Label            labelEmailConnecte;
+
 
     // ── Services ──────────────────────────────────────
     private final ServiceReservation       serviceRes    = new ServiceReservation();
@@ -70,24 +70,16 @@ public class ReservationFormController implements Initializable {
     // ── Données ───────────────────────────────────────
     private Offre                   offreSelectionnee;
     private List<StatutReservation> statuts;
-
-    /**
-     * Liste des TextField passeport générés dynamiquement.
-     * passeportFields.get(0) = Personne 1, get(1) = Personne 2, etc.
-     */
-    private final List<TextField> passeportFields = new ArrayList<>();
+    private final List<TextField>   passeportFields = new ArrayList<>();
 
     // ── Patterns de validation ────────────────────────
-    private static final DateTimeFormatter FMT              = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static final Pattern           EMAIL_PATTERN    =
+    private static final DateTimeFormatter FMT      = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final Pattern EMAIL_PATTERN      =
             Pattern.compile("^[\\w._%+\\-]+@[\\w.\\-]+\\.[a-zA-Z]{2,}$");
-    private static final Pattern           TEL_PATTERN      =
+    private static final Pattern TEL_PATTERN        =
             Pattern.compile("^[+]?[0-9 \\-().]{6,20}$");
-    private static final Pattern           PASSPORT_PATTERN =
+    private static final Pattern PASSPORT_PATTERN   =
             Pattern.compile("^[A-Z0-9]{6,12}$");
-
-    // ⚠️ Remplacez par votre système de session
-    private static final int ID_UTILISATEUR_CONNECTE = 1;
 
     // ══════════════════════════════════════════════════
     //  INITIALISATION
@@ -99,9 +91,14 @@ public class ReservationFormController implements Initializable {
         chargerStatuts();
         styleFocusBorder(emailField);
         styleFocusBorder(numTelField);
-
-        // Générer les champs passeport dès le départ (1 personne)
         genererChampsPasseport(1);
+
+        // ✅ Email connecté dans le header ET dans le champ email
+        String emailSession = SessionManager.getUserEmail();
+        if (emailSession != null) {
+            emailField.setText(emailSession);
+            labelEmailConnecte.setText("👤 " + emailSession);
+        }
     }
 
     /** Appelé depuis ReservationUserController avant d'afficher cette page. */
@@ -110,7 +107,6 @@ public class ReservationFormController implements Initializable {
         remplirResumeOffre(offre);
         mettreAJourTotal();
 
-        // Écouter le spinner → recalculer le total ET régénérer les passeports
         nbPersonnesSpinner.valueProperty().addListener((obs, oldVal, newVal) -> {
             mettreAJourTotal();
             genererChampsPasseport(newVal);
@@ -121,28 +117,20 @@ public class ReservationFormController implements Initializable {
     //  GÉNÉRATION DYNAMIQUE DES CHAMPS PASSEPORT
     // ══════════════════════════════════════════════════
 
-    /**
-     * Vide passeportFieldsBox et recrée N champs TextField,
-     * un par personne. Chaque rangée affiche :
-     *   [👤 Personne X]  [TextField ____________]
-     */
     private void genererChampsPasseport(int nb) {
         passeportFields.clear();
         passeportFieldsBox.getChildren().clear();
 
-        // Mettre à jour le label de comptage
         passeportCountLabel.setText("— " + nb + " personne" + (nb > 1 ? "s" : ""));
 
         for (int i = 1; i <= nb; i++) {
             final int index = i;
 
-            // Label personne
             Label lblPersonne = new Label("Personne " + i);
             lblPersonne.setMinWidth(80);
             lblPersonne.setStyle(
                     "-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #FF6B35;");
 
-            // Champ passeport
             TextField tf = new TextField();
             tf.setPromptText("ex : AB" + (1000000 + i));
             tf.setStyle(
@@ -150,7 +138,6 @@ public class ReservationFormController implements Initializable {
                             "-fx-border-color: #DDD; -fx-border-radius: 8; -fx-padding: 8 12;");
             HBox.setHgrow(tf, Priority.ALWAYS);
 
-            // Convertir automatiquement en majuscules à la saisie
             tf.textProperty().addListener((obs, oldTxt, newTxt) -> {
                 if (newTxt != null && !newTxt.equals(newTxt.toUpperCase())) {
                     tf.setText(newTxt.toUpperCase());
@@ -159,7 +146,6 @@ public class ReservationFormController implements Initializable {
 
             styleFocusBorder(tf);
 
-            // Badge numéro
             Label badge = new Label("🛂 " + index);
             badge.setStyle(
                     "-fx-font-size: 11px; -fx-text-fill: #888;" +
@@ -182,7 +168,6 @@ public class ReservationFormController implements Initializable {
         offreTitreLabel.setText(offre.getType() != null ? offre.getType() : "Offre de voyage");
         offreDescLabel.setText(offre.getDescription() != null ? offre.getDescription() : "");
 
-        // Image
         Image img = chargerImage(offre.getImagePath(), 360, 180);
         if (img != null) {
             offreImageView.setImage(img);
@@ -327,7 +312,7 @@ public class ReservationFormController implements Initializable {
             return;
         }
 
-        // ── Validation de chaque passeport ────────────
+        // ── Validation passeports ──────────────────────
         List<String> passeports = new ArrayList<>();
         for (int i = 0; i < passeportFields.size(); i++) {
             String val = passeportFields.get(i).getText() != null
@@ -367,9 +352,13 @@ public class ReservationFormController implements Initializable {
             reservation.setNombre_personnes(nbPersonnesSpinner.getValue());
             reservation.setCommentaire(
                     commentaireArea.getText() != null ? commentaireArea.getText().trim() : "");
-
-            // Passeports joints : "AB1234567 | CD9876543 | EF1122334"
             reservation.setNum_passeport(String.join(" | ", passeports));
+
+            // ✅ Personne connectée depuis SessionManager
+            Utilisateur userConnecte = SessionManager.getCurrentUser();
+            if (userConnecte instanceof Personne) {
+                reservation.setId_personne((Personne) userConnecte);
+            }
 
             reservation.setId_voyage(null);
             reservation.setId_statut(statutEnAttente);
@@ -417,22 +406,20 @@ public class ReservationFormController implements Initializable {
                         "-fx-border-color: #ECECEC; -fx-border-radius: 12; -fx-border-width: 1; -fx-padding: 4 16;");
 
         details.getChildren().addAll(
-                infoLigne("🎫 Offre",      offreSelectionnee.getType() != null ? offreSelectionnee.getType() : "—"),
+                infoLigne("🎫 Offre",     offreSelectionnee.getType() != null ? offreSelectionnee.getType() : "—"),
                 new Separator(),
-                infoLigne("📅 Date",       datePicker.getValue().format(FMT)),
+                infoLigne("📅 Date",      datePicker.getValue().format(FMT)),
                 new Separator(),
-                infoLigne("👥 Personnes",  nbPersonnesSpinner.getValue() + " personne(s)"),
+                infoLigne("👥 Personnes", nbPersonnesSpinner.getValue() + " personne(s)"),
                 new Separator(),
-                infoLigne("✉ E-mail",      emailField.getText().trim()),
+                infoLigne("✉ E-mail",     emailField.getText().trim()),
                 new Separator(),
-                infoLigne("📞 Téléphone",  numTelField.getText().trim()),
+                infoLigne("📞 Téléphone", numTelField.getText().trim()),
                 new Separator()
         );
 
-        // Afficher chaque passeport individuellement dans le récap
         for (int i = 0; i < passeports.size(); i++) {
-            details.getChildren().add(
-                    infoLigne("🛂 Passeport P" + (i + 1), passeports.get(i)));
+            details.getChildren().add(infoLigne("🛂 Passeport P" + (i + 1), passeports.get(i)));
             details.getChildren().add(new Separator());
         }
 
@@ -441,6 +428,15 @@ public class ReservationFormController implements Initializable {
                 new Separator(),
                 infoLigne("📌 Statut",     "⏳ En attente")
         );
+
+        // ✅ Afficher le compte connecté dans le récap
+        Utilisateur userConnecte = SessionManager.getCurrentUser();
+        if (userConnecte != null) {
+            details.getChildren().addAll(
+                    new Separator(),
+                    infoLigne("👤 Compte", userConnecte.getEmail())
+            );
+        }
 
         if (offreSelectionnee.getDestination() != null) {
             Destination d = offreSelectionnee.getDestination();
@@ -495,6 +491,7 @@ public class ReservationFormController implements Initializable {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/ReservationUser/ReservationUser.fxml"));
             Parent root = loader.load();
+
             Stage stage = (Stage) confirmerBtn.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
@@ -518,7 +515,6 @@ public class ReservationFormController implements Initializable {
         errorLabel.setManaged(false);
     }
 
-    /** Bordure orange au focus, grise sinon. */
     private void styleFocusBorder(TextField tf) {
         String base = "-fx-font-size: 13px; -fx-background-radius: 8; -fx-border-radius: 8; -fx-padding: 8 12;";
         tf.focusedProperty().addListener((obs, wasFocused, isFocused) ->

@@ -2,6 +2,7 @@ package Controller;
 
 import Entite.*;
 import Service.ServiceOffre;
+import Utils.SessionManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -32,6 +33,8 @@ public class ReservationUserController implements Initializable {
     @FXML private VBox      emptyBox;
     @FXML private TextField searchField;
     @FXML private Button    configurerVoyageBtn;  // AJOUTÉ
+    @FXML private Label labelEmail;
+
 
     private final ServiceOffre serviceOffre = new ServiceOffre();
     private List<Offre> toutesLesOffres;
@@ -39,12 +42,12 @@ public class ReservationUserController implements Initializable {
     private static final DateTimeFormatter FMT_DATE = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter FMT_DT   = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-    // ══════════════════════════════════════════════════
-    //  INITIALISATION
-    // ══════════════════════════════════════════════════
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        labelEmail.setText("👤 " + SessionManager.getUserEmail());
+
         loadOffres();
         setupSearch();
     }
