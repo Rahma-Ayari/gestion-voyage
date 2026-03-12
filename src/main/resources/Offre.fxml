@@ -58,10 +58,10 @@
 
     <!-- ================= LEFT FORM ================= -->
     <left>
-        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+        <ScrollPane prefWidth="370" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
                     style="-fx-background-color: transparent; -fx-padding: 10;">
             <content>
-                <VBox spacing="11" maxWidth="350" alignment="TOP_CENTER"
+                <VBox spacing="11" maxHeight="Infinity" maxWidth="350" alignment="TOP_CENTER"
                       style="-fx-background-color: white;
                              -fx-background-radius: 15;
                              -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 5);">
