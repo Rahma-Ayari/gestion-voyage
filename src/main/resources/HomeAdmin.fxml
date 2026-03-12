@@ -36,8 +36,7 @@
                     <!-- Admin info -->
                     <HBox alignment="CENTER" spacing="10"
                           style="-fx-background-color: rgba(255,255,255,0.18); -fx-background-radius: 30; -fx-padding: 8 18 8 14;">
-                        <Label text="👤"
-                               style="-fx-font-size: 18px;"/>
+                        <Label text="👤" style="-fx-font-size: 18px;"/>
                         <VBox spacing="0">
                             <Label fx:id="adminNameLabel" text="Administrateur"
                                    style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: white; -fx-font-family: 'Segoe UI';"/>
@@ -77,14 +76,16 @@
                            style="-fx-font-size: 14px; -fx-text-fill: #888; -fx-font-family: 'Segoe UI';"/>
                 </VBox>
 
-                <!-- Ligne 1 : 4 cartes -->
+                <!-- ══════════════════════════════════════
+                     Ligne 1 : Inscriptions / Avis / Destinations / Activités
+                ══════════════════════════════════════ -->
                 <HBox spacing="18">
 
                     <!-- Gestion Inscriptions -->
                     <VBox fx:id="cardInscriptions" spacing="14" alignment="TOP_LEFT"
-                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);"
                           HBox.hgrow="ALWAYS"
-                          onMouseClicked="#handleInscriptions">
+                          onMouseClicked="#handleInscriptions"
+                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);">
                         <HBox alignment="CENTER_LEFT" spacing="12">
                             <Label text="👥"
                                    style="-fx-font-size: 26px; -fx-background-color: #FFF3E0; -fx-background-radius: 12; -fx-padding: 10;"/>
@@ -106,9 +107,9 @@
 
                     <!-- Gestion Avis -->
                     <VBox fx:id="cardAvis" spacing="14" alignment="TOP_LEFT"
-                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);"
                           HBox.hgrow="ALWAYS"
-                          onMouseClicked="#handleAvis">
+                          onMouseClicked="#handleAvis"
+                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);">
                         <HBox alignment="CENTER_LEFT" spacing="12">
                             <Label text="⭐"
                                    style="-fx-font-size: 26px; -fx-background-color: #FFFDE7; -fx-background-radius: 12; -fx-padding: 10;"/>
@@ -130,9 +131,9 @@
 
                     <!-- Gestion Destinations -->
                     <VBox fx:id="cardDestinations" spacing="14" alignment="TOP_LEFT"
-                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);"
                           HBox.hgrow="ALWAYS"
-                          onMouseClicked="#handleDestinations">
+                          onMouseClicked="#handleDestinations"
+                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);">
                         <HBox alignment="CENTER_LEFT" spacing="12">
                             <Label text="🗺"
                                    style="-fx-font-size: 26px; -fx-background-color: #E8F5E9; -fx-background-radius: 12; -fx-padding: 10;"/>
@@ -154,9 +155,9 @@
 
                     <!-- Gestion Activités -->
                     <VBox fx:id="cardActivites" spacing="14" alignment="TOP_LEFT"
-                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);"
                           HBox.hgrow="ALWAYS"
-                          onMouseClicked="#handleActivites">
+                          onMouseClicked="#handleActivites"
+                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);">
                         <HBox alignment="CENTER_LEFT" spacing="12">
                             <Label text="🎯"
                                    style="-fx-font-size: 26px; -fx-background-color: #FCE4EC; -fx-background-radius: 12; -fx-padding: 10;"/>
@@ -178,14 +179,16 @@
 
                 </HBox>
 
-                <!-- Ligne 2 : 4 cartes -->
+                <!-- ══════════════════════════════════════
+                     Ligne 2 : Hôtels / Réservations / Offres / Vols
+                ══════════════════════════════════════ -->
                 <HBox spacing="18">
 
                     <!-- Gestion Hôtels -->
                     <VBox fx:id="cardHotels" spacing="14" alignment="TOP_LEFT"
-                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);"
                           HBox.hgrow="ALWAYS"
-                          onMouseClicked="#handleHotels">
+                          onMouseClicked="#handleHotels"
+                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);">
                         <HBox alignment="CENTER_LEFT" spacing="12">
                             <Label text="🏨"
                                    style="-fx-font-size: 26px; -fx-background-color: #E3F2FD; -fx-background-radius: 12; -fx-padding: 10;"/>
@@ -207,9 +210,9 @@
 
                     <!-- Gestion Réservations -->
                     <VBox fx:id="cardReservations" spacing="14" alignment="TOP_LEFT"
-                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);"
                           HBox.hgrow="ALWAYS"
-                          onMouseClicked="#handleReservations">
+                          onMouseClicked="#handleReservations"
+                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);">
                         <HBox alignment="CENTER_LEFT" spacing="12">
                             <Label text="📅"
                                    style="-fx-font-size: 26px; -fx-background-color: #EDE7F6; -fx-background-radius: 12; -fx-padding: 10;"/>
@@ -231,9 +234,9 @@
 
                     <!-- Gestion Offres -->
                     <VBox fx:id="cardOffres" spacing="14" alignment="TOP_LEFT"
-                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);"
                           HBox.hgrow="ALWAYS"
-                          onMouseClicked="#handleOffres">
+                          onMouseClicked="#handleOffres"
+                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);">
                         <HBox alignment="CENTER_LEFT" spacing="12">
                             <Label text="🏷"
                                    style="-fx-font-size: 26px; -fx-background-color: #FFF3E0; -fx-background-radius: 12; -fx-padding: 10;"/>
@@ -255,9 +258,9 @@
 
                     <!-- Gestion Vols -->
                     <VBox fx:id="cardVols" spacing="14" alignment="TOP_LEFT"
-                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);"
                           HBox.hgrow="ALWAYS"
-                          onMouseClicked="#handleVols">
+                          onMouseClicked="#handleVols"
+                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);">
                         <HBox alignment="CENTER_LEFT" spacing="12">
                             <Label text="✈"
                                    style="-fx-font-size: 26px; -fx-background-color: #E0F7FA; -fx-background-radius: 12; -fx-padding: 10;"/>
@@ -279,38 +282,16 @@
 
                 </HBox>
 
-                <!-- Ligne 3 : 2 cartes larges + 1 bannière stats -->
+                <!-- ══════════════════════════════════════
+                     Ligne 3 : Notifications (même taille) + 3 espaces vides + Bannière
+                ══════════════════════════════════════ -->
                 <HBox spacing="18">
-
-                    <!-- Gestion Paiements -->
-                    <VBox fx:id="cardPaiements" spacing="14" alignment="TOP_LEFT"
-                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);"
-                          HBox.hgrow="ALWAYS"
-                          onMouseClicked="#handlePaiements">
-                        <HBox alignment="CENTER_LEFT" spacing="12">
-                            <Label text="💳"
-                                   style="-fx-font-size: 26px; -fx-background-color: #E8F5E9; -fx-background-radius: 12; -fx-padding: 10;"/>
-                            <VBox spacing="3">
-                                <Label text="Paiements"
-                                       style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1A1A2E; -fx-font-family: 'Segoe UI';"/>
-                                <Label text="Transactions &amp; finances"
-                                       style="-fx-font-size: 11px; -fx-text-fill: #AAA; -fx-font-family: 'Segoe UI';"/>
-                            </VBox>
-                        </HBox>
-                        <Label text="Suivre les transactions, remboursements et rapports financiers."
-                               wrapText="true"
-                               style="-fx-font-size: 12px; -fx-text-fill: #999; -fx-font-family: 'Segoe UI';"/>
-                        <HBox alignment="CENTER_RIGHT">
-                            <Label text="Accéder →"
-                                   style="-fx-font-size: 12px; -fx-text-fill: #FF6B00; -fx-font-weight: bold;"/>
-                        </HBox>
-                    </VBox>
 
                     <!-- Gestion Notifications -->
                     <VBox fx:id="cardNotifications" spacing="14" alignment="TOP_LEFT"
-                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);"
                           HBox.hgrow="ALWAYS"
-                          onMouseClicked="#handleNotifications">
+                          onMouseClicked="#handleNotifications"
+                          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #EBEBEB; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 24 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 4);">
                         <HBox alignment="CENTER_LEFT" spacing="12">
                             <Label text="🔔"
                                    style="-fx-font-size: 26px; -fx-background-color: #FFF8E1; -fx-background-radius: 12; -fx-padding: 10;"/>
@@ -330,10 +311,16 @@
                         </HBox>
                     </VBox>
 
-                    <!-- Bannière infos plateforme -->
+                    <!-- Espace vide 1 (même taille que les cartes) -->
+                    <VBox HBox.hgrow="ALWAYS" style="-fx-background-color: transparent;"/>
+
+                    <!-- Espace vide 2 (même taille que les cartes) -->
+                    <VBox HBox.hgrow="ALWAYS" style="-fx-background-color: transparent;"/>
+
+                    <!-- Bannière infos plateforme (même taille que les cartes) -->
                     <VBox spacing="16" alignment="CENTER_LEFT"
-                          style="-fx-background-color: linear-gradient(to bottom right, #FF6B00, #FF9A3C); -fx-background-radius: 16; -fx-padding: 28 26; -fx-pref-width: 300; -fx-min-width: 280;"
-                          HBox.hgrow="NEVER">
+                          HBox.hgrow="ALWAYS"
+                          style="-fx-background-color: linear-gradient(to bottom right, #FF6B00, #FF9A3C); -fx-background-radius: 16; -fx-padding: 28 26;">
                         <Label text="🚀 TripEase Admin"
                                style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: white; -fx-font-family: 'Segoe UI';"/>
                         <Label text="Vous gérez l'ensemble de la plateforme depuis ce tableau de bord centralisé."
@@ -341,20 +328,17 @@
                                style="-fx-font-size: 12.5px; -fx-text-fill: rgba(255,255,255,0.88); -fx-font-family: 'Segoe UI';"/>
                         <Region prefHeight="6"/>
                         <HBox spacing="8" alignment="CENTER_LEFT">
-                            <Label text="✔"
-                                   style="-fx-text-fill: white; -fx-font-size: 13px;"/>
-                            <Label text="10 modules disponibles"
+                            <Label text="✔" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+                            <Label text="9 modules disponibles"
                                    style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 12px;"/>
                         </HBox>
                         <HBox spacing="8" alignment="CENTER_LEFT">
-                            <Label text="✔"
-                                   style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+                            <Label text="✔" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
                             <Label text="Gestion complète en temps réel"
                                    style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 12px;"/>
                         </HBox>
                         <HBox spacing="8" alignment="CENTER_LEFT">
-                            <Label text="✔"
-                                   style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+                            <Label text="✔" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
                             <Label text="Interface sécurisée &amp; intuitive"
                                    style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 12px;"/>
                         </HBox>

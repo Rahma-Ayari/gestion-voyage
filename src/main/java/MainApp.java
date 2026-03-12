@@ -13,7 +13,7 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) {
         try {
             // Démarrage de l'application sur l'écran de connexion
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/HomeAdmin.fxml"));
             Parent root = loader.load();
 
             Scene scene = new Scene(root);
