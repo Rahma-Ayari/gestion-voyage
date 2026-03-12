@@ -13,7 +13,8 @@ public class ServiceNotification implements IService<Notification> {
 
     @Override
     public boolean ajouter(Notification n) throws SQLException {
-        String sql = "INSERT INTO notification(message, date_notification, lu, type_notification, id_reservation) VALUES(?,?,?,?,?)";
+        String sql = "INSERT INTO notification(message, date_notification, lu, type_notification, id_reservation, id_utilisateur)\n" +
+                "VALUES(?,?,?,?,?,?)";
         try (PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, n.getMessage());
             ps.setTimestamp(2, Timestamp.valueOf(n.getDateNotification()));
@@ -62,7 +63,53 @@ public class ServiceNotification implements IService<Notification> {
         }
         return list;
     }
+    public List<Notification> getNotificationsByUser(int userId) {
 
+        List<Notification> notifications = new ArrayList<>();
+
+        String sql = "SELECT * FROM notification WHERE id_utilisateur = ? ORDER BY date_notification DESC";
+
+        try {
+
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ps.setInt(1, userId);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                Notification n = new Notification();
+
+                n.setIdNotification(rs.getInt("id_notification"));
+                n.setMessage(rs.getString("message"));
+                n.setDateNotification(rs.getTimestamp("date_notification").toLocalDateTime());
+                n.setLu(rs.getBoolean("lu"));
+                n.setTypeNotification(rs.getString("type_notification"));
+                n.setIdReservation(rs.getInt("id_reservation"));
+                n.setIdUtilisateur(rs.getInt("id_utilisateur"));
+
+                notifications.add(n);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erreur récupération notifications : " + e.getMessage());
+        }
+
+        return notifications;
+    }
+    public void markAsRead(int notificationId) {
+
+        String sql = "UPDATE notification SET lu = true WHERE id_notification = ?";
+
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+
+            ps.setInt(1, notificationId);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Erreur markAsRead : " + e.getMessage());
+        }
+    }
     @Override
     public Notification findbyId(int id) throws SQLException {
         String sql = "SELECT * FROM notification WHERE id_notification=?";
