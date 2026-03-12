@@ -7,7 +7,9 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import Controller.DashboardUserController;
 import Entite.Destination;
+import Entite.Utilisateur;
 import Entite.Voyage;
 import Service.ServiceDestination;
 import Service.ServiceVoyage;
@@ -211,20 +213,39 @@ public class ConfigVoyageController {
     // NAVIGATION - BOUTONS
     // ══════════════════════════════════════════════════════════════════
 
+
+
     @FXML
     private void retourMesVoyages() {
         try {
             URL url = getClass().getResource("/DashboardUser.fxml");
             if (url == null) {
-                showAlert("Erreur", "MesVoyages.fxml introuvable."); return;
+                showAlert("Erreur", "DashboardUser.fxml introuvable.");
+                return;
             }
-            Parent root = FXMLLoader.load(url);
+
+            FXMLLoader loader = new FXMLLoader(url);
+            Parent root = loader.load();
+
+            // ✅ CRUCIAL : Récupérer le contrôleur et passer l'utilisateur connecté
+            DashboardUserController controller = loader.getController();
+            Utilisateur utilisateurConnecte = SessionManager.getCurrentUser();
+
+            if (utilisateurConnecte != null) {
+                controller.setUtilisateur(utilisateurConnecte);
+            } else {
+                showAlert("Erreur", "Session expirée. Veuillez vous reconnecter.");
+                handleLogout();
+                return;
+            }
+
             Stage stage = (Stage) retourButton.getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.setTitle("TripEase - Mes Voyages");
+            stage.setTitle("TripEase - Dashboard");
             stage.show();
         } catch (IOException e) {
-            showAlert("Erreur", "Impossible de charger Mes Voyages : " + e.getMessage());
+            showAlert("Erreur", "Impossible de charger le Dashboard : " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
