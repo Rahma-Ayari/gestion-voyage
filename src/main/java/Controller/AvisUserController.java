@@ -28,6 +28,14 @@ public class AvisUserController {
     @FXML private ToggleButton btnOui, btnNon;
     @FXML private Label        lblUserName, lblUserAvatar;
     @FXML private ComboBox<Voyage> cmbVoyage;
+    @FXML private Button btnRetour;
+
+    // ── Navigation ────────────────────────────────────────────────────────────
+    private javafx.stage.Stage stage;
+
+    public void setStage(javafx.stage.Stage stage) {
+        this.stage = stage;
+    }
 
     // ── État ──────────────────────────────────────────────────────────────────
     private int         currentRating = 0;
@@ -42,6 +50,30 @@ public class AvisUserController {
     // ══════════════════════════════════════════════════════════════════════════
     //  POINT D'ENTRÉE
     // ══════════════════════════════════════════════════════════════════════════
+
+    private void handleRetour() {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                    getClass().getResource("/DashboardUser.fxml"));
+            javafx.scene.Parent root = loader.load();
+
+            // ✅ CRUCIAL : Passer l'utilisateur au contrôleur du Dashboard
+            DashboardUserController ctrl = loader.getController();
+            ctrl.setUtilisateur(utilisateurConnecte);  // ← Transférer la session
+
+            // Récupérer le stage depuis le bouton retour
+            javafx.stage.Stage currentStage =
+                    (javafx.stage.Stage) btnRetour.getScene().getWindow();
+
+            javafx.scene.Scene scene = new javafx.scene.Scene(root);
+            currentStage.setScene(scene);
+            currentStage.show();
+
+        } catch (Exception e) {
+            afficherErreur("Impossible de revenir : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     public void setUtilisateur(Utilisateur user) {
         this.utilisateurConnecte = user;
@@ -324,6 +356,8 @@ public class AvisUserController {
     private void setupActionButtons() {
         btnPublier .setOnAction(e -> handlePublish());
         btnAnnuler .setOnAction(e -> demanderAnnulation());
+        btnRetour.setOnAction(e -> handleRetour());
+
     }
 
     private void demanderAnnulation() {

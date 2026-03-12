@@ -17,7 +17,7 @@
             <HBox style="-fx-background-color: linear-gradient(to right, #FF7F50, #FF9A76); -fx-padding: 18 32;"
                   alignment="CENTER_LEFT" spacing="16">
 
-                <!-- Logo -->
+                <!-- Logo à GAUCHE -->
                 <HBox spacing="14" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
                     <StackPane style="-fx-background-color: rgba(255,255,255,0.22); -fx-background-radius: 14;
                                       -fx-pref-width: 50; -fx-pref-height: 50;
@@ -33,7 +33,15 @@
                     </VBox>
                 </HBox>
 
-                <!-- Badge utilisateur -->
+                <!-- Bouton Retour à DROITE (AVANT le badge utilisateur) -->
+                <Button fx:id="btnRetour" text="← Retour"
+                        style="-fx-font-size:13px; -fx-padding:8 18;
+                               -fx-background-color: rgba(255,255,255,0.2);
+                               -fx-border-color: rgba(255,255,255,0.5); -fx-border-width:1.5;
+                               -fx-border-radius:10; -fx-background-radius:10;
+                               -fx-text-fill: white; -fx-font-weight:bold; -fx-cursor:hand;"/>
+
+                <!-- Badge utilisateur à DROITE -->
                 <HBox spacing="10" alignment="CENTER"
                       style="-fx-background-color: rgba(255,255,255,0.2); -fx-background-radius: 40;
                              -fx-padding: 7 18 7 7; -fx-border-color: rgba(255,255,255,0.3);
