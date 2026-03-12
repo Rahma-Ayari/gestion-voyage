@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.ScrollPane?>
@@ -20,136 +19,194 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="800" prefWidth="1400" style="-fx-background-color: #F4F6F9;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ReservationVoyageController">
+<BorderPane prefHeight="800" prefWidth="1400" style="-fx-background-color: #F4F6F9;"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controller.ReservationVoyageController">
 
     <!-- HEADER -->
     <top>
         <VBox spacing="0">
-            <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: linear-gradient(to right, #FF6B35, #F7931E); -fx-padding: 18 40;">
-                <StackPane prefHeight="48" prefWidth="48" style="-fx-background-color: rgba(255,255,255,0.22); -fx-background-radius: 12;">
-                    <Label style="-fx-font-size: 22px;" text="🧳" />
+            <HBox alignment="CENTER_LEFT" spacing="15"
+                  style="-fx-background-color: linear-gradient(to right, #FF6B35, #F7931E); -fx-padding: 18 40;">
+                <StackPane prefHeight="48" prefWidth="48"
+                           style="-fx-background-color: rgba(255,255,255,0.22); -fx-background-radius: 12;">
+                    <Label style="-fx-font-size: 22px;" text="🧳"/>
                 </StackPane>
                 <VBox spacing="1" HBox.hgrow="ALWAYS">
-                    <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="TripEase" textFill="white" />
-                    <Label style="-fx-font-size: 12px;" text="Planifiez votre voyage ideal" textFill="rgba(255,255,255,0.85)" />
+                    <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="TripEase" textFill="white"/>
+                    <Label style="-fx-font-size: 12px;" text="Planifiez votre voyage ideal"
+                           textFill="rgba(255,255,255,0.85)"/>
                 </VBox>
                 <VBox alignment="CENTER_RIGHT" spacing="2">
-                    <Label fx:id="headerDestLabel" style="-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;" text="--" />
-                    <Label fx:id="headerDatesLabel" style="-fx-text-fill: rgba(255,255,255,0.85); -fx-font-size: 11px;" text="--" />
+                    <Label fx:id="headerDestLabel"
+                           style="-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;" text="--"/>
+                    <Label fx:id="headerDatesLabel"
+                           style="-fx-text-fill: rgba(255,255,255,0.85); -fx-font-size: 11px;" text="--"/>
                 </VBox>
-                <Label style="-fx-font-size: 12px; -fx-padding: 7 14; -fx-background-color: rgba(255,255,255,0.15); -fx-background-radius: 18;" text="Utilisateur" textFill="white" />
+                <!-- ✅ Email utilisateur connecté -->
+                <Label fx:id="labelEmailConnecte" text="👤 Utilisateur" textFill="white"
+                       style="-fx-font-size: 12px; -fx-padding: 7 14;
+                              -fx-background-color: rgba(255,255,255,0.15);
+                              -fx-background-radius: 18;"/>
             </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="6" style="-fx-background-color: white; -fx-padding: 10 40; -fx-border-color: #E8E8E8; -fx-border-width: 0 0 1 0;">
-                <Label style="-fx-font-size: 12px; -fx-text-fill: #999;" text="Accueil" />
-                <Label style="-fx-text-fill: #CCC;" text="&gt;" />
-                <Label style="-fx-font-size: 12px; -fx-text-fill: #999;" text="Configuration" />
-                <Label style="-fx-text-fill: #CCC;" text="&gt;" />
-                <Label style="-fx-font-size: 12px; -fx-text-fill: #999;" text="Budget" />
-                <Label style="-fx-text-fill: #CCC;" text="&gt;" />
-                <Label style="-fx-font-size: 12px; -fx-text-fill: #FF6B35; -fx-font-weight: bold;" text="Reservation" />
+            <HBox alignment="CENTER_LEFT" spacing="6"
+                  style="-fx-background-color: white; -fx-padding: 10 40;
+                         -fx-border-color: #E8E8E8; -fx-border-width: 0 0 1 0;">
+                <Label style="-fx-font-size: 12px; -fx-text-fill: #999;" text="Accueil"/>
+                <Label style="-fx-text-fill: #CCC;" text=">"/>
+                <Label style="-fx-font-size: 12px; -fx-text-fill: #999;" text="Configuration"/>
+                <Label style="-fx-text-fill: #CCC;" text=">"/>
+                <Label style="-fx-font-size: 12px; -fx-text-fill: #999;" text="Budget"/>
+                <Label style="-fx-text-fill: #CCC;" text=">"/>
+                <Label style="-fx-font-size: 12px; -fx-text-fill: #FF6B35; -fx-font-weight: bold;"
+                       text="Reservation"/>
             </HBox>
         </VBox>
     </top>
 
     <!-- SIDEBAR -->
     <left>
-        <VBox prefWidth="255" spacing="0" style="-fx-background-color: white; -fx-border-color: #EBEBEB; -fx-border-width: 0 1 0 0;">
-            <Label style="-fx-text-fill: #C0C0C0; -fx-font-size: 10px; -fx-font-weight: bold; -fx-padding: 20 18 6 18;" text="ETAPES" />
+        <VBox prefWidth="255" spacing="0"
+              style="-fx-background-color: white; -fx-border-color: #EBEBEB; -fx-border-width: 0 1 0 0;">
+            <Label style="-fx-text-fill: #C0C0C0; -fx-font-size: 10px; -fx-font-weight: bold;
+                          -fx-padding: 20 18 6 18;" text="ETAPES"/>
 
             <HBox alignment="CENTER_LEFT" prefHeight="42" spacing="12" style="-fx-padding: 0 18;">
-                <StackPane minHeight="26" minWidth="26" prefHeight="26" prefWidth="26" style="-fx-background-color: #27AE60; -fx-background-radius: 13;">
-                    <Label style="-fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold;" text="✓" />
+                <StackPane minHeight="26" minWidth="26" prefHeight="26" prefWidth="26"
+                           style="-fx-background-color: #27AE60; -fx-background-radius: 13;">
+                    <Label style="-fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold;" text="✓"/>
                 </StackPane>
-                <Label style="-fx-text-fill: #27AE60; -fx-font-size: 12.5px;" text="Dates et Destination" />
+                <Label style="-fx-text-fill: #27AE60; -fx-font-size: 12.5px;" text="Dates et Destination"/>
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="42" spacing="12" style="-fx-padding: 0 18;">
-                <StackPane minHeight="26" minWidth="26" prefHeight="26" prefWidth="26" style="-fx-background-color: #27AE60; -fx-background-radius: 13;">
-                    <Label style="-fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold;" text="✓" />
+                <StackPane minHeight="26" minWidth="26" prefHeight="26" prefWidth="26"
+                           style="-fx-background-color: #27AE60; -fx-background-radius: 13;">
+                    <Label style="-fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold;" text="✓"/>
                 </StackPane>
-                <Label style="-fx-text-fill: #27AE60; -fx-font-size: 12.5px;" text="Vols" />
+                <Label style="-fx-text-fill: #27AE60; -fx-font-size: 12.5px;" text="Vols"/>
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="42" spacing="12" style="-fx-padding: 0 18;">
-                <StackPane minHeight="26" minWidth="26" prefHeight="26" prefWidth="26" style="-fx-background-color: #27AE60; -fx-background-radius: 13;">
-                    <Label style="-fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold;" text="✓" />
+                <StackPane minHeight="26" minWidth="26" prefHeight="26" prefWidth="26"
+                           style="-fx-background-color: #27AE60; -fx-background-radius: 13;">
+                    <Label style="-fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold;" text="✓"/>
                 </StackPane>
-                <Label style="-fx-text-fill: #27AE60; -fx-font-size: 12.5px;" text="Hotels" />
+                <Label style="-fx-text-fill: #27AE60; -fx-font-size: 12.5px;" text="Hotels"/>
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="42" spacing="12" style="-fx-padding: 0 18;">
-                <StackPane minHeight="26" minWidth="26" prefHeight="26" prefWidth="26" style="-fx-background-color: #27AE60; -fx-background-radius: 13;">
-                    <Label style="-fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold;" text="✓" />
+                <StackPane minHeight="26" minWidth="26" prefHeight="26" prefWidth="26"
+                           style="-fx-background-color: #27AE60; -fx-background-radius: 13;">
+                    <Label style="-fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold;" text="✓"/>
                 </StackPane>
-                <Label style="-fx-text-fill: #27AE60; -fx-font-size: 12.5px;" text="Activites" />
+                <Label style="-fx-text-fill: #27AE60; -fx-font-size: 12.5px;" text="Activites"/>
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="42" spacing="12" style="-fx-padding: 0 18;">
-                <StackPane minHeight="26" minWidth="26" prefHeight="26" prefWidth="26" style="-fx-background-color: #27AE60; -fx-background-radius: 13;">
-                    <Label style="-fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold;" text="✓" />
+                <StackPane minHeight="26" minWidth="26" prefHeight="26" prefWidth="26"
+                           style="-fx-background-color: #27AE60; -fx-background-radius: 13;">
+                    <Label style="-fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold;" text="✓"/>
                 </StackPane>
-                <Label style="-fx-text-fill: #27AE60; -fx-font-size: 12.5px;" text="Services supplementaires" />
+                <Label style="-fx-text-fill: #27AE60; -fx-font-size: 12.5px;" text="Services supplementaires"/>
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="42" spacing="12" style="-fx-padding: 0 18;">
-                <StackPane minHeight="26" minWidth="26" prefHeight="26" prefWidth="26" style="-fx-background-color: #27AE60; -fx-background-radius: 13;">
-                    <Label style="-fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold;" text="✓" />
+                <StackPane minHeight="26" minWidth="26" prefHeight="26" prefWidth="26"
+                           style="-fx-background-color: #27AE60; -fx-background-radius: 13;">
+                    <Label style="-fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold;" text="✓"/>
                 </StackPane>
-                <Label style="-fx-text-fill: #27AE60; -fx-font-size: 12.5px;" text="Budget" />
+                <Label style="-fx-text-fill: #27AE60; -fx-font-size: 12.5px;" text="Budget"/>
             </HBox>
 
-            <!-- Etape Reservation active -->
-            <HBox alignment="CENTER_LEFT" prefHeight="46" spacing="12" style="-fx-background-color: linear-gradient(to right, #FFF3E0, #FFF8F4);                          -fx-border-color: #FF6B35; -fx-border-width: 0 0 0 3; -fx-padding: 0 18;">
-                <StackPane minHeight="26" minWidth="26" prefHeight="26" prefWidth="26" style="-fx-background-color: linear-gradient(to bottom, #FF6B35, #F7931E); -fx-background-radius: 13;">
-                    <Label style="-fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold;" text="7" />
+            <HBox alignment="CENTER_LEFT" prefHeight="46" spacing="12"
+                  style="-fx-background-color: linear-gradient(to right, #FFF3E0, #FFF8F4);
+                         -fx-border-color: #FF6B35; -fx-border-width: 0 0 0 3; -fx-padding: 0 18;">
+                <StackPane minHeight="26" minWidth="26" prefHeight="26" prefWidth="26"
+                           style="-fx-background-color: linear-gradient(to bottom, #FF6B35, #F7931E);
+                                  -fx-background-radius: 13;">
+                    <Label style="-fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold;" text="7"/>
                 </StackPane>
-                <Label style="-fx-text-fill: #FF6B35; -fx-font-weight: bold; -fx-font-size: 12.5px;" text="Reservation" />
+                <Label style="-fx-text-fill: #FF6B35; -fx-font-weight: bold; -fx-font-size: 12.5px;"
+                       text="Reservation"/>
             </HBox>
 
-            <Region VBox.vgrow="ALWAYS" />
+            <Region VBox.vgrow="ALWAYS"/>
 
-            <VBox spacing="6" style="-fx-padding: 14 18; -fx-background-color: #FFF3E0; -fx-border-color: #EBEBEB; -fx-border-width: 1 0 0 0;">
+            <VBox spacing="6"
+                  style="-fx-padding: 14 18; -fx-background-color: #FFF3E0;
+                         -fx-border-color: #EBEBEB; -fx-border-width: 1 0 0 0;">
                 <HBox alignment="CENTER_LEFT">
-                    <Label style="-fx-text-fill: #FF6B35; -fx-font-size: 11px; -fx-font-weight: bold;" text="Progression" />
-                    <Region HBox.hgrow="ALWAYS" />
-                    <Label style="-fx-text-fill: #FF6B35; -fx-font-size: 11px; -fx-font-weight: bold;" text="Complet" />
+                    <Label style="-fx-text-fill: #FF6B35; -fx-font-size: 11px; -fx-font-weight: bold;"
+                           text="Progression"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label style="-fx-text-fill: #FF6B35; -fx-font-size: 11px; -fx-font-weight: bold;"
+                           text="Complet"/>
                 </HBox>
-                <StackPane prefHeight="6" style="-fx-background-color: #E8E8E8; -fx-background-radius: 3;">
+                <StackPane prefHeight="6"
+                           style="-fx-background-color: #E8E8E8; -fx-background-radius: 3;">
                     <HBox alignment="CENTER_LEFT">
-                        <Region prefHeight="6" prefWidth="215" style="-fx-background-color: linear-gradient(to right, #FF6B35, #F7931E); -fx-background-radius: 3;" />
+                        <Region prefHeight="6" prefWidth="215"
+                                style="-fx-background-color: linear-gradient(to right, #FF6B35, #F7931E);
+                                       -fx-background-radius: 3;"/>
                     </HBox>
                 </StackPane>
             </VBox>
-            <Separator />
-            <Button maxWidth="Infinity" style="-fx-background-color: transparent; -fx-text-fill: #777; -fx-font-size: 13px; -fx-alignment: CENTER-LEFT; -fx-padding: 11 18; -fx-cursor: hand;" text="     Parametres" />
-            <Button maxWidth="Infinity" style="-fx-background-color: transparent; -fx-text-fill: #E74C3C; -fx-font-size: 13px; -fx-alignment: CENTER-LEFT; -fx-padding: 11 18; -fx-cursor: hand;" text="     Deconnexion" />
+            <Separator/>
+            <Button maxWidth="Infinity"
+                    style="-fx-background-color: transparent; -fx-text-fill: #777; -fx-font-size: 13px;
+                           -fx-alignment: CENTER-LEFT; -fx-padding: 11 18; -fx-cursor: hand;"
+                    text="     Parametres"/>
+            <Button maxWidth="Infinity"
+                    style="-fx-background-color: transparent; -fx-text-fill: #E74C3C; -fx-font-size: 13px;
+                           -fx-alignment: CENTER-LEFT; -fx-padding: 11 18; -fx-cursor: hand;"
+                    text="     Deconnexion"/>
         </VBox>
     </left>
 
     <!-- CONTENU CENTRAL -->
     <center>
-        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: transparent;">
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER"
+                    style="-fx-background-color: transparent; -fx-background: transparent;">
             <VBox spacing="0">
 
                 <!-- Titre page -->
                 <HBox alignment="CENTER_LEFT" spacing="14" style="-fx-padding: 28 32 18 32;">
-                    <StackPane prefHeight="46" prefWidth="46" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #FF6B35, #F7931E); -fx-background-radius: 13;">
-                        <Label style="-fx-font-size: 20px;" text="📋" />
+                    <StackPane prefHeight="46" prefWidth="46"
+                               style="-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #FF6B35, #F7931E);
+                                      -fx-background-radius: 13;">
+                        <Label style="-fx-font-size: 20px;" text="📋"/>
                     </StackPane>
                     <VBox spacing="2">
-                        <Label style="-fx-font-size: 21px; -fx-font-weight: bold; -fx-text-fill: #2C2C2C;" text="Confirmer la reservation" />
-                        <Label style="-fx-font-size: 13px; -fx-text-fill: #999;" text="Finalisez votre reservation de voyage" />
+                        <Label style="-fx-font-size: 21px; -fx-font-weight: bold; -fx-text-fill: #2C2C2C;"
+                               text="Confirmer la reservation"/>
+                        <Label style="-fx-font-size: 13px; -fx-text-fill: #999;"
+                               text="Finalisez votre reservation de voyage"/>
                     </VBox>
-                    <Region HBox.hgrow="ALWAYS" />
-                    <HBox alignment="CENTER" spacing="18" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #ECECEC; -fx-border-radius: 12; -fx-border-width: 1; -fx-padding: 10 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 2);">
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <HBox alignment="CENTER" spacing="18"
+                          style="-fx-background-color: white; -fx-background-radius: 12;
+                                 -fx-border-color: #ECECEC; -fx-border-radius: 12; -fx-border-width: 1;
+                                 -fx-padding: 10 20;
+                                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 2);">
                         <VBox alignment="CENTER" spacing="2">
-                            <Label style="-fx-text-fill: #BBB; -fx-font-size: 9px; -fx-font-weight: bold;" text="DESTINATION" />
-                            <Label fx:id="destinationLabel" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333;" text="--" />
+                            <Label style="-fx-text-fill: #BBB; -fx-font-size: 9px; -fx-font-weight: bold;"
+                                   text="DESTINATION"/>
+                            <Label fx:id="destinationLabel"
+                                   style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333;"
+                                   text="--"/>
                         </VBox>
-                        <Separator orientation="VERTICAL" />
+                        <Separator orientation="VERTICAL"/>
                         <VBox alignment="CENTER" spacing="2">
-                            <Label style="-fx-text-fill: #BBB; -fx-font-size: 9px; -fx-font-weight: bold;" text="DATES" />
-                            <Label fx:id="datesLabel" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333;" text="--" />
+                            <Label style="-fx-text-fill: #BBB; -fx-font-size: 9px; -fx-font-weight: bold;"
+                                   text="DATES"/>
+                            <Label fx:id="datesLabel"
+                                   style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333;"
+                                   text="--"/>
                         </VBox>
-                        <Separator orientation="VERTICAL" />
+                        <Separator orientation="VERTICAL"/>
                         <VBox alignment="CENTER" spacing="2">
-                            <Label style="-fx-text-fill: #BBB; -fx-font-size: 9px; -fx-font-weight: bold;" text="DUREE" />
-                            <Label fx:id="dureeLabel" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #FF6B35;" text="--" />
+                            <Label style="-fx-text-fill: #BBB; -fx-font-size: 9px; -fx-font-weight: bold;"
+                                   text="DUREE"/>
+                            <Label fx:id="dureeLabel"
+                                   style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #FF6B35;"
+                                   text="--"/>
                         </VBox>
                     </HBox>
                 </HBox>
@@ -161,133 +218,228 @@
                     <VBox spacing="18" HBox.hgrow="ALWAYS">
 
                         <!-- Informations voyageur -->
-                        <VBox spacing="14" style="-fx-background-color: white; -fx-background-radius: 14; -fx-border-color: #ECECEC; -fx-border-radius: 14; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 2);">
-                            <padding><Insets bottom="18" left="18" right="18" top="18" /></padding>
+                        <VBox spacing="14"
+                              style="-fx-background-color: white; -fx-background-radius: 14;
+                                     -fx-border-color: #ECECEC; -fx-border-radius: 14; -fx-border-width: 1;
+                                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 2);">
+                            <padding><Insets bottom="18" left="18" right="18" top="18"/></padding>
                             <HBox alignment="CENTER_LEFT" spacing="8">
-                                <StackPane prefHeight="32" prefWidth="32" style="-fx-background-color: #FFF3E0; -fx-background-radius: 9;">
-                                    <Label style="-fx-font-size: 16px;" text="👤" />
+                                <StackPane prefHeight="32" prefWidth="32"
+                                           style="-fx-background-color: #FFF3E0; -fx-background-radius: 9;">
+                                    <Label style="-fx-font-size: 16px;" text="👤"/>
                                 </StackPane>
-                                <Label style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #333;" text="Informations du voyageur" />
+                                <Label style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #333;"
+                                       text="Informations du voyageur"/>
                             </HBox>
-                            <Separator />
+                            <Separator/>
+
                             <GridPane hgap="14" vgap="12">
                                 <columnConstraints>
-                                    <ColumnConstraints hgrow="ALWAYS" />
-                                    <ColumnConstraints hgrow="ALWAYS" />
+                                    <ColumnConstraints hgrow="ALWAYS"/>
+                                    <ColumnConstraints hgrow="ALWAYS"/>
                                 </columnConstraints>
+                                <rowConstraints>
+                                    <RowConstraints/>
+                                    <RowConstraints/>
+                                    <RowConstraints/>
+                                </rowConstraints>
+
+                                <!-- Nom -->
                                 <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                                    <Label style="-fx-font-size: 11.5px; -fx-text-fill: #777; -fx-font-weight: bold;" text="Nom *" />
-                                    <TextField fx:id="nomField" promptText="Votre nom" style="-fx-background-color: #F8F9FA; -fx-border-color: #DDD; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 9 12; -fx-font-size: 13px;" />
+                                    <Label style="-fx-font-size: 11.5px; -fx-text-fill: #777; -fx-font-weight: bold;"
+                                           text="Nom *"/>
+                                    <TextField fx:id="nomField" promptText="Votre nom"
+                                               style="-fx-background-color: #F8F9FA; -fx-border-color: #DDD;
+                                                      -fx-border-radius: 8; -fx-background-radius: 8;
+                                                      -fx-padding: 9 12; -fx-font-size: 13px;"/>
                                 </VBox>
+
+                                <!-- Prenom -->
                                 <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                                    <Label style="-fx-font-size: 11.5px; -fx-text-fill: #777; -fx-font-weight: bold;" text="Prenom *" />
-                                    <TextField fx:id="prenomField" promptText="Votre prenom" style="-fx-background-color: #F8F9FA; -fx-border-color: #DDD; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 9 12; -fx-font-size: 13px;" />
+                                    <Label style="-fx-font-size: 11.5px; -fx-text-fill: #777; -fx-font-weight: bold;"
+                                           text="Prenom *"/>
+                                    <TextField fx:id="prenomField" promptText="Votre prenom"
+                                               style="-fx-background-color: #F8F9FA; -fx-border-color: #DDD;
+                                                      -fx-border-radius: 8; -fx-background-radius: 8;
+                                                      -fx-padding: 9 12; -fx-font-size: 13px;"/>
                                 </VBox>
+
+                                <!-- Email -->
                                 <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                                    <Label style="-fx-font-size: 11.5px; -fx-text-fill: #777; -fx-font-weight: bold;" text="Email *" />
-                                    <TextField fx:id="emailField" promptText="votre@email.com" style="-fx-background-color: #F8F9FA; -fx-border-color: #DDD; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 9 12; -fx-font-size: 13px;" />
+                                    <Label style="-fx-font-size: 11.5px; -fx-text-fill: #777; -fx-font-weight: bold;"
+                                           text="Email *"/>
+                                    <TextField fx:id="emailField" promptText="votre@email.com"
+                                               style="-fx-background-color: #F8F9FA; -fx-border-color: #DDD;
+                                                      -fx-border-radius: 8; -fx-background-radius: 8;
+                                                      -fx-padding: 9 12; -fx-font-size: 13px;"/>
                                 </VBox>
+
+                                <!-- Telephone -->
                                 <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                    <Label style="-fx-font-size: 11.5px; -fx-text-fill: #777; -fx-font-weight: bold;" text="Telephone *" />
-                                    <TextField fx:id="telephoneField" promptText="+216 XX XXX XXX" style="-fx-background-color: #F8F9FA; -fx-border-color: #DDD; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 9 12; -fx-font-size: 13px;" />
+                                    <Label style="-fx-font-size: 11.5px; -fx-text-fill: #777; -fx-font-weight: bold;"
+                                           text="Telephone *"/>
+                                    <TextField fx:id="telephoneField" promptText="+216 XX XXX XXX"
+                                               style="-fx-background-color: #F8F9FA; -fx-border-color: #DDD;
+                                                      -fx-border-radius: 8; -fx-background-radius: 8;
+                                                      -fx-padding: 9 12; -fx-font-size: 13px;"/>
                                 </VBox>
+
+                                <!-- Nombre de personnes -->
                                 <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="2">
-                                    <Label style="-fx-font-size: 11.5px; -fx-text-fill: #777; -fx-font-weight: bold;" text="Numero Passeport" />
-                                    <TextField fx:id="passportField" promptText="Ex: A12345678" style="-fx-background-color: #F8F9FA; -fx-border-color: #DDD; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 9 12; -fx-font-size: 13px;" />
+                                    <Label style="-fx-font-size: 11.5px; -fx-text-fill: #777; -fx-font-weight: bold;"
+                                           text="Nombre de personnes"/>
+                                    <Spinner fx:id="nbPersonnesSpinner" initialValue="1" max="20"
+                                             maxWidth="Infinity" min="1" prefHeight="38"/>
                                 </VBox>
+
+                                <!-- Commentaire -->
                                 <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                    <Label style="-fx-font-size: 11.5px; -fx-text-fill: #777; -fx-font-weight: bold;" text="Nationalite" />
-                                    <ComboBox fx:id="nationaliteCombo" maxWidth="Infinity" promptText="Choisir..." style="-fx-background-color: #F8F9FA; -fx-border-color: #DDD; -fx-border-radius: 8; -fx-font-size: 13px;" />
+                                    <Label style="-fx-font-size: 11.5px; -fx-text-fill: #777; -fx-font-weight: bold;"
+                                           text="Commentaire (optionnel)"/>
+                                    <TextArea fx:id="commentaireArea" prefHeight="68"
+                                              promptText="Demandes speciales..."
+                                              style="-fx-background-color: #F8F9FA; -fx-border-color: #DDD;
+                                                     -fx-border-radius: 8; -fx-background-radius: 8;
+                                                     -fx-padding: 9 12; -fx-font-size: 12.5px;"
+                                              wrapText="true"/>
                                 </VBox>
-                                <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="3">
-                                    <Label style="-fx-font-size: 11.5px; -fx-text-fill: #777; -fx-font-weight: bold;" text="Nombre de personnes" />
-                                    <Spinner fx:id="nbPersonnesSpinner" initialValue="1" max="20" maxWidth="Infinity" min="1" prefHeight="38" />
-                                </VBox>
-                                <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                                    <Label style="-fx-font-size: 11.5px; -fx-text-fill: #777; -fx-font-weight: bold;" text="Commentaire (optionnel)" />
-                                    <TextArea fx:id="commentaireArea" prefHeight="68" promptText="Demandes speciales..." style="-fx-background-color: #F8F9FA; -fx-border-color: #DDD; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 9 12; -fx-font-size: 12.5px;" wrapText="true" />
-                                </VBox>
-                        <rowConstraints>
-                           <RowConstraints />
-                           <RowConstraints />
-                           <RowConstraints />
-                           <RowConstraints />
-                        </rowConstraints>
                             </GridPane>
+
+                            <!-- ✅ Section passeports dynamiques -->
+                            <VBox spacing="10"
+                                  style="-fx-background-color: #FAFAFA; -fx-background-radius: 10;
+                                         -fx-border-color: #ECECEC; -fx-border-radius: 10;
+                                         -fx-border-width: 1; -fx-padding: 14 16;">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label style="-fx-font-size: 16px;" text="🛂"/>
+                                    <Label style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555;"
+                                           text="Numeros de passeport"/>
+                                    <Label fx:id="passeportCountLabel"
+                                           style="-fx-font-size: 11px; -fx-text-fill: #FF6B35; -fx-font-weight: bold;"
+                                           text="— 1 personne"/>
+                                </HBox>
+                                <!-- ✅ Champs injectés dynamiquement par le Controller -->
+                                <VBox fx:id="passeportFieldsBox" spacing="8"/>
+                            </VBox>
+
                         </VBox>
 
                         <!-- Mode de paiement -->
-                        <VBox spacing="14" style="-fx-background-color: white; -fx-background-radius: 14; -fx-border-color: #ECECEC; -fx-border-radius: 14; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 2);">
-                            <padding><Insets bottom="18" left="18" right="18" top="18" /></padding>
+                        <VBox spacing="14"
+                              style="-fx-background-color: white; -fx-background-radius: 14;
+                                     -fx-border-color: #ECECEC; -fx-border-radius: 14; -fx-border-width: 1;
+                                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 2);">
+                            <padding><Insets bottom="18" left="18" right="18" top="18"/></padding>
                             <HBox alignment="CENTER_LEFT" spacing="8">
-                                <StackPane prefHeight="32" prefWidth="32" style="-fx-background-color: #FFF3E0; -fx-background-radius: 9;">
-                                    <Label style="-fx-font-size: 16px;" text="💳" />
+                                <StackPane prefHeight="32" prefWidth="32"
+                                           style="-fx-background-color: #FFF3E0; -fx-background-radius: 9;">
+                                    <Label style="-fx-font-size: 16px;" text="💳"/>
                                 </StackPane>
-                                <Label style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #333;" text="Mode de paiement" />
+                                <Label style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #333;"
+                                       text="Mode de paiement"/>
                             </HBox>
-                            <Separator />
+                            <Separator/>
 
-                            <!-- Toggles -->
                             <HBox spacing="10">
-                                <ToggleButton fx:id="btnCarte" maxWidth="Infinity" onAction="#onPaiementToggle" prefHeight="42" style="-fx-background-color: #FF6B35; -fx-text-fill: white; -fx-font-size: 12.5px; -fx-background-radius: 9; -fx-cursor: hand;" text="Carte bancaire" HBox.hgrow="ALWAYS" />
-                                <ToggleButton fx:id="btnVirement" maxWidth="Infinity" onAction="#onPaiementToggle" prefHeight="42" style="-fx-background-color: #F0F0F0; -fx-text-fill: #555; -fx-font-size: 12.5px; -fx-background-radius: 9; -fx-cursor: hand;" text="Virement" HBox.hgrow="ALWAYS" />
-                                <ToggleButton fx:id="btnEspeces" maxWidth="Infinity" onAction="#onPaiementToggle" prefHeight="42" style="-fx-background-color: #F0F0F0; -fx-text-fill: #555; -fx-font-size: 12.5px; -fx-background-radius: 9; -fx-cursor: hand;" text="Especes" HBox.hgrow="ALWAYS" />
+                                <ToggleButton fx:id="btnCarte" maxWidth="Infinity" onAction="#onPaiementToggle"
+                                              prefHeight="42"
+                                              style="-fx-background-color: #FF6B35; -fx-text-fill: white;
+                                                    -fx-font-size: 12.5px; -fx-background-radius: 9; -fx-cursor: hand;"
+                                              text="Carte bancaire" HBox.hgrow="ALWAYS"/>
+                                <ToggleButton fx:id="btnVirement" maxWidth="Infinity" onAction="#onPaiementToggle"
+                                              prefHeight="42"
+                                              style="-fx-background-color: #F0F0F0; -fx-text-fill: #555;
+                                                    -fx-font-size: 12.5px; -fx-background-radius: 9; -fx-cursor: hand;"
+                                              text="Virement" HBox.hgrow="ALWAYS"/>
+                                <ToggleButton fx:id="btnEspeces" maxWidth="Infinity" onAction="#onPaiementToggle"
+                                              prefHeight="42"
+                                              style="-fx-background-color: #F0F0F0; -fx-text-fill: #555;
+                                                    -fx-font-size: 12.5px; -fx-background-radius: 9; -fx-cursor: hand;"
+                                              text="Especes" HBox.hgrow="ALWAYS"/>
                             </HBox>
 
                             <!-- Panel carte -->
                             <VBox fx:id="panelCarte" spacing="12">
-                                <!-- Hint cartes de test -->
-                                <VBox spacing="4" style="-fx-background-color: #FFF8F5; -fx-background-radius: 8; -fx-border-color: #FFCDB0; -fx-border-radius: 8; -fx-border-width: 1; -fx-padding: 10 14;">
-                                    <Label style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #FF6B35;" text="Cartes de test disponibles" />
-                                    <Label style="-fx-font-size: 11px; -fx-text-fill: #666;" text="VISA        :  4111 1111 1111 1111" />
-                                    <Label style="-fx-font-size: 11px; -fx-text-fill: #666;" text="MASTERCARD  :  5500 0055 5555 5559" />
-                                    <Label style="-fx-font-size: 11px; -fx-text-fill: #666;" text="AMEX        :  3714 496353 98431" />
-                                    <Label style="-fx-font-size: 10.5px; -fx-text-fill: #AAA;" text="CVV : 3 chiffres  |  Expiration : date future ex. 12/28" />
+                                <VBox spacing="4"
+                                      style="-fx-background-color: #FFF8F5; -fx-background-radius: 8;
+                                             -fx-border-color: #FFCDB0; -fx-border-radius: 8;
+                                             -fx-border-width: 1; -fx-padding: 10 14;">
+                                    <Label style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #FF6B35;"
+                                           text="Cartes de test disponibles"/>
+                                    <Label style="-fx-font-size: 11px; -fx-text-fill: #666;"
+                                           text="VISA        :  4111 1111 1111 1111"/>
+                                    <Label style="-fx-font-size: 11px; -fx-text-fill: #666;"
+                                           text="MASTERCARD  :  5500 0055 5555 5559"/>
+                                    <Label style="-fx-font-size: 11px; -fx-text-fill: #666;"
+                                           text="AMEX        :  3714 496353 98431"/>
+                                    <Label style="-fx-font-size: 10.5px; -fx-text-fill: #AAA;"
+                                           text="CVV : 3 chiffres  |  Expiration : date future ex. 12/28"/>
                                 </VBox>
 
                                 <GridPane hgap="14" vgap="12">
                                     <columnConstraints>
-                                        <ColumnConstraints hgrow="ALWAYS" />
-                                        <ColumnConstraints minWidth="170" prefWidth="210" />
+                                        <ColumnConstraints hgrow="ALWAYS"/>
+                                        <ColumnConstraints minWidth="170" prefWidth="210"/>
                                     </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints/>
+                                        <RowConstraints/>
+                                    </rowConstraints>
 
-                                    <!-- Numero carte -->
-                                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0">
+                                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.columnSpan="2"
+                                          GridPane.rowIndex="0">
                                         <HBox alignment="CENTER_LEFT" spacing="10">
-                                            <Label style="-fx-font-size: 11.5px; -fx-text-fill: #777; -fx-font-weight: bold;" text="Numero de carte" />
-                                            <Region HBox.hgrow="ALWAYS" />
-                                            <Label fx:id="carteTypeLabel" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #FF6B35;" text="" />
-                                            <Label fx:id="carteStatutLabel" style="-fx-font-size: 11px; -fx-font-weight: bold;" text="" />
+                                            <Label style="-fx-font-size: 11.5px; -fx-text-fill: #777;
+                                                          -fx-font-weight: bold;" text="Numero de carte"/>
+                                            <Region HBox.hgrow="ALWAYS"/>
+                                            <Label fx:id="carteTypeLabel"
+                                                   style="-fx-font-size: 11px; -fx-font-weight: bold;
+                                                          -fx-text-fill: #FF6B35;" text=""/>
+                                            <Label fx:id="carteStatutLabel"
+                                                   style="-fx-font-size: 11px; -fx-font-weight: bold;" text=""/>
                                         </HBox>
-                                        <TextField fx:id="numCarteField" promptText="XXXX  XXXX  XXXX  XXXX" style="-fx-background-color: #F8F9FA; -fx-border-color: #DDD; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 9 12; -fx-font-size: 14px;" />
+                                        <TextField fx:id="numCarteField" promptText="XXXX  XXXX  XXXX  XXXX"
+                                                   style="-fx-background-color: #F8F9FA; -fx-border-color: #DDD;
+                                                          -fx-border-radius: 8; -fx-background-radius: 8;
+                                                          -fx-padding: 9 12; -fx-font-size: 14px;"/>
                                     </VBox>
 
-                                    <!-- Nom carte -->
                                     <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                                        <Label style="-fx-font-size: 11.5px; -fx-text-fill: #777; -fx-font-weight: bold;" text="Nom sur la carte" />
-                                        <TextField fx:id="nomCarteField" promptText="NOM PRENOM" style="-fx-background-color: #F8F9FA; -fx-border-color: #DDD; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 9 12; -fx-font-size: 13px;" />
+                                        <Label style="-fx-font-size: 11.5px; -fx-text-fill: #777;
+                                                      -fx-font-weight: bold;" text="Nom sur la carte"/>
+                                        <TextField fx:id="nomCarteField" promptText="NOM PRENOM"
+                                                   style="-fx-background-color: #F8F9FA; -fx-border-color: #DDD;
+                                                          -fx-border-radius: 8; -fx-background-radius: 8;
+                                                          -fx-padding: 9 12; -fx-font-size: 13px;"/>
                                     </VBox>
 
-                                    <!-- Expiration + CVV -->
                                     <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                         <VBox spacing="4" HBox.hgrow="ALWAYS">
-                                            <Label style="-fx-font-size: 11.5px; -fx-text-fill: #777; -fx-font-weight: bold;" text="Expiration" />
-                                            <TextField fx:id="expirationField" promptText="MM/AA" style="-fx-background-color: #F8F9FA; -fx-border-color: #DDD; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 9 12; -fx-font-size: 13px;" />
+                                            <Label style="-fx-font-size: 11.5px; -fx-text-fill: #777;
+                                                          -fx-font-weight: bold;" text="Expiration"/>
+                                            <TextField fx:id="expirationField" promptText="MM/AA"
+                                                       style="-fx-background-color: #F8F9FA; -fx-border-color: #DDD;
+                                                              -fx-border-radius: 8; -fx-background-radius: 8;
+                                                              -fx-padding: 9 12; -fx-font-size: 13px;"/>
                                         </VBox>
                                         <VBox prefWidth="80" spacing="4">
-                                            <Label style="-fx-font-size: 11.5px; -fx-text-fill: #777; -fx-font-weight: bold;" text="CVV" />
-                                            <PasswordField fx:id="cvvField" promptText="..." style="-fx-background-color: #F8F9FA; -fx-border-color: #DDD; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 9 12; -fx-font-size: 13px;" />
+                                            <Label style="-fx-font-size: 11.5px; -fx-text-fill: #777;
+                                                          -fx-font-weight: bold;" text="CVV"/>
+                                            <PasswordField fx:id="cvvField" promptText="..."
+                                                           style="-fx-background-color: #F8F9FA; -fx-border-color: #DDD;
+                                                                  -fx-border-radius: 8; -fx-background-radius: 8;
+                                                                  -fx-padding: 9 12; -fx-font-size: 13px;"/>
                                         </VBox>
                                     </HBox>
-                           <rowConstraints>
-                              <RowConstraints />
-                              <RowConstraints />
-                           </rowConstraints>
                                 </GridPane>
                             </VBox>
 
-                            <!-- Info virement / especes -->
-                            <Label fx:id="paiementInfoLabel" managed="false" style="-fx-font-size: 12.5px; -fx-text-fill: #555; -fx-background-color: #FFF8F5; -fx-background-radius: 8; -fx-border-color: #FFCDB0; -fx-border-radius: 8; -fx-border-width: 1; -fx-padding: 12 14;" text="" visible="false" wrapText="true" />
+                            <Label fx:id="paiementInfoLabel" managed="false"
+                                   style="-fx-font-size: 12.5px; -fx-text-fill: #555;
+                                          -fx-background-color: #FFF8F5; -fx-background-radius: 8;
+                                          -fx-border-color: #FFCDB0; -fx-border-radius: 8;
+                                          -fx-border-width: 1; -fx-padding: 12 14;"
+                                   text="" visible="false" wrapText="true"/>
                         </VBox>
 
                     </VBox>
@@ -296,87 +448,138 @@
                     <VBox minWidth="300" prefWidth="320" spacing="20">
 
                         <!-- Resume commande -->
-                        <VBox spacing="14" style="-fx-background-color: white; -fx-background-radius: 14; -fx-border-color: #ECECEC; -fx-border-radius: 14; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.09), 14, 0, 0, 4);">
-                            <padding><Insets bottom="22" left="22" right="22" top="22" /></padding>
+                        <VBox spacing="14"
+                              style="-fx-background-color: white; -fx-background-radius: 14;
+                                     -fx-border-color: #ECECEC; -fx-border-radius: 14; -fx-border-width: 1;
+                                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.09), 14, 0, 0, 4);">
+                            <padding><Insets bottom="22" left="22" right="22" top="22"/></padding>
                             <HBox alignment="CENTER_LEFT" spacing="10">
-                                <StackPane prefHeight="38" prefWidth="38" style="-fx-background-color: #FFF3E0; -fx-background-radius: 11;">
-                                    <Label style="-fx-font-size: 18px;" text="🧾" />
+                                <StackPane prefHeight="38" prefWidth="38"
+                                           style="-fx-background-color: #FFF3E0; -fx-background-radius: 11;">
+                                    <Label style="-fx-font-size: 18px;" text="🧾"/>
                                 </StackPane>
                                 <VBox spacing="2">
-                                    <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333;" text="Recapitulatif" />
-                                    <Label style="-fx-font-size: 12px; -fx-text-fill: #999;" text="Detail de votre voyage" />
+                                    <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333;"
+                                           text="Recapitulatif"/>
+                                    <Label style="-fx-font-size: 12px; -fx-text-fill: #999;"
+                                           text="Detail de votre voyage"/>
                                 </VBox>
                             </HBox>
-                            <Separator />
+                            <Separator/>
                             <VBox spacing="8">
                                 <HBox alignment="CENTER_LEFT">
-                                    <Label style="-fx-font-size: 12.5px; -fx-text-fill: #777;" text="Vol" />
-                                    <Region HBox.hgrow="ALWAYS" />
-                                    <Label fx:id="cmdVolLabel" style="-fx-font-size: 12.5px; -fx-text-fill: #333;" text="--" />
+                                    <Label style="-fx-font-size: 12.5px; -fx-text-fill: #777;" text="Vol"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label fx:id="cmdVolLabel"
+                                           style="-fx-font-size: 12.5px; -fx-text-fill: #333;" text="--"/>
                                 </HBox>
                                 <HBox alignment="CENTER_LEFT">
-                                    <Label style="-fx-font-size: 12.5px; -fx-text-fill: #777;" text="Hebergement" />
-                                    <Region HBox.hgrow="ALWAYS" />
-                                    <Label fx:id="cmdHotelLabel" style="-fx-font-size: 12.5px; -fx-text-fill: #333;" text="--" />
+                                    <Label style="-fx-font-size: 12.5px; -fx-text-fill: #777;" text="Hebergement"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label fx:id="cmdHotelLabel"
+                                           style="-fx-font-size: 12.5px; -fx-text-fill: #333;" text="--"/>
                                 </HBox>
                                 <HBox alignment="CENTER_LEFT">
-                                    <Label style="-fx-font-size: 12.5px; -fx-text-fill: #777;" text="Activites" />
-                                    <Region HBox.hgrow="ALWAYS" />
-                                    <Label fx:id="cmdActivitesLabel" style="-fx-font-size: 12.5px; -fx-text-fill: #333;" text="--" />
+                                    <Label style="-fx-font-size: 12.5px; -fx-text-fill: #777;" text="Activites"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label fx:id="cmdActivitesLabel"
+                                           style="-fx-font-size: 12.5px; -fx-text-fill: #333;" text="--"/>
                                 </HBox>
                                 <HBox alignment="CENTER_LEFT">
-                                    <Label style="-fx-font-size: 12.5px; -fx-text-fill: #777;" text="Services suppl." />
-                                    <Region HBox.hgrow="ALWAYS" />
-                                    <Label fx:id="cmdServicesLabel" style="-fx-font-size: 12.5px; -fx-text-fill: #333;" text="0 TND" />
+                                    <Label style="-fx-font-size: 12.5px; -fx-text-fill: #777;" text="Services suppl."/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label fx:id="cmdServicesLabel"
+                                           style="-fx-font-size: 12.5px; -fx-text-fill: #333;" text="0 TND"/>
                                 </HBox>
                             </VBox>
-                            <Separator />
-                            <VBox spacing="6" style="-fx-background-color: #FFF8F5; -fx-background-radius: 10; -fx-border-color: #FFCDB0; -fx-border-radius: 10; -fx-border-width: 1.5; -fx-padding: 10 14;">
+                            <Separator/>
+                            <VBox spacing="6"
+                                  style="-fx-background-color: #FFF8F5; -fx-background-radius: 10;
+                                         -fx-border-color: #FFCDB0; -fx-border-radius: 10;
+                                         -fx-border-width: 1.5; -fx-padding: 10 14;">
                                 <HBox alignment="CENTER_LEFT">
-                                    <Label style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #FF6B35;" text="TOTAL A PAYER" />
-                                    <Region HBox.hgrow="ALWAYS" />
-                                    <Label fx:id="cmdTotalLabel" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #FF6B35;" text="0 TND" />
+                                    <Label style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #FF6B35;"
+                                           text="TOTAL A PAYER"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label fx:id="cmdTotalLabel"
+                                           style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #FF6B35;"
+                                           text="0 TND"/>
                                 </HBox>
-                                <Label fx:id="cmdParJourLabel" style="-fx-font-size: 11.5px; -fx-text-fill: #888;" text="" />
+                                <Label fx:id="cmdParJourLabel"
+                                       style="-fx-font-size: 11.5px; -fx-text-fill: #888;" text=""/>
                             </VBox>
                         </VBox>
 
                         <!-- Info voyage -->
-                        <VBox spacing="12" style="-fx-background-color: white; -fx-background-radius: 14; -fx-border-color: #ECECEC; -fx-border-radius: 14; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 12, 0, 0, 3);">
-                            <padding><Insets bottom="20" left="20" right="20" top="20" /></padding>
+                        <VBox spacing="12"
+                              style="-fx-background-color: white; -fx-background-radius: 14;
+                                     -fx-border-color: #ECECEC; -fx-border-radius: 14; -fx-border-width: 1;
+                                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 12, 0, 0, 3);">
+                            <padding><Insets bottom="20" left="20" right="20" top="20"/></padding>
                             <HBox alignment="CENTER_LEFT" spacing="10">
-                                <StackPane prefHeight="36" prefWidth="36" style="-fx-background-color: #FFF3E0; -fx-background-radius: 10;">
-                                    <Label style="-fx-font-size: 16px;" text="🗺" />
+                                <StackPane prefHeight="36" prefWidth="36"
+                                           style="-fx-background-color: #FFF3E0; -fx-background-radius: 10;">
+                                    <Label style="-fx-font-size: 16px;" text="🗺"/>
                                 </StackPane>
-                                <Label style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #333;" text="Votre voyage" />
+                                <Label style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #333;"
+                                       text="Votre voyage"/>
                             </HBox>
-                            <Separator />
+                            <Separator/>
                             <GridPane hgap="12" vgap="8">
                                 <columnConstraints>
-                                    <ColumnConstraints minWidth="90" prefWidth="100" />
-                                    <ColumnConstraints hgrow="ALWAYS" />
+                                    <ColumnConstraints minWidth="90" prefWidth="100"/>
+                                    <ColumnConstraints hgrow="ALWAYS"/>
                                 </columnConstraints>
-                                <Label style="-fx-text-fill: #AAA; -fx-font-size: 12px;" text="Destination" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                                <Label fx:id="recapDestLabel" style="-fx-font-weight: bold; -fx-text-fill: #333; -fx-font-size: 12px;" text="--" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                                <Label style="-fx-text-fill: #AAA; -fx-font-size: 12px;" text="Depart" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                                <Label fx:id="recapDepartLabel" style="-fx-font-weight: bold; -fx-text-fill: #333; -fx-font-size: 12px;" text="--" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                <Label style="-fx-text-fill: #AAA; -fx-font-size: 12px;" text="Retour" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                                <Label fx:id="recapRetourLabel" style="-fx-font-weight: bold; -fx-text-fill: #333; -fx-font-size: 12px;" text="--" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                <Label style="-fx-text-fill: #AAA; -fx-font-size: 12px;" text="Duree" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                                <Label fx:id="recapDureeLabel" style="-fx-font-weight: bold; -fx-text-fill: #FF6B35; -fx-font-size: 12px;" text="--" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <rowConstraints>
-                           <RowConstraints />
-                           <RowConstraints />
-                           <RowConstraints />
-                           <RowConstraints />
-                        </rowConstraints>
+                                <rowConstraints>
+                                    <RowConstraints/>
+                                    <RowConstraints/>
+                                    <RowConstraints/>
+                                    <RowConstraints/>
+                                </rowConstraints>
+                                <Label style="-fx-text-fill: #AAA; -fx-font-size: 12px;" text="Destination"
+                                       GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                <Label fx:id="recapDestLabel"
+                                       style="-fx-font-weight: bold; -fx-text-fill: #333; -fx-font-size: 12px;"
+                                       text="--" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                                <Label style="-fx-text-fill: #AAA; -fx-font-size: 12px;" text="Depart"
+                                       GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                <Label fx:id="recapDepartLabel"
+                                       style="-fx-font-weight: bold; -fx-text-fill: #333; -fx-font-size: 12px;"
+                                       text="--" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                <Label style="-fx-text-fill: #AAA; -fx-font-size: 12px;" text="Retour"
+                                       GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                                <Label fx:id="recapRetourLabel"
+                                       style="-fx-font-weight: bold; -fx-text-fill: #333; -fx-font-size: 12px;"
+                                       text="--" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                                <Label style="-fx-text-fill: #AAA; -fx-font-size: 12px;" text="Duree"
+                                       GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                                <Label fx:id="recapDureeLabel"
+                                       style="-fx-font-weight: bold; -fx-text-fill: #FF6B35; -fx-font-size: 12px;"
+                                       text="--" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
                             </GridPane>
                         </VBox>
 
                         <!-- Boutons -->
                         <VBox spacing="10">
-                            <Button maxWidth="Infinity" onAction="#retourBudget" onMouseEntered="#onMouseEnteredButton" onMouseExited="#onMouseExitedButton" prefHeight="44" style="-fx-background-color: white; -fx-text-fill: #777; -fx-font-size: 13px; -fx-background-radius: 10; -fx-border-color: #DCDCDC; -fx-border-radius: 10; -fx-border-width: 1.5; -fx-cursor: hand;" text="   Retour au budget" />
-                            <Button fx:id="confirmerButton" maxWidth="Infinity" onAction="#confirmerReservation" onMouseEntered="#onMouseEnteredSuivantButton" onMouseExited="#onMouseExitedSuivantButton" prefHeight="50" style="-fx-background-color: linear-gradient(to right, #FF6B35, #F7931E); -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(255,107,53,0.45), 12, 0, 0, 4);" text="Confirmer la reservation" />
+                            <Button maxWidth="Infinity" onAction="#retourBudget"
+                                    onMouseEntered="#onMouseEnteredButton"
+                                    onMouseExited="#onMouseExitedButton"
+                                    prefHeight="44"
+                                    style="-fx-background-color: white; -fx-text-fill: #777;
+                                           -fx-font-size: 13px; -fx-background-radius: 10;
+                                           -fx-border-color: #DCDCDC; -fx-border-radius: 10;
+                                           -fx-border-width: 1.5; -fx-cursor: hand;"
+                                    text="   Retour au budget"/>
+                            <Button fx:id="confirmerButton" maxWidth="Infinity"
+                                    onAction="#confirmerReservation"
+                                    onMouseEntered="#onMouseEnteredSuivantButton"
+                                    onMouseExited="#onMouseExitedSuivantButton"
+                                    prefHeight="50"
+                                    style="-fx-background-color: linear-gradient(to right, #FF6B35, #F7931E);
+                                           -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold;
+                                           -fx-background-radius: 10; -fx-cursor: hand;
+                                           -fx-effect: dropshadow(gaussian, rgba(255,107,53,0.45), 12, 0, 0, 4);"
+                                    text="Confirmer la reservation"/>
                         </VBox>
 
                     </VBox>
