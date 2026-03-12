@@ -9,6 +9,10 @@
 <BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Controller.ActiviteController"
+            prefWidth="1100"
+            prefHeight="700"
+            maxWidth="1100"
+            maxHeight="700"
             style="-fx-background-color: linear-gradient(to bottom, #f5f7fa, #c3cfe2);">
 
     <!-- ================= TOP HEADER ================= -->
@@ -17,263 +21,180 @@
             <!-- Barre supérieure avec logo et titre -->
             <HBox alignment="CENTER_LEFT" spacing="15"
                   style="-fx-background-color: linear-gradient(to right, #FF6B35, #F7931E);
-                         -fx-padding: 20 40 20 40;">
+                         -fx-padding: 15 30 15 30;">
 
                 <!-- Logo -->
-                <StackPane
-                        prefWidth="55"
-                        prefHeight="55"
-                        style="-fx-background-color: white;
-                               -fx-background-radius: 15;
-                               -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0, 0, 3);">
-                    <ImageView fitHeight="50"
-                               fitWidth="50"
-                               preserveRatio="true"
-                               smooth="true"/>
+                <StackPane prefWidth="50" prefHeight="50"
+                           style="-fx-background-color: white; -fx-background-radius: 12;
+                                  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 6, 0, 0, 2);">
+                    <ImageView fitHeight="40" fitWidth="40" preserveRatio="true" smooth="true"/>
                 </StackPane>
 
-                <Separator orientation="VERTICAL"
-                           style="-fx-background-color: rgba(255,255,255,0.3);"
-                           prefHeight="40"/>
+                <Separator orientation="VERTICAL" prefHeight="35"
+                           style="-fx-background-color: rgba(255,255,255,0.3);"/>
 
                 <!-- Titre -->
-                <VBox alignment="CENTER_LEFT" spacing="3" HBox.hgrow="ALWAYS">
-                    <Label text="TripEase"
-                           textFill="white"
-                           style="-fx-font-size: 28px;
-                                  -fx-font-weight: bold;
-                                  -fx-font-family: 'Segoe UI', Arial;
-                                  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);"/>
-                    <Label text="Gestion des Activités"
-                           textFill="rgba(255,255,255,0.95)">
-                        <font>
-                            <Font name="Segoe UI Semibold" size="15"/>
-                        </font>
+                <VBox alignment="CENTER_LEFT" spacing="2" HBox.hgrow="ALWAYS">
+                    <Label text="TripEase" textFill="white"
+                           style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+                    <Label text="Gestion des Activités" textFill="rgba(255,255,255,0.95)">
+                        <font><Font name="Segoe UI Semibold" size="13"/></font>
                     </Label>
                 </VBox>
 
-                <HBox alignment="CENTER_RIGHT" spacing="15">
-                    <Label text="👤 Admin"
-                           textFill="white"
-                           style="-fx-font-size: 13px;
-                                  -fx-padding: 8 15;
+                <HBox alignment="CENTER_RIGHT" spacing="10">
+                    <Label text="👤 Admin" textFill="white"
+                           style="-fx-font-size: 12px;
+                                  -fx-padding: 6 12;
                                   -fx-background-color: rgba(255,255,255,0.2);
-                                  -fx-background-radius: 20;"/>
+                                  -fx-background-radius: 15;"/>
                 </HBox>
             </HBox>
 
             <!-- Barre secondaire -->
-            <HBox alignment="CENTER_LEFT" spacing="10"
-                  style="-fx-background-color: white;
-                         -fx-padding: 12 40;
-                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
-                <Label text="🏠 Accueil"
-                       style="-fx-font-size: 13px; -fx-text-fill: #666;
-                              -fx-padding: 5 15;"/>
+            <HBox alignment="CENTER_LEFT" spacing="8"
+                  style="-fx-background-color: white; -fx-padding: 10 30;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 1);">
+                <Label text="🏠 Accueil" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
                 <Label text=">" style="-fx-text-fill: #ccc;"/>
-                <Label text="📋 Activités"
-                       style="-fx-font-size: 13px; -fx-text-fill: #FF6B35;
-                              -fx-font-weight: bold;
-                              -fx-padding: 5 15;"/>
+                <Label text="📋 Activités" style="-fx-font-size: 12px; -fx-text-fill: #FF6B35; -fx-font-weight: bold;"/>
             </HBox>
         </VBox>
     </top>
 
     <!-- ================= LEFT FORM ================= -->
     <left>
-        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" style="-fx-background-color: transparent; -fx-padding: 10;">
-        <content>
-        <VBox spacing="11" maxWidth="350" alignment="TOP_CENTER"
-              style="-fx-background-color: white;
-                         -fx-background-radius: 15;
-                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 5);">
-            <padding>
-                <Insets top="30" right="20" bottom="30" left="10"/>
-            </padding>
-            <padding>
-                <Insets top="30" right="20" bottom="30" left="20"/>
-            </padding>
+        <ScrollPane fitToWidth="true" prefWidth="320" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                    style="-fx-background-color: transparent; -fx-padding: 10;">
+            <content>
+                <VBox spacing="10" maxWidth="300" prefWidth="300" alignment="TOP_CENTER"
+                      style="-fx-background-color: white;
+                             -fx-background-radius: 12;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 8, 0, 0, 4);">
+                    <padding><Insets top="25" right="15" bottom="25" left="15"/></padding>
 
-            <Label text="📝 Ajouter une Activité" textFill="#FF6B35">
-                <font>
-                    <Font name="Segoe UI Bold" size="22"/>
-                </font>
-            </Label>
+                    <Label text="📝 Ajouter une Activité" textFill="#FF6B35">
+                        <font><Font name="Segoe UI Bold" size="20"/></font>
+                    </Label>
+                    <Separator/>
 
-            <Separator/>
+                    <!-- Nom -->
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <Label text="🏷" style="-fx-font-size: 16px;"/>
+                        <TextField fx:id="nomField" promptText="Nom de l'activité" prefWidth="260"
+                                   style="-fx-background-radius: 6; -fx-border-color: #ddd; -fx-border-radius: 6; -fx-padding: 8; -fx-font-size: 12px;"/>
+                    </HBox>
 
-            <!-- Nom -->
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label text="🏷" style="-fx-font-size: 18px;"/>
-                <TextField fx:id="nomField"
-                           promptText="Nom de l'activité"
-                           prefWidth="280"
-                           style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
-            </HBox>
+                    <!-- Description -->
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <Label text="📝" style="-fx-font-size: 16px;"/>
+                        <TextArea fx:id="descriptionField" promptText="Description" prefWidth="260" prefRowCount="3"
+                                  wrapText="true"
+                                  style="-fx-background-radius: 6; -fx-border-color: #ddd; -fx-border-radius: 6; -fx-padding: 8; -fx-font-size: 12px;"/>
+                    </HBox>
 
-            <!-- Description -->
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label text="📝" style="-fx-font-size: 18px;"/>
-                <TextArea fx:id="descriptionField"
-                          promptText="Description"
-                          prefWidth="280"
-                          prefRowCount="3"
-                          wrapText="true"
-                          style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
-            </HBox>
+                    <!-- Autres champs (Prix, Durée, Catégorie, Horaire, Destination, Type) -->
+                    <VBox spacing="8">
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <Label text="💰" style="-fx-font-size: 16px;"/>
+                            <TextField fx:id="prixField" promptText="Prix" prefWidth="260"
+                                       style="-fx-background-radius: 6; -fx-border-color: #ddd; -fx-border-radius: 6; -fx-padding: 8; -fx-font-size: 12px;"/>
+                        </HBox>
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <Label text="⏱" style="-fx-font-size: 16px;"/>
+                            <TextField fx:id="dureeField" promptText="Durée (heures)" prefWidth="260"
+                                       style="-fx-background-radius: 6; -fx-border-color: #ddd; -fx-border-radius: 6; -fx-padding: 8; -fx-font-size: 12px;"/>
+                        </HBox>
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <Label text="📂" style="-fx-font-size: 16px;"/>
+                            <TextField fx:id="categorieField" promptText="Catégorie" prefWidth="260"
+                                       style="-fx-background-radius: 6; -fx-border-color: #ddd; -fx-border-radius: 6; -fx-padding: 8; -fx-font-size: 12px;"/>
+                        </HBox>
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <Label text="🕒" style="-fx-font-size: 16px;"/>
+                            <TextField fx:id="horaireField" promptText="Horaire" prefWidth="260"
+                                       style="-fx-background-radius: 6; -fx-border-color: #ddd; -fx-border-radius: 6; -fx-padding: 8; -fx-font-size: 12px;"/>
+                        </HBox>
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <Label text="🌍" style="-fx-font-size: 16px;"/>
+                            <ComboBox fx:id="cbDestination" promptText="Choisir une destination" prefWidth="260"
+                                      style="-fx-background-radius: 6; -fx-border-color: #ddd; -fx-border-radius: 6; -fx-padding: 8; -fx-font-size: 12px;"/>
+                        </HBox>
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <Label text="📌" style="-fx-font-size: 16px;"/>
+                            <ComboBox fx:id="cbTypeActivite" promptText="Choisir un type d'activité" prefWidth="260"
+                                      style="-fx-background-radius: 6; -fx-border-color: #ddd; -fx-border-radius: 6; -fx-padding: 8; -fx-font-size: 12px;"/>
+                        </HBox>
+                    </VBox>
 
-            <!-- Prix -->
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label text="💰" style="-fx-font-size: 18px;"/>
-                <TextField fx:id="prixField"
-                           promptText="Prix"
-                           prefWidth="280"
-                           style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
-            </HBox>
+                    <!-- Buttons -->
+                    <HBox spacing="10" alignment="CENTER">
+                        <VBox spacing="8">
+                            <Button fx:id="ajouterBtn" text="Ajouter" prefWidth="120" prefHeight="35"
+                                    onAction="#ajouterActivite"
+                                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12px; -fx-background-radius: 6;"/>
+                            <Button fx:id="modifierBtn" text="Modifier" prefWidth="120" prefHeight="35"
+                                    onAction="#modifierActivite"
+                                    style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12px; -fx-background-radius: 6;"/>
+                        </VBox>
+                        <VBox spacing="8">
+                            <Button fx:id="supprimerBtn" text="Supprimer" prefWidth="120" prefHeight="35"
+                                    onAction="#supprimerActivite"
+                                    style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12px; -fx-background-radius: 6;"/>
+                            <Button fx:id="clearBtn" text="Effacer" prefWidth="120" prefHeight="35"
+                                    onAction="#clearFields"
+                                    style="-fx-background-color: #9E9E9E; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12px; -fx-background-radius: 6;"/>
+                        </VBox>
+                    </HBox>
 
-            <!-- Durée -->
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label text="⏱" style="-fx-font-size: 18px;"/>
-                <TextField fx:id="dureeField"
-                           promptText="Durée (heures)"
-                           prefWidth="280"
-                           style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
-            </HBox>
-
-            <!-- Catégorie -->
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label text="📂" style="-fx-font-size: 18px;"/>
-                <TextField fx:id="categorieField"
-                           promptText="Catégorie"
-                           prefWidth="280"
-                           style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
-            </HBox>
-
-            <!-- Horaire -->
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label text="🕒" style="-fx-font-size: 18px;"/>
-                <TextField fx:id="horaireField"
-                           promptText="Horaire"
-                           prefWidth="280"
-                           style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
-            </HBox>
-
-            <!-- Destination -->
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label text="🌍" style="-fx-font-size: 18px;"/>
-                <ComboBox fx:id="cbDestination"
-                          promptText="Choisir une destination"
-                          prefWidth="280"
-                          style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
-            </HBox>
-
-            <!-- Type d'activité -->
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label text="📌" style="-fx-font-size: 18px;"/>
-                <ComboBox fx:id="cbTypeActivite"
-                          promptText="Choisir un type d'activité"
-                          prefWidth="280"
-                          style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
-            </HBox>
-
-            <!-- Buttons -->
-            <HBox spacing="10" alignment="CENTER">
-                <VBox spacing="10">
-                    <Button fx:id="ajouterBtn"
-                            text="Ajouter"
-                            prefWidth="130" prefHeight="40"
-                            onAction="#ajouterActivite"
-                            style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
-                    <Button fx:id="modifierBtn"
-                            text="Modifier"
-                            prefWidth="130" prefHeight="40"
-                            onAction="#modifierActivite"
-                            style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
                 </VBox>
-                <VBox spacing="10">
-                    <Button fx:id="supprimerBtn"
-                            text="Supprimer"
-                            prefWidth="130" prefHeight="40"
-                            onAction="#supprimerActivite"
-                            style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
-                    <Button fx:id="clearBtn"
-                            text="Effacer"
-                            prefWidth="130" prefHeight="40"
-                            onAction="#clearFields"
-                            style="-fx-background-color: #9E9E9E; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
-                </VBox>
-            </HBox>
-
-        </VBox>
-        </content>
+            </content>
         </ScrollPane>
     </left>
 
     <!-- ================= CENTER TABLE ================= -->
     <center>
-        <VBox spacing="15">
-            <padding>
-                <Insets top="30" right="30" bottom="30" left="20"/>
-            </padding>
+        <VBox spacing="12">
+            <padding><Insets top="20" right="20" bottom="20" left="15"/></padding>
 
             <!-- Search Bar -->
-            <HBox spacing="10" alignment="CENTER_LEFT"
-                  style="-fx-background-color: white;
-                         -fx-background-radius: 10;
-                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
-                <padding>
-                    <Insets top="10" right="10" bottom="10" left="10"/>
-                </padding>
+            <HBox spacing="8" alignment="CENTER_LEFT"
+                  style="-fx-background-color: white; -fx-background-radius: 8;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 4, 0, 0, 1);">
+                <padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
 
-                <Label text="🔍" style="-fx-font-size: 18px;"/>
-                <TextField fx:id="searchField"
-                           promptText="Rechercher une activité..."
-                           prefWidth="300"
-                           style="-fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-padding: 10; -fx-font-size: 13px;"/>
-                <Button fx:id="refreshBtn"
-                        text="🔄"
-                        onAction="#refreshTable"
-                        style="-fx-background-color: #FF6B35; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 50%; -fx-padding: 8 12; -fx-cursor: hand;"/>
+                <Label text="🔍" style="-fx-font-size: 16px;"/>
+                <TextField fx:id="searchField" promptText="Rechercher une activité..." prefWidth="250"
+                           style="-fx-background-radius: 6; -fx-border-color: #ddd; -fx-border-radius: 6; -fx-padding: 6; -fx-font-size: 12px;"/>
+                <Button fx:id="refreshBtn" text="🔄" onAction="#refreshTable"
+                        style="-fx-background-color: #FF6B35; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 50%; -fx-padding: 6;"/>
             </HBox>
 
             <!-- Table -->
-            <TableView fx:id="tableView"
-                       VBox.vgrow="ALWAYS"
-                       style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 5);">
+            <TableView fx:id="tableView" VBox.vgrow="ALWAYS"
+                       style="-fx-background-color: white; -fx-background-radius: 8;
+                              -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 6, 0, 0, 4);">
                 <columns>
-                    <TableColumn fx:id="idCol" text="ID" prefWidth="80"/>
-                    <TableColumn fx:id="nomCol" text="Nom" prefWidth="180"/>
-                    <TableColumn fx:id="descriptionCol" text="Description" prefWidth="250"/>
-                    <TableColumn fx:id="prixCol" text="Prix" prefWidth="80"/>
-                    <TableColumn fx:id="dureeCol" text="Durée" prefWidth="80"/>
-                    <TableColumn fx:id="categorieCol" text="Catégorie" prefWidth="120"/>
-                    <TableColumn fx:id="horaireCol" text="Horaire" prefWidth="120"/>
-                    <TableColumn fx:id="typeCol" text="Type" prefWidth="150"/>
-                    <TableColumn fx:id="destinationCol" text="Destination" prefWidth="150"/>
+                    <TableColumn fx:id="idCol" text="ID" prefWidth="60"/>
+                    <TableColumn fx:id="nomCol" text="Nom" prefWidth="140"/>
+                    <TableColumn fx:id="descriptionCol" text="Description" prefWidth="200"/>
+                    <TableColumn fx:id="prixCol" text="Prix" prefWidth="70"/>
+                    <TableColumn fx:id="dureeCol" text="Durée" prefWidth="70"/>
+                    <TableColumn fx:id="categorieCol" text="Catégorie" prefWidth="100"/>
+                    <TableColumn fx:id="horaireCol" text="Horaire" prefWidth="100"/>
+                    <TableColumn fx:id="typeCol" text="Type" prefWidth="120"/>
+                    <TableColumn fx:id="destinationCol" text="Destination" prefWidth="120"/>
                 </columns>
-
-                <placeholder>
-                    <Label text="Aucune activité trouvée"/>
-                </placeholder>
+                <placeholder><Label text="Aucune activité trouvée"/></placeholder>
             </TableView>
 
             <!-- Stats -->
-            <HBox spacing="20" alignment="CENTER"
-                  style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
-                <padding>
-                    <Insets top="15" right="15" bottom="15" left="15"/>
-                </padding>
-
-                <Label text="📊 Total des activités: ">
-                    <font>
-                        <Font name="Segoe UI Bold" size="14"/>
-                    </font>
-                </Label>
-                <Label fx:id="countLabel" text="0" textFill="#FF6B35">
-                    <font>
-                        <Font name="Segoe UI Bold" size="18"/>
-                    </font>
-                </Label>
+            <HBox spacing="15" alignment="CENTER"
+                  style="-fx-background-color: white; -fx-background-radius: 8;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 4, 0, 0, 1);">
+                <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+                <Label text="📊 Total des activités: "><font><Font name="Segoe UI Bold" size="13"/></font></Label>
+                <Label fx:id="countLabel" text="0" textFill="#FF6B35"><font><Font name="Segoe UI Bold" size="16"/></font></Label>
             </HBox>
         </VBox>
     </center>
