@@ -103,15 +103,7 @@
 
             </HBox>
 
-                <VBox alignment="CENTER" spacing="10">
-
-                    <Label text="🔔"
-                           style="-fx-font-size:60px; -fx-opacity:0.5;"/>
-
-                    <Label text="Aucune notification"
-                           style="-fx-font-size:16px; -fx-text-fill:#666;"/>
-
-                </VBox>
+              
 
         </VBox>
         </content>
