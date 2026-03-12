@@ -40,6 +40,19 @@
                            style="-fx-font-size: 12px;"/>
                 </VBox>
 
+                <Button fx:id="retourButton"
+                        onAction="#retourMesVoyages"
+                        onMouseEntered="#onMouseEnteredRetourButton"
+                        onMouseExited="#onMouseExitedRetourButton"
+                        text="← Retour"
+                        style="-fx-text-fill: white;
+                               -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 7 16;
+                               -fx-background-color: rgba(255,255,255,0.22);
+                               -fx-background-radius: 18;
+                               -fx-border-color: rgba(255,255,255,0.45);
+                               -fx-border-width: 1.5; -fx-border-radius: 18;
+                               -fx-cursor: hand;"/>
+
                 <Label text="✈ Nouveau voyage" textFill="white"
                        style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 7 16;
                               -fx-background-color: rgba(255,255,255,0.22);
@@ -47,7 +60,7 @@
                               -fx-border-color: rgba(255,255,255,0.45);
                               -fx-border-width: 1.5; -fx-border-radius: 18;"/>
 
-                <Label text="👤 Utilisateur" textFill="white"
+                <Label fx:id="userNameHeader" text="👤 Utilisateur" textFill="white"
                        style="-fx-font-size: 12px; -fx-padding: 7 14;
                               -fx-background-color: rgba(255,255,255,0.15);
                               -fx-background-radius: 18;"/>
@@ -79,8 +92,11 @@
                    style="-fx-text-fill: #C0C0C0; -fx-font-size: 10px; -fx-font-weight: bold;
                           -fx-padding: 20 18 6 18;"/>
 
-            <Button maxWidth="Infinity"
-                    onMouseEntered="#onMouseEnteredButton" onMouseExited="#onMouseExitedButton"
+            <Button fx:id="accueilNavButton"
+                    onAction="#allerAccueil"
+                    onMouseEntered="#onMouseEnteredButton"
+                    onMouseExited="#onMouseExitedButton"
+                    maxWidth="Infinity"
                     style="-fx-background-color: transparent; -fx-text-fill: #777;
                            -fx-font-size: 13px; -fx-alignment: CENTER-LEFT;
                            -fx-padding: 12 18; -fx-cursor: hand;"
@@ -95,12 +111,15 @@
                            -fx-border-color: #FF6B35; -fx-border-width: 0 0 0 3;"
                     text="✈   Configuration du voyage"/>
 
-            <Button maxWidth="Infinity"
-                    onMouseEntered="#onMouseEnteredButton" onMouseExited="#onMouseExitedButton"
+            <Button fx:id="mesVoyagesNavButton"
+                    onAction="#retourMesVoyages"
+                    onMouseEntered="#onMouseEnteredButton"
+                    onMouseExited="#onMouseExitedButton"
+                    maxWidth="Infinity"
                     style="-fx-background-color: transparent; -fx-text-fill: #777;
                            -fx-font-size: 13px; -fx-alignment: CENTER-LEFT;
                            -fx-padding: 12 18; -fx-cursor: hand;"
-                    text="📋   Aperçu du voyage"/>
+                    text="📋   Mes Voyages"/>
 
             <!-- Steps label -->
             <Label text="ÉTAPES"

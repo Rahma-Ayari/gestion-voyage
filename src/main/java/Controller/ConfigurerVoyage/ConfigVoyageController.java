@@ -32,12 +32,23 @@ public class ConfigVoyageController {
     @FXML private ComboBox<Destination> destinationCombo;
     @FXML private Label                 destinationPreview;
     @FXML private Button                suivantButton;
+    @FXML private Button                retourButton;
+    @FXML private Button                accueilNavButton;
+    @FXML private Button                mesVoyagesNavButton;
+    @FXML private Label                 userNameHeader;
+    @FXML private Button                logoutButton;
 
     private final ServiceDestination serviceDestination = new ServiceDestination();
     private final ServiceVoyage      serviceVoyage      = new ServiceVoyage();
 
     @FXML
     public void initialize() {
+        // ✅ Afficher le nom d'utilisateur connecté dans le header
+        String userName = SessionManager.getUserName();
+        if (userName != null && !userName.isEmpty()) {
+            userNameHeader.setText("👤 " + userName);
+        }
+
         rythmeCombo.getItems().addAll(
                 "Détente", "Aventure", "Culturel", "Gastronomique", "Sport", "Famille");
 
@@ -139,12 +150,35 @@ public class ConfigVoyageController {
 
         int idVoyage;
         try {
+            // ✅ ÉTAPE CLIÉ : Récupérer l'ID de l'utilisateur connecté
+            int idUserActuel = SessionManager.getUserId();
+
+            // ✅ Vérification de sécurité (optionnel mais recommandé)
+            if (idUserActuel <= 0) {
+                showAlert("Erreur", "Utilisateur non authentifié. Veuillez vous reconnecter.");
+                return;
+            }
+
+            // Afficher dans la console pour déboguer
+            System.out.println("═══════════════════════════════════════════");
+            System.out.println("🧳 CRÉATION DE VOYAGE");
+            System.out.println("═══════════════════════════════════════════");
+            System.out.println("👤 Utilisateur ID : " + idUserActuel);
+            System.out.println("📍 Destination : " + destinationCombo.getValue().getPays());
+            System.out.println("📅 Du " + debut + " au " + fin);
+            System.out.println("🎒 Rythme : " + rythmeCombo.getValue());
+            System.out.println("═══════════════════════════════════════════");
+
             Voyage v = new Voyage();
             v.setDuree((int) duree);
             v.setDateDebut(debut);
             v.setDateFin(fin);
             v.setRythme(rythmeCombo.getValue());
             v.setIdDestination(destinationCombo.getValue().getIdDestination());
+
+            // ✅ CRUCIAL : Associer le voyage à l'utilisateur connecté
+            v.setIdUser(idUserActuel);
+
             idVoyage = serviceVoyage.ajouter(v);
             if (idVoyage == -1) {
                 showAlert("Erreur", "Impossible de créer le voyage."); return;
@@ -173,6 +207,44 @@ public class ConfigVoyageController {
         }
     }
 
+    // ══════════════════════════════════════════════════════════════════
+    // NAVIGATION - BOUTONS
+    // ══════════════════════════════════════════════════════════════════
+
+    @FXML
+    private void retourMesVoyages() {
+        try {
+            URL url = getClass().getResource("/MesVoyages.fxml");
+            if (url == null) {
+                showAlert("Erreur", "MesVoyages.fxml introuvable."); return;
+            }
+            Parent root = FXMLLoader.load(url);
+            Stage stage = (Stage) retourButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("TripEase - Mes Voyages");
+            stage.show();
+        } catch (IOException e) {
+            showAlert("Erreur", "Impossible de charger Mes Voyages : " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void allerAccueil() {
+        try {
+            URL url = getClass().getResource("/Accueil.fxml");
+            if (url == null) {
+                showAlert("Erreur", "Accueil.fxml introuvable."); return;
+            }
+            Parent root = FXMLLoader.load(url);
+            Stage stage = (Stage) accueilNavButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("TripEase - Accueil");
+            stage.show();
+        } catch (IOException e) {
+            showAlert("Erreur", "Impossible de charger Accueil : " + e.getMessage());
+        }
+    }
+
     @FXML
     private void handleLogout() {
         // Nettoyer la session et revenir à l'écran de connexion
@@ -183,7 +255,7 @@ public class ConfigVoyageController {
         }
         try {
             Parent root = FXMLLoader.load(url);
-            Stage stage = (Stage) suivantButton.getScene().getWindow();
+            Stage stage = (Stage) logoutButton.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("TripEase - Connexion");
             stage.show();
@@ -192,8 +264,39 @@ public class ConfigVoyageController {
         }
     }
 
-    @FXML private void onMouseEnteredButton(javafx.scene.input.MouseEvent e)  { ((Button)e.getSource()).setOpacity(0.85); }
-    @FXML private void onMouseExitedButton(javafx.scene.input.MouseEvent e)   { ((Button)e.getSource()).setOpacity(1.0); }
+    // ══════════════════════════════════════════════════════════════════
+    // EFFECTS DE SOURIS
+    // ══════════════════════════════════════════════════════════════════
+
+    @FXML private void onMouseEnteredButton(javafx.scene.input.MouseEvent e)  {
+        ((Button)e.getSource()).setOpacity(0.85);
+    }
+    @FXML private void onMouseExitedButton(javafx.scene.input.MouseEvent e)   {
+        ((Button)e.getSource()).setOpacity(1.0);
+    }
+
+    @FXML private void onMouseEnteredRetourButton(javafx.scene.input.MouseEvent e) {
+        ((Button)e.getSource()).setStyle(
+                "-fx-text-fill: white;" +
+                        "-fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 7 16;" +
+                        "-fx-background-color: rgba(255,255,255,0.35);" +
+                        "-fx-background-radius: 18;" +
+                        "-fx-border-color: rgba(255,255,255,0.6);" +
+                        "-fx-border-width: 1.5; -fx-border-radius: 18;" +
+                        "-fx-cursor: hand;");
+    }
+
+    @FXML private void onMouseExitedRetourButton(javafx.scene.input.MouseEvent e) {
+        ((Button)e.getSource()).setStyle(
+                "-fx-text-fill: white;" +
+                        "-fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 7 16;" +
+                        "-fx-background-color: rgba(255,255,255,0.22);" +
+                        "-fx-background-radius: 18;" +
+                        "-fx-border-color: rgba(255,255,255,0.45);" +
+                        "-fx-border-width: 1.5; -fx-border-radius: 18;" +
+                        "-fx-cursor: hand;");
+    }
+
     @FXML private void onMouseEnteredSuivantButton(javafx.scene.input.MouseEvent e) {
         ((Button)e.getSource()).setStyle(
                 "-fx-background-color:linear-gradient(to right,#E8622F,#E08519);" +

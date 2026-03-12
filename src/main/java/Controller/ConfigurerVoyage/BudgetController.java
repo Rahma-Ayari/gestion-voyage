@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import Controller.ReservationVoyageController;
 import Entite.Activite;
 import Entite.Budget;
 import Entite.Destination;
@@ -292,36 +293,58 @@ public class BudgetController {
     private void terminerConfiguration() {
         if (idVoyage <= 0) {
             showAlert("Information",
-                    "Le budget a été calculé mais l'identifiant du voyage est invalide, il ne sera pas enregistré.");
-        } else {
-            try {
-                Budget b = new Budget(
-                        idVoyage,
-                        totalVol,
-                        totalHotel,
-                        totalActivites,
-                        totalServices,
-                        totalGlobal
-                );
-                int idBudget = serviceBudget.enregistrer(b);
-
-                if (idBudget > 0) {
-                    serviceVoyage.mettreAJourBudget(idVoyage, idBudget);
-                } else {
-                    showAlert("Information",
-                            "Le budget a été enregistré mais l'identifiant généré n'a pas pu être récupéré.");
-                }
-            } catch (Exception e) {
-                showAlert("Erreur",
-                        "Le budget a été calculé mais n'a pas pu être enregistré : " + e.getMessage());
-            }
+                    "L'identifiant du voyage est invalide. Impossible de procéder à la réservation.");
+            return;
         }
 
-        showAlert("Configuration terminée",
-                "Votre configuration de voyage est complète.\n\nBudget total estimé : "
-                        + grandTotalLabel.getText());
+        // Enregistrement du budget en BD
+        try {
+            Budget b = new Budget(idVoyage, totalVol, totalHotel, totalActivites, totalServices, totalGlobal);
+            int idBudget = serviceBudget.enregistrer(b);
+            if (idBudget > 0) {
+                serviceVoyage.mettreAJourBudget(idVoyage, idBudget);
+            }
+        } catch (Exception e) {
+            showAlert("Avertissement",
+                    "Le budget a été calculé mais n'a pas pu être enregistré : " + e.getMessage()
+                            + "\nVous pouvez tout de même continuer la réservation.");
+        }
+
+        // ── Ouvrir l'écran de réservation ──
+        URL url = getClass().getClassLoader().getResource("ReservationUser/ReservationVoyage.fxml");
+        if (url == null) url = getClass().getResource("/ReservationUser/ReservationVoyage.fxml");
+        if (url == null) {
+            showAlert("Erreur", "ReservationVoyage.fxml introuvable.");
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(url);
+            Parent root = loader.load();
+
+            ReservationVoyageController ctrl = loader.getController();
+            ctrl.initDonnees(
+                    destination,
+                    dateDebut,
+                    dateFin,
+                    idVoyage,
+                    totalVol,
+                    totalHotel,
+                    totalActivites,
+                    totalServices,
+                    totalGlobal
+            );
+
+            Stage stage = (Stage) grandTotalLabel.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("TripEase — Réservation");
+            stage.show();
+
+        } catch (IOException e) {
+            showAlert("Erreur", "ReservationVoyage.fxml : " + e.getMessage());
+        }
     }
-    
+
+
     @FXML
     private void onMouseEnteredButton(javafx.scene.input.MouseEvent e)  {
         ((Button)e.getSource()).setOpacity(0.85);
@@ -354,4 +377,3 @@ public class BudgetController {
         a.showAndWait();
     }
 }
-

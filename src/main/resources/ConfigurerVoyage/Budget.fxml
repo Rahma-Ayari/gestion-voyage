@@ -355,7 +355,7 @@
                                     onMouseExited="#onMouseExitedSuivantButton"
                                     prefHeight="50"
                                     style="-fx-background-color: linear-gradient(to right, #27AE60, #2ECC71); -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(39,174,96,0.45), 12, 0, 0, 4);"
-                                    text="Terminer la configuration ✔"/>
+                                    text="Réserver ce voyage ✔"/>
                         </VBox>
 
                     </VBox>
