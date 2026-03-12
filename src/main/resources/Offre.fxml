@@ -6,7 +6,8 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.image.ImageView?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21"
+<BorderPane prefWidth="1100" prefHeight="700" minWidth="1100" minHeight="700"
+            xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Controller.OffreController"
             style="-fx-background-color: linear-gradient(to bottom, #f5f7fa, #c3cfe2);">
