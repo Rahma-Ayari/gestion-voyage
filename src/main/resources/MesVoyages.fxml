@@ -61,6 +61,20 @@
                     </VBox>
                 </HBox>
 
+                <!-- BOUTON RETOUR (NOUVEAU) -->
+                <Button fx:id="btnRetour"
+                        text="← Retour"
+                        style="-fx-background-color: rgba(255,255,255,0.18);
+                               -fx-text-fill: white;
+                               -fx-font-size: 12px;
+                               -fx-font-weight: bold;
+                               -fx-padding: 9 18;
+                               -fx-background-radius: 8;
+                               -fx-cursor: hand;
+                               -fx-border-color: rgba(255,255,255,0.45);
+                               -fx-border-width: 1.5;
+                               -fx-border-radius: 8;"/>
+
                 <Button fx:id="logoutButton"
                         text="🚪  Déconnexion"
                         style="-fx-background-color: rgba(255,255,255,0.18);
