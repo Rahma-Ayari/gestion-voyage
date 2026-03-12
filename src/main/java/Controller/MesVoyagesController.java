@@ -1,5 +1,6 @@
 package Controller;
 
+import Entite.Utilisateur;
 import Entite.Voyage;
 import Service.ServiceVoyage;
 import Utils.SessionManager;
@@ -46,6 +47,7 @@ public class MesVoyagesController implements Initializable {
     @FXML private Button activeTabButton;
     @FXML private Button archiveTabButton;
     @FXML private Label  sectionTitleLabel;
+    @FXML private Button btnRetour;
 
     private final ServiceVoyage     serviceVoyage = new ServiceVoyage();
     private final DateTimeFormatter fmt           = DateTimeFormatter.ofPattern("dd MMM yyyy");
@@ -64,6 +66,8 @@ public class MesVoyagesController implements Initializable {
         userNameLabel.setText(SessionManager.getUserName());
         newVoyageButton.setOnAction(e -> navigateToConfigVoyage());
         logoutButton.setOnAction(e -> handleLogout());
+        btnRetour.setOnAction(e -> retourDashboard());  // ← AJOUT
+
 
         // Gestion des onglets
         activeTabButton.setOnAction(e -> switchToActiveTab());
@@ -808,5 +812,35 @@ public class MesVoyagesController implements Initializable {
     private void showAlert(String title, String msg) {
         Alert a = new Alert(Alert.AlertType.INFORMATION);
         a.setTitle(title); a.setHeaderText(null); a.setContentText(msg); a.showAndWait();
+    }
+
+    private void retourDashboard() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/DashboardUser.fxml")
+            );
+            Parent root = loader.load();
+
+            // ✅ CRUCIAL : Récupérer le contrôleur et passer l'utilisateur connecté
+            DashboardUserController controller = loader.getController();
+            Utilisateur utilisateurConnecte = SessionManager.getCurrentUser();
+
+            if (utilisateurConnecte != null) {
+                controller.setUtilisateur(utilisateurConnecte);
+            } else {
+                showAlert("Erreur", "Session expirée. Veuillez vous reconnecter.");
+                redirectToLogin();
+                return;
+            }
+
+            Stage stage = (Stage) btnRetour.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("TripEase - Dashboard");
+            stage.show();
+
+        } catch (IOException e) {
+            showAlert("Erreur", "Impossible de revenir au dashboard : " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

@@ -29,10 +29,11 @@ public class DashboardUserController implements Initializable {
     @FXML private HBox   menuAccueil;
     @FXML private HBox   menuConfigurerVoyage;
     @FXML private HBox   menuOffres;
-    @FXML private HBox   menuPaiement;
-    @FXML private HBox   menuNotifications;
+    @FXML private HBox menuMesVoyages;    @FXML private HBox   menuNotifications;
     @FXML private HBox   menuAvis;
     @FXML private HBox   menuReservation;
+    @FXML
+    private VBox mainContainer;
 
     // ══ ÉTAT ══════════════════════════════════════════════════════════════════
     private Utilisateur utilisateurConnecte;
@@ -229,7 +230,7 @@ public class DashboardUserController implements Initializable {
                 {"🎁", "Nos offres spéciales",
                         "Découvrez nos promotions exclusives et bons plans du moment.",
                         "Explorer →", "#FFF8EC", "#FFF0D6"},
-                {"💳", "Effectuer un paiement",
+                {"💳", "Mes voyages configurés",
                         "Réglez vos réservations de façon simple, rapide et sécurisée.",
                         "Payer →", "#F0FFF7", "#DCFCEE"},
                 {"🔔", "Mes notifications",
@@ -247,7 +248,7 @@ public class DashboardUserController implements Initializable {
         Runnable[] actions = {
                 this::ouvrirConfigurerVoyage,
                 this::ouvrirOffres,
-                this::ouvrirPaiement,
+                this::ouvrirMesVoyages,
                 this::ouvrirNotifications,
                 this::ouvrirAvis,
                 this::ouvrirReservation
@@ -442,6 +443,7 @@ public class DashboardUserController implements Initializable {
         }
     }
 
+
     @FXML
     public void ouvrirOffres() {
         try {
@@ -460,11 +462,26 @@ public class DashboardUserController implements Initializable {
         }
     }
 
-    @FXML public void ouvrirPaiement() {
-        activerMenu(menuPaiement);
-        mettreAJourBreadcrumb("Accueil", "Effectuer un paiement");
-        afficherSection("💳", "Effectuer un paiement",
-                "Le module de paiement sécurisé sera disponible très prochainement.");
+    @FXML
+    public void ouvrirMesVoyages() {
+
+        try {
+
+            FXMLLoader loader =
+                    new FXMLLoader(getClass().getResource("/MesVoyages.fxml"));
+
+            Parent root = loader.load();
+
+            Stage stage = (Stage) menuMesVoyages.getScene().getWindow();
+
+            stage.setScene(new Scene(root));
+            stage.setTitle("Mes voyages");
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            afficherErreur("Impossible d'ouvrir MesVoyage.fxml");
+        }
     }
 
    @FXML
