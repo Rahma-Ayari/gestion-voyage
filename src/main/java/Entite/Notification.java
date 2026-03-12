@@ -9,7 +9,15 @@ public class Notification {
     private boolean lu;
     private String typeNotification;
     private int idReservation;
+    private int idUtilisateur;
 
+    public int getIdUtilisateur() {
+        return idUtilisateur;
+    }
+
+    public void setIdUtilisateur(int idUtilisateur) {
+        this.idUtilisateur = idUtilisateur;
+    }
 
     public int getIdNotification() { return idNotification; }
     public void setIdNotification(int idNotification) { this.idNotification = idNotification; }

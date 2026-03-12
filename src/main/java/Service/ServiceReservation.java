@@ -6,7 +6,9 @@ import Entite.Voyage;
 import Entite.StatutReservation;
 import Entite.Offre;
 import Utils.DataSource;
-
+import Entite.Notification;
+import Service.ServiceNotification;
+import java.time.LocalDateTime;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +65,28 @@ public class ServiceReservation implements IService<Reservation> {
                 + voyageVal                   + ","
                 + offreVal                    + ")";
 
-        return st.executeUpdate(req) > 0;
+        boolean success = st.executeUpdate(req) > 0;
+
+        if(success){
+
+            ServiceNotification serviceNotification = new ServiceNotification();
+
+            Notification n = new Notification();
+            n.setMessage("Nouvelle réservation effectuée");
+            n.setDateNotification(LocalDateTime.now());
+            n.setLu(false);
+            n.setTypeNotification("reservation");
+
+            // set reservation id
+            n.setIdReservation(r.getId_reservation());
+
+            // notify admin (example id = 1)
+            n.setIdUtilisateur(1);
+
+            serviceNotification.ajouter(n);
+        }
+
+        return success;
     }
 
     // ══════════════════════════════════════════════════
@@ -111,7 +134,27 @@ public class ServiceReservation implements IService<Reservation> {
                 + "id_offre="           + offreVal
                 + " WHERE id_reservation=" + r.getId_reservation();
 
-        return st.executeUpdate(req) > 0;
+        boolean success = st.executeUpdate(req) > 0;
+
+        if(success && r.getEtat().equalsIgnoreCase("acceptée")){
+
+            ServiceNotification serviceNotification = new ServiceNotification();
+
+            Notification n = new Notification();
+            n.setMessage("Votre réservation a été acceptée");
+            n.setDateNotification(LocalDateTime.now());
+            n.setLu(false);
+            n.setTypeNotification("reservation");
+
+            n.setIdReservation(r.getId_reservation());
+
+            // notify the client
+            n.setIdUtilisateur(r.getId_personne().getIdUtilisateur());
+
+            serviceNotification.ajouter(n);
+        }
+
+        return success;
     }
 
     // ══════════════════════════════════════════════════
