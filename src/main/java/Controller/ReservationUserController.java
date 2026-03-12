@@ -37,7 +37,6 @@ public class ReservationUserController implements Initializable {
     @FXML private Button    btnRetour;  // ← AJOUT
 
 
-
     private final ServiceOffre serviceOffre = new ServiceOffre();
     private List<Offre> toutesLesOffres;
 
