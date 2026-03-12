@@ -25,7 +25,8 @@ public class DashboardUserController implements Initializable {
     @FXML private Label  lblAvatar;
     @FXML private HBox   hboxBreadcrumb;
     @FXML private VBox   contenuPrincipal;
-
+    @FXML private HBox menuMesVoyages;
+    @FXML private VBox mainContainer;
     @FXML private HBox   menuAccueil;
     @FXML private HBox   menuConfigurerVoyage;
     @FXML private HBox   menuOffres;
@@ -229,8 +230,7 @@ public class DashboardUserController implements Initializable {
                 {"🎁", "Nos offres spéciales",
                         "Découvrez nos promotions exclusives et bons plans du moment.",
                         "Explorer →", "#FFF8EC", "#FFF0D6"},
-                {"💳", "Effectuer un paiement",
-                        "Réglez vos réservations de façon simple, rapide et sécurisée.",
+                {"💳", "Mes voyages configurés",                        "Réglez vos réservations de façon simple, rapide et sécurisée.",
                         "Payer →", "#F0FFF7", "#DCFCEE"},
                 {"🔔", "Mes notifications",
                         "Consultez vos alertes, rappels et messages importants.",
@@ -247,7 +247,7 @@ public class DashboardUserController implements Initializable {
         Runnable[] actions = {
                 this::ouvrirConfigurerVoyage,
                 this::ouvrirOffres,
-                this::ouvrirPaiement,
+                this::ouvrirMesVoyages,
                 this::ouvrirNotifications,
                 this::ouvrirAvis,
                 this::ouvrirReservation
@@ -265,6 +265,8 @@ public class DashboardUserController implements Initializable {
         page.getChildren().addAll(enTete, banniere, titreCartes, grille);
         contenuPrincipal.getChildren().setAll(page);
     }
+
+
 
     // ══ BANNIÈRE ══════════════════════════════════════════════════════════════
     private Pane construireBanniere(String nom) {
@@ -518,6 +520,8 @@ public class DashboardUserController implements Initializable {
         });
     }
 
+
+
     // ══ PAGE "BIENTÔT DISPONIBLE" ═════════════════════════════════════════════
     private void afficherSection(String emoji, String titre, String msg) {
         contenuPrincipal.getChildren().clear();
@@ -625,5 +629,28 @@ public class DashboardUserController implements Initializable {
         Alert a = new Alert(Alert.AlertType.ERROR);
         a.setTitle("Erreur"); a.setHeaderText(null); a.setContentText(msg);
         a.showAndWait();
+    }
+
+
+    @FXML
+    public void ouvrirMesVoyages() {
+
+        try {
+
+            FXMLLoader loader =
+                    new FXMLLoader(getClass().getResource("/MesVoyages.fxml"));
+
+            Parent root = loader.load();
+
+            Stage stage = (Stage) menuMesVoyages.getScene().getWindow();
+
+            stage.setScene(new Scene(root));
+            stage.setTitle("Mes voyages");
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            afficherErreur("Impossible d'ouvrir MesVoyage.fxml");
+        }
     }
 }
