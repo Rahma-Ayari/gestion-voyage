@@ -135,16 +135,21 @@ public class HomeAdminController implements Initializable {
 
     private void ouvrirFenetre(String fxmlPath, String titre) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            System.out.println("Tentative d'ouverture : " + fxmlPath);
+            URL resource = getClass().getResource(fxmlPath);
+
+            if (resource == null) {
+                System.err.println("ERREUR : Le fichier " + fxmlPath + " n'existe pas !");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(resource);
             Parent root = loader.load();
 
             Stage stage = new Stage();
             stage.setTitle("TripEase Admin – " + titre);
             stage.setScene(new Scene(root));
             stage.show();
-
-            // Optionnel : fermer la fenêtre Home (décommenter si souhaité)
-            // ((Stage) adminNameLabel.getScene().getWindow()).close();
 
         } catch (IOException ex) {
             System.err.println("Impossible d'ouvrir : " + fxmlPath);
