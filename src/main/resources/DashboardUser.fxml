@@ -190,22 +190,6 @@
                 </VBox>
             </HBox>
 
-            <!-- Réservation -->
-            <HBox fx:id="menuReservation" spacing="12" alignment="CENTER_LEFT"
-                  style="-fx-padding: 11 14; -fx-background-radius: 8; -fx-cursor: hand;"
-                  onMouseClicked="#ouvrirReservation"
-                  onMouseEntered="#onMenuHover"
-                  onMouseExited="#onMenuExit">
-                <Label text="📅" style="-fx-font-size: 16px;"/>
-                <VBox spacing="1">
-                    <Label text="Mes réservations"
-                           style="-fx-font-size: 12.5px; -fx-text-fill: #4A4035;
-                                  -fx-font-family: 'Segoe UI';"/>
-                    <Label text="Hôtels, vols, activités"
-                           style="-fx-font-size: 10px; -fx-text-fill: #B0A898;"/>
-                </VBox>
-            </HBox>
-
             <Region VBox.vgrow="ALWAYS"/>
 
             <!-- Ligne séparatrice -->
