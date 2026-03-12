@@ -64,7 +64,9 @@ public class notificationsController implements Initializable {
 
             notificationsContainer.getChildren().add(notificationBox);
 
-            serviceNotification.markAsRead(n.getIdNotification());
+            notificationBox.setOnMouseClicked(e -> {
+                serviceNotification.markAsRead(n.getIdNotification());
+            });
         }
 
     }
