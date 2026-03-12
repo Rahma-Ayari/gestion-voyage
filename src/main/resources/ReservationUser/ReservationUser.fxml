@@ -25,6 +25,21 @@
                            textFill="rgba(255,255,255,0.85)" style="-fx-font-size: 12px;"/>
                 </VBox>
 
+                <!-- BOUTON RETOUR (NOUVEAU) -->
+                <Button fx:id="btnRetour"
+                        text="← Retour"
+                        onAction="#retourDashboard"
+                        style="-fx-background-color: rgba(255,255,255,0.2);
+                               -fx-text-fill: white;
+                               -fx-font-size: 12px;
+                               -fx-font-weight: bold;
+                               -fx-padding: 8 16;
+                               -fx-background-radius: 18;
+                               -fx-border-color: rgba(255,255,255,0.45);
+                               -fx-border-width: 1.5;
+                               -fx-border-radius: 18;
+                               -fx-cursor: hand;"/>
+
                 <!-- BOUTON CONFIGURER VOYAGE -->
                 <Button fx:id="configurerVoyageBtn"
                         text="⚙ Configurer nouveau voyage"

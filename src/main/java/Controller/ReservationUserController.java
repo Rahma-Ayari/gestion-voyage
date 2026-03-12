@@ -34,6 +34,8 @@ public class ReservationUserController implements Initializable {
     @FXML private TextField searchField;
     @FXML private Button    configurerVoyageBtn;  // AJOUTÉ
     @FXML private Label labelEmail;
+    @FXML private Button    btnRetour;  // ← AJOUT
+
 
 
     private final ServiceOffre serviceOffre = new ServiceOffre();
@@ -460,5 +462,37 @@ public class ReservationUserController implements Initializable {
         Alert a = new Alert(type, msg, ButtonType.OK);
         a.setHeaderText(null);
         a.showAndWait();
+    }
+
+
+    @FXML
+    private void retourDashboard() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/DashboardUser.fxml")
+            );
+            Parent root = loader.load();
+
+            // ✅ CRUCIAL : Récupérer le contrôleur et passer l'utilisateur connecté
+            DashboardUserController controller = loader.getController();
+            Utilisateur utilisateurConnecte = SessionManager.getCurrentUser();
+
+            if (utilisateurConnecte != null) {
+                controller.setUtilisateur(utilisateurConnecte);
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Session expirée. Veuillez vous reconnecter.");
+                return;
+            }
+
+            Stage stage = (Stage) btnRetour.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("TripEase - Dashboard");
+            stage.show();
+
+        } catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR,
+                    "Impossible de revenir au dashboard : " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
