@@ -3,6 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.web.WebView?>
 
 <BorderPane prefHeight="800" prefWidth="1100"
             style="-fx-background-color: #F4F6F9;"
@@ -31,7 +32,6 @@
               -fx-background-radius: 18;"/>
             </HBox>
 
-            <!-- Breadcrumb -->
             <HBox alignment="CENTER_LEFT" spacing="6"
                   style="-fx-background-color: white; -fx-padding: 10 40;
                          -fx-border-color: #E8E8E8; -fx-border-width: 0 0 1 0;">
@@ -76,8 +76,10 @@
                 <!-- ══ CONTENU PRINCIPAL (2 colonnes) ══ -->
                 <HBox spacing="20" alignment="TOP_LEFT">
 
-                    <!-- ─── Colonne gauche : Résumé offre ─── -->
+                    <!-- ─── Colonne gauche ─── -->
                     <VBox spacing="16" prefWidth="360" minWidth="320">
+
+                        <!-- Card résumé offre -->
                         <VBox spacing="0"
                               style="-fx-background-color: white; -fx-background-radius: 14;
                                      -fx-border-color: #ECECEC; -fx-border-radius: 14; -fx-border-width: 1;
@@ -105,6 +107,7 @@
                                 <Label fx:id="offreDescLabel" text=""
                                        style="-fx-font-size: 12px; -fx-text-fill: #777;" wrapText="true"/>
                                 <Separator/>
+
                                 <HBox spacing="8" alignment="CENTER_LEFT">
                                     <Label text="🌍" style="-fx-font-size: 14px;"/>
                                     <VBox spacing="1">
@@ -114,6 +117,7 @@
                                                style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
                                     </VBox>
                                 </HBox>
+
                                 <HBox spacing="8" alignment="CENTER_LEFT">
                                     <Label text="📅" style="-fx-font-size: 14px;"/>
                                     <VBox spacing="1">
@@ -123,6 +127,7 @@
                                                style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
                                     </VBox>
                                 </HBox>
+
                                 <HBox spacing="8" alignment="CENTER_LEFT">
                                     <Label text="🏨" style="-fx-font-size: 14px;"/>
                                     <VBox spacing="1">
@@ -132,6 +137,7 @@
                                                style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
                                     </VBox>
                                 </HBox>
+
                                 <HBox spacing="8" alignment="CENTER_LEFT">
                                     <Label text="✈" style="-fx-font-size: 14px;"/>
                                     <VBox spacing="1">
@@ -141,6 +147,7 @@
                                                style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
                                     </VBox>
                                 </HBox>
+
                                 <HBox spacing="8" alignment="CENTER_LEFT">
                                     <Label text="🎯" style="-fx-font-size: 14px;"/>
                                     <VBox spacing="1">
@@ -150,6 +157,7 @@
                                                style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
                                     </VBox>
                                 </HBox>
+
                                 <Separator/>
                                 <HBox alignment="CENTER_LEFT" spacing="8">
                                     <Label text="💰 Prix par personne :"
@@ -160,19 +168,57 @@
                                 </HBox>
                             </VBox>
                         </VBox>
+
+                        <!-- ✅ Card mini-carte hôtel -->
+                        <VBox spacing="0"
+                              style="-fx-background-color: white; -fx-background-radius: 14;
+                                     -fx-border-color: #ECECEC; -fx-border-radius: 14; -fx-border-width: 1;
+                                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 12, 0, 0, 3);">
+
+                            <!-- En-tête carte -->
+                            <HBox alignment="CENTER_LEFT" spacing="10"
+                                  style="-fx-padding: 14 16 10 16;
+                                         -fx-border-color: #F0F0F0; -fx-border-width: 0 0 1 0;">
+                                <StackPane prefWidth="30" prefHeight="30"
+                                           style="-fx-background-color: #FFF3E0; -fx-background-radius: 8;">
+                                    <Label text="🗺" style="-fx-font-size: 14px;"/>
+                                </StackPane>
+                                <VBox spacing="1">
+                                    <Label text="Localisation de l'hôtel"
+                                           style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+                                    <Label fx:id="hotelAdresseLabel" text="—"
+                                           style="-fx-font-size: 11px; -fx-text-fill: #999;"/>
+                                    <Button fx:id="agrandirCarteBtn" onAction="#ouvrirPopupCarte"
+                                            prefWidth="120"/>
+                                </VBox>
+                            </HBox>
+
+                            <!-- WebView carte -->
+                            <WebView fx:id="hotelMapView"
+                                     prefHeight="200"
+                                     maxHeight="200"
+                                     style="-fx-background-radius: 0 0 14 14;"/>
+
+                            <!-- Footer carte -->
+                            <HBox alignment="CENTER_RIGHT"
+                                  style="-fx-padding: 6 12 8 12;
+                                         -fx-border-color: #F0F0F0; -fx-border-width: 1 0 0 0;">
+                                <Label text="© OpenStreetMap contributors"
+                                       style="-fx-font-size: 9px; -fx-text-fill: #CCC;"/>
+                            </HBox>
+                        </VBox>
+
                     </VBox>
 
                     <!-- ─── Colonne droite : Formulaire ─── -->
                     <VBox spacing="16" HBox.hgrow="ALWAYS">
 
-                        <!-- Card formulaire -->
                         <VBox spacing="16"
                               style="-fx-background-color: white; -fx-background-radius: 14;
                                      -fx-border-color: #ECECEC; -fx-border-radius: 14; -fx-border-width: 1;
                                      -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 12, 0, 0, 3);">
                             <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
 
-                            <!-- Titre formulaire -->
                             <HBox alignment="CENTER_LEFT" spacing="10">
                                 <StackPane prefWidth="36" prefHeight="36"
                                            style="-fx-background-color: #FFF3E0; -fx-background-radius: 10;">
@@ -183,7 +229,6 @@
                             </HBox>
                             <Separator/>
 
-                            <!-- Nombre de personnes -->
                             <VBox spacing="6">
                                 <Label text="👥  Nombre de personnes"
                                        style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555;"/>
@@ -198,7 +243,6 @@
                                 </HBox>
                             </VBox>
 
-                            <!-- Date de réservation -->
                             <VBox spacing="6">
                                 <Label text="📅  Date de réservation"
                                        style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555;"/>
@@ -207,7 +251,6 @@
                                                    -fx-border-color: #DDD; -fx-border-radius: 8;"/>
                             </VBox>
 
-                            <!-- Email -->
                             <VBox spacing="6">
                                 <Label text="✉  Adresse e-mail"
                                        style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555;"/>
@@ -216,7 +259,6 @@
                                                   -fx-border-color: #DDD; -fx-border-radius: 8; -fx-padding: 9 12;"/>
                             </VBox>
 
-                            <!-- Téléphone -->
                             <VBox spacing="6">
                                 <Label text="📞  Numéro de téléphone"
                                        style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555;"/>
@@ -225,9 +267,6 @@
                                                   -fx-border-color: #DDD; -fx-border-radius: 8; -fx-padding: 9 12;"/>
                             </VBox>
 
-                            <!-- ═══ PASSEPORTS DYNAMIQUES ═══
-                                 Le Controller génère autant de champs que de personnes.
-                                 Seul passeportFieldsBox est peuplé dynamiquement.     -->
                             <VBox fx:id="passeportsContainer" spacing="10"
                                   style="-fx-background-color: #FAFAFA; -fx-background-radius: 10;
                                          -fx-border-color: #ECECEC; -fx-border-radius: 10; -fx-border-width: 1;
@@ -239,11 +278,9 @@
                                     <Label fx:id="passeportCountLabel" text="— 1 personne"
                                            style="-fx-font-size: 11px; -fx-text-fill: #FF6B35; -fx-font-weight: bold;"/>
                                 </HBox>
-                                <!-- Champs injectés dynamiquement par le Controller -->
                                 <VBox fx:id="passeportFieldsBox" spacing="8"/>
                             </VBox>
 
-                            <!-- Commentaire -->
                             <VBox spacing="6">
                                 <Label text="💬  Commentaire (optionnel)"
                                        style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555;"/>
@@ -254,7 +291,6 @@
                                                  -fx-border-color: #DDD; -fx-border-radius: 8;"/>
                             </VBox>
 
-                            <!-- Message erreur -->
                             <Label fx:id="errorLabel" text=""
                                    visible="false" managed="false"
                                    style="-fx-text-fill: #E74C3C; -fx-font-size: 12px;

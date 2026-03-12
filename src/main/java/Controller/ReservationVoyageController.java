@@ -16,17 +16,22 @@ import Entite.Personne;
 import Entite.Reservation;
 import Entite.StatutReservation;
 import Entite.TypePaiement;
+import Entite.Utilisateur;
 import Entite.Voyage;
 import Service.ServicePaiement;
 import Service.ServiceReservation;
+import Utils.SessionManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -34,27 +39,27 @@ import javafx.util.Duration;
 public class ReservationVoyageController {
 
     // ══════════════════════════════════════════════════
-    //  IDs — adapter selon votre BDD
+    //  CONSTANTES
     // ══════════════════════════════════════════════════
-    private static final int    ID_TYPE_CARTE            = 1;
-    private static final int    ID_TYPE_VIREMENT         = 2;
-    private static final int    ID_TYPE_ESPECES          = 3;
-    private static final int    ID_STATUT_EN_ATTENTE     = 1;
-    private static final int    ID_PERSONNE_CONNECTE     = 1;
-    private static final String ETAT_RESERVATION         = "En attente";
-    private static final String STATUT_PAIEMENT_OK       = "Payé";
-    private static final String STATUT_PAIEMENT_ATTENTE  = "En attente";
+    private static final int    ID_TYPE_CARTE           = 1;
+    private static final int    ID_TYPE_VIREMENT        = 2;
+    private static final int    ID_TYPE_ESPECES         = 3;
+    private static final int    ID_STATUT_EN_ATTENTE    = 1;
+    private static final String ETAT_RESERVATION        = "En attente";
+    private static final String STATUT_PAIEMENT_OK      = "Payé";
+    private static final String STATUT_PAIEMENT_ATTENTE = "En attente";
 
     // ── Header ──
+    @FXML private Label labelEmailConnecte;
     @FXML private Label headerDestLabel;
     @FXML private Label headerDatesLabel;
 
-    // ── Bandeau info (comme Budget) ──
+    // ── Bandeau info ──
     @FXML private Label destinationLabel;
     @FXML private Label datesLabel;
     @FXML private Label dureeLabel;
 
-    // ── Recap voyage (colonne droite) ──
+    // ── Recap voyage ──
     @FXML private Label recapDestLabel;
     @FXML private Label recapDepartLabel;
     @FXML private Label recapRetourLabel;
@@ -65,10 +70,12 @@ public class ReservationVoyageController {
     @FXML private TextField        prenomField;
     @FXML private TextField        emailField;
     @FXML private TextField        telephoneField;
-    @FXML private TextField        passportField;
-    @FXML private ComboBox<String> nationaliteCombo;
     @FXML private Spinner<Integer> nbPersonnesSpinner;
     @FXML private TextArea         commentaireArea;
+
+    // ── Passeports dynamiques ──
+    @FXML private VBox  passeportFieldsBox;
+    @FXML private Label passeportCountLabel;
 
     // ── Paiement ──
     @FXML private ToggleButton  btnCarte;
@@ -101,10 +108,13 @@ public class ReservationVoyageController {
     private double      totalHotel;
     private double      totalActivites;
     private double      totalServices;
-    private double      totalGlobal;
+    private double      totalGlobal;   // prix BASE pour 1 personne
 
-    private String  modePaiement     = "CARTE";
-    private boolean enCoursDeFormat  = false;
+    private String  modePaiement    = "CARTE";
+    private boolean enCoursDeFormat = false;
+
+    // ✅ Champs passeport dynamiques
+    private final java.util.List<TextField> passeportFields = new java.util.ArrayList<>();
 
     private final DateTimeFormatter  fmt                = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private final ServiceReservation serviceReservation = new ServiceReservation();
@@ -116,24 +126,31 @@ public class ReservationVoyageController {
 
     @FXML
     public void initialize() {
-        // Nationalités
-        if (nationaliteCombo != null) {
-            nationaliteCombo.getItems().addAll(
-                    "Tunisienne", "Française", "Algérienne", "Marocaine",
-                    "Allemande", "Espagnole", "Italienne", "Britannique",
-                    "Américaine", "Canadienne", "Autre");
-            nationaliteCombo.getSelectionModel().selectFirst();
+
+        // Email connecté dans le header + pré-remplissage
+        String emailSession = SessionManager.getUserEmail();
+        if (emailSession != null) {
+            if (labelEmailConnecte != null) labelEmailConnecte.setText("👤 " + emailSession);
+            if (emailField        != null) emailField.setText(emailSession);
         }
 
-        // Spinner
-        if (nbPersonnesSpinner != null)
+        // Spinner + passeports dynamiques + total par personnes
+        if (nbPersonnesSpinner != null) {
             nbPersonnesSpinner.setValueFactory(
                     new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 1));
+
+            genererChampsPasseport(1);
+
+            nbPersonnesSpinner.valueProperty().addListener((obs, oldVal, newVal) -> {
+                genererChampsPasseport(newVal);
+                mettreAJourTotalPersonnes(newVal);
+            });
+        }
 
         // Paiement par défaut : carte
         if (btnCarte != null) { btnCarte.setSelected(true); afficherPanelCarte(); }
 
-        // ── Listener numéro carte : auto-format + Luhn ──
+        // Listener numéro carte : auto-format + Luhn
         if (numCarteField != null) {
             numCarteField.textProperty().addListener((obs, oldVal, newVal) -> {
                 if (enCoursDeFormat) return;
@@ -150,7 +167,8 @@ public class ReservationVoyageController {
                     Platform.runLater(() -> {
                         try {
                             numCarteField.setText(result);
-                            numCarteField.positionCaret(Math.max(0, Math.min(result.length(), numCarteField.getLength())));
+                            numCarteField.positionCaret(Math.max(0,
+                                    Math.min(result.length(), numCarteField.getLength())));
                         } finally { enCoursDeFormat = false; }
                     });
                 }
@@ -158,7 +176,7 @@ public class ReservationVoyageController {
             });
         }
 
-        // ── Listener expiration : auto MM/AA ──
+        // Listener expiration : auto MM/AA
         if (expirationField != null) {
             expirationField.textProperty().addListener((obs, oldVal, newVal) -> {
                 if (enCoursDeFormat) return;
@@ -172,14 +190,15 @@ public class ReservationVoyageController {
                     Platform.runLater(() -> {
                         try {
                             expirationField.setText(r);
-                            expirationField.positionCaret(Math.max(0, Math.min(r.length(), expirationField.getLength())));
+                            expirationField.positionCaret(Math.max(0,
+                                    Math.min(r.length(), expirationField.getLength())));
                         } finally { enCoursDeFormat = false; }
                     });
                 }
             });
         }
 
-        // ── Listener CVV : chiffres seulement ──
+        // Listener CVV : chiffres seulement
         if (cvvField != null) {
             cvvField.textProperty().addListener((obs, oldVal, newVal) -> {
                 if (enCoursDeFormat) return;
@@ -197,6 +216,83 @@ public class ReservationVoyageController {
                 }
             });
         }
+    }
+
+    // ══════════════════════════════════════════════════
+    //  ✅ GÉNÉRATION CHAMPS PASSEPORT DYNAMIQUES
+    // ══════════════════════════════════════════════════
+
+    private void genererChampsPasseport(int nb) {
+        if (passeportFieldsBox == null) return;
+
+        passeportFields.clear();
+        passeportFieldsBox.getChildren().clear();
+
+        if (passeportCountLabel != null)
+            passeportCountLabel.setText("— " + nb + " personne" + (nb > 1 ? "s" : ""));
+
+        for (int i = 1; i <= nb; i++) {
+            Label badge = new Label("🛂 " + i);
+            badge.setStyle("-fx-font-size:11px;-fx-text-fill:#888;" +
+                    "-fx-background-color:#F0F0F0;-fx-background-radius:6;-fx-padding:4 8;");
+
+            Label lblPersonne = new Label("Personne " + i);
+            lblPersonne.setMinWidth(80);
+            lblPersonne.setStyle(
+                    "-fx-font-size:12px;-fx-font-weight:bold;-fx-text-fill:#FF6B35;");
+
+            TextField tf = new TextField();
+            tf.setPromptText("ex : AB" + (1000000 + i));
+            tf.setStyle("-fx-font-size:13px;-fx-background-color:#F8F9FA;" +
+                    "-fx-border-color:#DDD;-fx-border-radius:8;" +
+                    "-fx-background-radius:8;-fx-padding:8 12;");
+            HBox.setHgrow(tf, Priority.ALWAYS);
+
+            // Auto-majuscules
+            tf.textProperty().addListener((obs, oldTxt, newTxt) -> {
+                if (newTxt != null && !newTxt.equals(newTxt.toUpperCase()))
+                    tf.setText(newTxt.toUpperCase());
+            });
+
+            HBox row = new HBox(10, badge, lblPersonne, tf);
+            row.setAlignment(Pos.CENTER_LEFT);
+
+            passeportFieldsBox.getChildren().add(row);
+            passeportFields.add(tf);
+        }
+    }
+
+    // ══════════════════════════════════════════════════
+    //  ✅ MISE À JOUR TOTAL SELON NB PERSONNES
+    // ══════════════════════════════════════════════════
+
+    private void mettreAJourTotalPersonnes(int nb) {
+        double vol        = totalVol        * nb;
+        double hotel      = totalHotel      * nb;
+        double activites  = totalActivites  * nb;
+        double services   = totalServices   * nb;
+        double total      = totalGlobal     * nb;
+
+        if (cmdVolLabel       != null) cmdVolLabel.setText(String.format("%.0f TND", vol));
+        if (cmdHotelLabel     != null) cmdHotelLabel.setText(String.format("%.0f TND", hotel));
+        if (cmdActivitesLabel != null) cmdActivitesLabel.setText(String.format("%.0f TND", activites));
+        if (cmdServicesLabel  != null) cmdServicesLabel.setText(String.format("%.0f TND", services));
+        if (cmdTotalLabel     != null) cmdTotalLabel.setText(String.format("%.0f TND", total));
+
+        long jours = dateDebut != null && dateFin != null
+                ? ChronoUnit.DAYS.between(dateDebut, dateFin) : 0;
+        if (cmdParJourLabel != null && jours > 0)
+            cmdParJourLabel.setText(String.format(
+                    "≈ %.0f TND/jour · %d personne%s · %d jour%s",
+                    total / jours,
+                    nb, nb > 1 ? "s" : "",
+                    jours, jours > 1 ? "s" : ""));
+    }
+
+    // ✅ Helper : total réel au moment de l'enregistrement
+    private double getTotalReel() {
+        int nb = nbPersonnesSpinner != null ? nbPersonnesSpinner.getValue() : 1;
+        return totalGlobal * nb;
     }
 
     // ══════════════════════════════════════════════════
@@ -220,7 +316,7 @@ public class ReservationVoyageController {
     }
 
     // ══════════════════════════════════════════════════
-    //  MISE À JOUR INTERFACE (même pattern que BudgetController)
+    //  MISE À JOUR INTERFACE INITIALE
     // ══════════════════════════════════════════════════
 
     private void mettreAJourInterface() {
@@ -233,30 +329,18 @@ public class ReservationVoyageController {
                 ? ChronoUnit.DAYS.between(dateDebut, dateFin) : 0;
         String joursStr = jours + " jour" + (jours > 1 ? "s" : "");
 
-        // Header
         if (headerDestLabel  != null) headerDestLabel.setText(destTxt);
         if (headerDatesLabel != null) headerDatesLabel.setText(datesTxt);
-
-        // Bandeau info (identique à Budget)
         if (destinationLabel != null) destinationLabel.setText("🌍 " + destTxt);
         if (datesLabel       != null) datesLabel.setText(datesTxt);
         if (dureeLabel       != null) dureeLabel.setText(joursStr);
-
-        // Recap colonne droite
         if (recapDestLabel   != null) recapDestLabel.setText(destTxt);
         if (recapDepartLabel != null) recapDepartLabel.setText(dateDebut != null ? dateDebut.format(fmt) : "—");
         if (recapRetourLabel != null) recapRetourLabel.setText(dateFin   != null ? dateFin.format(fmt)   : "—");
         if (recapDureeLabel  != null) recapDureeLabel.setText(joursStr);
 
-        // Résumé commande
-        if (cmdVolLabel       != null) cmdVolLabel.setText(String.format("%.0f TND", totalVol));
-        if (cmdHotelLabel     != null) cmdHotelLabel.setText(String.format("%.0f TND", totalHotel));
-        if (cmdActivitesLabel != null) cmdActivitesLabel.setText(String.format("%.0f TND", totalActivites));
-        if (cmdServicesLabel  != null) cmdServicesLabel.setText(String.format("%.0f TND", totalServices));
-        if (cmdTotalLabel     != null) cmdTotalLabel.setText(String.format("%.0f TND", totalGlobal));
-        if (cmdParJourLabel   != null && jours > 0)
-            cmdParJourLabel.setText(String.format("≈ %.0f TND par jour sur %d jour%s",
-                    totalGlobal / jours, jours, jours > 1 ? "s" : ""));
+        // Affichage initial pour 1 personne
+        mettreAJourTotalPersonnes(1);
     }
 
     // ══════════════════════════════════════════════════
@@ -268,9 +352,9 @@ public class ReservationVoyageController {
         if (digits.isEmpty()) { carteTypeLabel.setText(""); carteStatutLabel.setText(""); return; }
 
         String type = "CARTE";
-        if      (digits.startsWith("4"))           type = "💳 VISA";
-        else if (digits.matches("^5[1-5].*"))      type = "💳 MASTERCARD";
-        else if (digits.startsWith("34") || digits.startsWith("37")) type = "💳 AMEX";
+        if      (digits.startsWith("4"))                               type = "💳 VISA";
+        else if (digits.matches("^5[1-5].*"))                          type = "💳 MASTERCARD";
+        else if (digits.startsWith("34") || digits.startsWith("37"))   type = "💳 AMEX";
         else if (digits.startsWith("6011") || digits.startsWith("65")) type = "💳 DISCOVER";
 
         carteTypeLabel.setText(type);
@@ -283,13 +367,15 @@ public class ReservationVoyageController {
             if (algorithemLuhn(digits)) {
                 carteStatutLabel.setText("✔ Carte valide");
                 carteStatutLabel.setStyle("-fx-font-size:11px;-fx-font-weight:bold;-fx-text-fill:#27AE60;");
-                numCarteField.setStyle("-fx-background-color:#F0FFF4;-fx-border-color:#27AE60;-fx-border-width:2;"
-                        + "-fx-border-radius:8;-fx-background-radius:8;-fx-padding:9 12;-fx-font-size:14px;");
+                numCarteField.setStyle("-fx-background-color:#F0FFF4;-fx-border-color:#27AE60;"
+                        + "-fx-border-width:2;-fx-border-radius:8;-fx-background-radius:8;"
+                        + "-fx-padding:9 12;-fx-font-size:14px;");
             } else {
                 carteStatutLabel.setText("✘ Numero invalide");
                 carteStatutLabel.setStyle("-fx-font-size:11px;-fx-font-weight:bold;-fx-text-fill:#E74C3C;");
-                numCarteField.setStyle("-fx-background-color:#FFF5F5;-fx-border-color:#E74C3C;-fx-border-width:2;"
-                        + "-fx-border-radius:8;-fx-background-radius:8;-fx-padding:9 12;-fx-font-size:14px;");
+                numCarteField.setStyle("-fx-background-color:#FFF5F5;-fx-border-color:#E74C3C;"
+                        + "-fx-border-width:2;-fx-border-radius:8;-fx-background-radius:8;"
+                        + "-fx-padding:9 12;-fx-font-size:14px;");
             }
         } else {
             carteStatutLabel.setText("");
@@ -311,7 +397,7 @@ public class ReservationVoyageController {
     private boolean verifierExpiration(String exp) {
         try {
             String[] p = exp.split("/");
-            int mois = Integer.parseInt(p[0]);
+            int mois  = Integer.parseInt(p[0]);
             int annee = 2000 + Integer.parseInt(p[1]);
             if (mois < 1 || mois > 12) return false;
             return !YearMonth.of(annee, mois).isBefore(YearMonth.now());
@@ -349,14 +435,14 @@ public class ReservationVoyageController {
             modePaiement = "ESPECES"; masquerPanelCarte();
             paiementInfoLabel.setText(
                     "Paiement en especes\n\nMontant : " +
-                            String.format("%.0f TND", totalGlobal) +
+                            String.format("%.0f TND", getTotalReel()) +
                             "\n\nAdresse : 12 Avenue Habib Bourguiba, Tunis\nHoraires : Lun-Ven 09h-18h");
             paiementInfoLabel.setVisible(true); paiementInfoLabel.setManaged(true);
         }
     }
 
     private void afficherPanelCarte() {
-        if (panelCarte != null)        { panelCarte.setVisible(true);        panelCarte.setManaged(true);         }
+        if (panelCarte        != null) { panelCarte.setVisible(true);        panelCarte.setManaged(true);         }
         if (paiementInfoLabel != null) { paiementInfoLabel.setVisible(false); paiementInfoLabel.setManaged(false); }
     }
 
@@ -390,8 +476,8 @@ public class ReservationVoyageController {
         if (confirmerButton != null) {
             confirmerButton.setDisable(true);
             confirmerButton.setText("Traitement en cours...");
-            confirmerButton.setStyle("-fx-background-color:#BDC3C7;-fx-text-fill:white;-fx-font-size:14px;"
-                    + "-fx-font-weight:bold;-fx-background-radius:10;-fx-cursor:wait;");
+            confirmerButton.setStyle("-fx-background-color:#BDC3C7;-fx-text-fill:white;"
+                    + "-fx-font-size:14px;-fx-font-weight:bold;-fx-background-radius:10;-fx-cursor:wait;");
         }
 
         Timeline t1 = new Timeline(new KeyFrame(Duration.millis(800), e -> setBtnText("Connexion securisee...")));
@@ -423,6 +509,7 @@ public class ReservationVoyageController {
         String type      = digits.startsWith("4") ? "VISA"
                 : digits.startsWith("5") ? "MASTERCARD"
                 : digits.startsWith("3") ? "AMEX" : "CARTE";
+        int    nb        = nbPersonnesSpinner != null ? nbPersonnesSpinner.getValue() : 1;
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Paiement approuve");
@@ -434,7 +521,8 @@ public class ReservationVoyageController {
                         "Reseau     : " + type + "\n" +
                         "Carte      : **** **** **** " + derniers4 + "\n" +
                         "Titulaire  : " + nomCarteField.getText().trim().toUpperCase() + "\n" +
-                        "Montant    : " + String.format("%.0f TND", totalGlobal) + "\n" +
+                        "Personnes  : " + nb + "\n" +
+                        "Montant    : " + String.format("%.0f TND", getTotalReel()) + "\n" +
                         "Code auth. : " + genererCodeAuth() + "\n" +
                         "Date       : " + LocalDate.now().format(fmt) + "\n" +
                         "━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
@@ -455,16 +543,26 @@ public class ReservationVoyageController {
 
     private int enregistrerReservation() {
         try {
+            int nb = nbPersonnesSpinner != null ? nbPersonnesSpinner.getValue() : 1;
+
             Reservation r = new Reservation();
             r.setDate_reservation(Date.valueOf(LocalDate.now()));
-            r.setPrix_reservation(totalGlobal);
+            r.setPrix_reservation(getTotalReel());   // ✅ total × nb personnes
             r.setEtat(ETAT_RESERVATION);
             r.setEmail(emailField.getText().trim());
             r.setNum_tel(telephoneField.getText().trim());
-            r.setNum_passeport(passportField.getText().trim().isEmpty()
-                    ? null : passportField.getText().trim());
+            r.setNombre_personnes(nb);
+
+            // ✅ Passeports dynamiques joints
+            java.util.List<String> passeports = new java.util.ArrayList<>();
+            for (TextField tf : passeportFields) {
+                String val = tf.getText() != null ? tf.getText().trim() : "";
+                if (!val.isEmpty()) passeports.add(val.toUpperCase());
+            }
+            r.setNum_passeport(passeports.isEmpty() ? null : String.join(" | ", passeports));
 
             String commentaire = prenomField.getText().trim() + " " + nomField.getText().trim()
+                    + " | " + nb + " personne" + (nb > 1 ? "s" : "")
                     + " | Paiement: " + modePaiement;
             if ("CARTE".equals(modePaiement) && numCarteField != null) {
                 String d = numCarteField.getText().replaceAll("\\s", "");
@@ -474,15 +572,19 @@ public class ReservationVoyageController {
                 commentaire += " — " + commentaireArea.getText().trim();
             r.setCommentaire(commentaire);
 
-            r.setNombre_personnes(nbPersonnesSpinner != null ? nbPersonnesSpinner.getValue() : 1);
-
             StatutReservation statut = new StatutReservation();
             statut.setId_statut(ID_STATUT_EN_ATTENTE);
             r.setId_statut(statut);
 
-            Personne personne = new Personne();
-            personne.setIdUtilisateur(ID_PERSONNE_CONNECTE);
-            r.setId_personne(personne);
+            // Personne connectée via SessionManager
+            Utilisateur userConnecte = SessionManager.getCurrentUser();
+            if (userConnecte instanceof Personne) {
+                r.setId_personne((Personne) userConnecte);
+            } else {
+                Personne p = new Personne();
+                p.setIdUtilisateur(1);
+                r.setId_personne(p);
+            }
 
             Voyage voyage = new Voyage();
             voyage.setIdVoyage(idVoyage);
@@ -517,7 +619,7 @@ public class ReservationVoyageController {
     private void enregistrerPaiement(int idReservation, String statut) {
         try {
             Paiement p = new Paiement();
-            p.setMontant(totalGlobal);
+            p.setMontant(getTotalReel());   // ✅ total réel
             p.setDatePaiement(LocalDateTime.now());
             p.setStatut(statut);
             p.setIdReservation(idReservation);
@@ -532,19 +634,19 @@ public class ReservationVoyageController {
             p.setTypePaiement(tp);
 
             boolean ok = servicePaiement.ajouter(p);
-            if (!ok)
-                showAlert("Paiement",
-                        "Reservation enregistree mais le paiement n'a pas pu etre sauvegarde.");
+            if (!ok) showAlert("Paiement",
+                    "Reservation enregistree mais le paiement n'a pas pu etre sauvegarde.");
         } catch (SQLException e) {
             showAlert("Paiement", "Reservation OK, erreur paiement :\n" + e.getMessage());
         }
     }
 
     // ══════════════════════════════════════════════════
-    //  SUCCÈS
+    //  SUCCÈS FINAL
     // ══════════════════════════════════════════════════
 
     private void afficherSuccesFinal(int idReservation) {
+        int nb = nbPersonnesSpinner != null ? nbPersonnesSpinner.getValue() : 1;
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Reservation confirmee");
         alert.setHeaderText("Votre voyage a ete reserve avec succes !");
@@ -553,7 +655,8 @@ public class ReservationVoyageController {
                         ? destination.getPays() + " — " + destination.getVille() : "—") + "\n" +
                         "Depart        : " + (dateDebut != null ? dateDebut.format(fmt) : "—") + "\n" +
                         "Retour        : " + (dateFin   != null ? dateFin.format(fmt)   : "—") + "\n" +
-                        "Total paye    : " + String.format("%.0f TND", totalGlobal) + "\n" +
+                        "Voyageurs     : " + nb + " personne" + (nb > 1 ? "s" : "") + "\n" +
+                        "Total paye    : " + String.format("%.0f TND", getTotalReel()) + "\n" +
                         "Mode paiement : " + modePaiement + "\n" +
                         "Statut        : " + ETAT_RESERVATION + "\n" +
                         "Reference     : RES-" + idReservation + "\n\n" +
@@ -579,8 +682,21 @@ public class ReservationVoyageController {
             showAlert("Champs manquants", "Veuillez saisir votre numero de telephone.");
             surlignerErreur(telephoneField); return false;
         }
+
+        // ✅ Validation passeports dynamiques
+        for (int i = 0; i < passeportFields.size(); i++) {
+            String val = passeportFields.get(i).getText() != null
+                    ? passeportFields.get(i).getText().trim() : "";
+            if (val.isEmpty()) {
+                showAlert("Passeport manquant",
+                        "Veuillez saisir le numero de passeport de la Personne " + (i + 1) + ".");
+                passeportFields.get(i).requestFocus();
+                return false;
+            }
+        }
+
         if ("CARTE".equals(modePaiement)) {
-            String digits  = numCarteField != null ? numCarteField.getText().replaceAll("\\s", "") : "";
+            String  digits = numCarteField != null ? numCarteField.getText().replaceAll("\\s", "") : "";
             boolean isAmex = digits.startsWith("34") || digits.startsWith("37");
             int     expLen = isAmex ? 15 : 16;
             if (digits.length() < expLen) {
@@ -621,8 +737,9 @@ public class ReservationVoyageController {
     }
 
     private void surlignerErreur(TextField f) {
-        if (f != null) f.setStyle("-fx-background-color:#FFF5F5;-fx-border-color:#E74C3C;-fx-border-width:2;"
-                + "-fx-border-radius:8;-fx-background-radius:8;-fx-padding:9 12;-fx-font-size:13px;");
+        if (f != null) f.setStyle("-fx-background-color:#FFF5F5;-fx-border-color:#E74C3C;"
+                + "-fx-border-width:2;-fx-border-radius:8;-fx-background-radius:8;"
+                + "-fx-padding:9 12;-fx-font-size:13px;");
     }
 
     private void reinitialiserStyle(TextField... fields) {
@@ -653,7 +770,7 @@ public class ReservationVoyageController {
     }
 
     // ══════════════════════════════════════════════════
-    //  HOVER BOUTONS (même pattern que BudgetController)
+    //  HOVER BOUTONS
     // ══════════════════════════════════════════════════
 
     @FXML
