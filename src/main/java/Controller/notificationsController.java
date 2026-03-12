@@ -22,7 +22,26 @@ public class notificationsController implements Initializable {
     private VBox notificationsContainer;
     // Déclarer en tant que membre de classe (en haut, avec tes autres services)
     private final ServiceNotification serviceNotification = new ServiceNotification();
+@FXML
+private Button btnRetour;
+    @FXML
+private void retourDashboard() {
 
+    try {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/DashboardUser.fxml"));
+        Parent root = loader.load();
+
+        Stage stage = (Stage) btnRetour.getScene().getWindow();
+
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
