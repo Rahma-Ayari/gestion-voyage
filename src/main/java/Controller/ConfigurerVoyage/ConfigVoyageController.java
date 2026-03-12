@@ -239,6 +239,8 @@ public class ConfigVoyageController {
                 return;
             }
 
+
+
             Stage stage = (Stage) retourButton.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("TripEase - Dashboard");
