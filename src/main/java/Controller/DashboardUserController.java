@@ -442,11 +442,22 @@ public class DashboardUserController implements Initializable {
         }
     }
 
-    @FXML public void ouvrirOffres() {
-        activerMenu(menuOffres);
-        mettreAJourBreadcrumb("Accueil", "Nos offres spéciales");
-        afficherSection("🎁", "Nos offres spéciales",
-                "Les offres exclusives TripEase seront disponibles très prochainement.");
+    @FXML
+    public void ouvrirOffres() {
+        try {
+            // Charger le FXML de la page reservationUser
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ReservationUser/ReservationUser.fxml"));
+            Parent root = loader.load();
+
+            // Récupérer la scène actuelle via un composant existant
+            Stage stage = (Stage) menuOffres.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Réservation Utilisateur");
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML public void ouvrirPaiement() {
