@@ -42,7 +42,15 @@
 
             <!-- Title -->
             <Label style="-fx-font-size:26px; -fx-font-weight:bold;" text="Notifications" />
-
+                 <HBox alignment="CENTER_RIGHT">
+                    <Button fx:id="btnRetour" alignment="CENTER_RIGHT"
+                            text="← Retour"
+                            onAction="#retourDashboard"
+                            style="-fx-background-color:#FF6B00;
+                   -fx-text-fill:white;
+                   -fx-font-weight:bold;
+                   -fx-background-radius:8;"/>
+                </HBox>
             <HBox spacing="10" alignment="CENTER_LEFT">
 
                 <Label text="Filtrer :" style="-fx-font-size:14px; -fx-font-weight:bold;"/>
