@@ -16,80 +16,67 @@ import java.util.List;
 public class ServiceReservation implements IService<Reservation> {
 
     private Connection cnx = DataSource.getInstance().getCon();
-    private Statement st;
-
-    public ServiceReservation() {
-        try {
-            st = cnx.createStatement();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
 
     // ══════════════════════════════════════════════════
     //  INSERT
     // ══════════════════════════════════════════════════
 
-    // Remplacer dans ServiceReservation :
-// private Statement st;  ← supprimer l'utilisation pour l'INSERT
-
     @Override
     public boolean ajouter(Reservation r) throws SQLException {
 
-        String passeportVal = (r.getNum_passeport() != null)
-                ? "'" + r.getNum_passeport().replace("'", "''") + "'"
-                : "NULL";
-
-        String personneVal = (r.getId_personne() != null)
-                ? String.valueOf(r.getId_personne().getIdUtilisateur()) : "NULL";
-
-        String voyageVal = (r.getId_voyage() != null)
-                ? String.valueOf(r.getId_voyage().getIdVoyage()) : "NULL";
-
-        String offreVal = (r.getId_offre() != null)
-                ? String.valueOf(r.getId_offre().getId_offre()) : "NULL";
-
-        String req = "INSERT INTO reservation("
+        String sql = "INSERT INTO reservation("
                 + "date_reservation, prix_reservation, etat, email, num_tel, commentaire, "
-                + "nombre_personnes, num_passeport, "
-                + "id_personne, id_statut, id_voyage, id_offre"
-                + ") VALUES ('"
-                + r.getDate_reservation()          + "',"
-                + r.getPrix_reservation()          + ",'"
-                + r.getEtat()                      + "','"
-                + r.getEmail()                     + "','"
-                + r.getNum_tel()                   + "','"
-                + r.getCommentaire()               + "',"
-                + r.getNombre_personnes()          + ","
-                + passeportVal                     + ","
-                + personneVal                      + ","
-                + r.getId_statut().getId_statut()  + ","
-                + voyageVal                        + ","
-                + offreVal                         + ")";
+                + "nombre_personnes, num_passeport, id_personne, id_statut, id_voyage, id_offre"
+                + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        // ✅ Utiliser RETURN_GENERATED_KEYS pour récupérer l'ID
-        try (PreparedStatement ps = cnx.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement ps = cnx.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            ps.setDate  (1,  r.getDate_reservation() != null
+                    ? new java.sql.Date(r.getDate_reservation().getTime()) : null);
+            ps.setDouble(2,  r.getPrix_reservation());
+            ps.setString(3,  r.getEtat());
+            ps.setString(4,  r.getEmail());
+            ps.setString(5,  r.getNum_tel());
+            ps.setString(6,  r.getCommentaire());
+            ps.setInt   (7,  r.getNombre_personnes());
+            ps.setString(8,  r.getNum_passeport());
+
+            if (r.getId_personne() != null)
+                ps.setInt(9, r.getId_personne().getIdUtilisateur());
+            else
+                ps.setNull(9, Types.INTEGER);
+
+            if (r.getId_statut() != null)
+                ps.setInt(10, r.getId_statut().getId_statut());
+            else
+                ps.setNull(10, Types.INTEGER);
+
+            if (r.getId_voyage() != null)
+                ps.setInt(11, r.getId_voyage().getIdVoyage());
+            else
+                ps.setNull(11, Types.INTEGER);
+
+            if (r.getId_offre() != null)
+                ps.setInt(12, r.getId_offre().getId_offre());
+            else
+                ps.setNull(12, Types.INTEGER);
+
             boolean success = ps.executeUpdate() > 0;
 
             if (success) {
-                // ✅ Récupérer l'ID généré et le setter sur r
-                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        r.setId_reservation(generatedKeys.getInt(1));
-                    }
+                try (ResultSet keys = ps.getGeneratedKeys()) {
+                    if (keys.next()) r.setId_reservation(keys.getInt(1));
                 }
-
-                // ✅ Maintenant r.getId_reservation() est correct
                 try {
-                    ServiceNotification serviceNotification = new ServiceNotification();
+                    ServiceNotification sn = new ServiceNotification();
                     Notification n = new Notification();
                     n.setMessage("Nouvelle réservation effectuée");
                     n.setDateNotification(LocalDateTime.now());
                     n.setLu(false);
                     n.setTypeNotification("reservation");
-                    n.setIdReservation(r.getId_reservation()); // ← ID réel maintenant
+                    n.setIdReservation(r.getId_reservation());
                     n.setIdUtilisateur(1);
-                    serviceNotification.ajouter(n);
+                    sn.ajouter(n);
                 } catch (Exception ex) {
                     System.err.println("Notification non envoyée : " + ex.getMessage());
                 }
@@ -97,72 +84,100 @@ public class ServiceReservation implements IService<Reservation> {
             return success;
         }
     }
+
     // ══════════════════════════════════════════════════
     //  DELETE
     // ══════════════════════════════════════════════════
 
     @Override
     public boolean supprimer(Reservation r) throws SQLException {
-        String req = "DELETE FROM reservation WHERE id_reservation=" + r.getId_reservation();
-        return st.executeUpdate(req) > 0;
+        String sql = "DELETE FROM reservation WHERE id_reservation = ?";
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+            ps.setInt(1, r.getId_reservation());
+            return ps.executeUpdate() > 0;
+        }
     }
 
     // ══════════════════════════════════════════════════
-    //  UPDATE
+    //  UPDATE  ← root cause of "no value for parameter 6" fixed here
     // ══════════════════════════════════════════════════
 
     @Override
     public boolean modifier(Reservation r) throws SQLException {
 
-        String personneVal = (r.getId_personne() != null)
-                ? String.valueOf(r.getId_personne().getIdUtilisateur()) : "NULL";
+        String sql = "UPDATE reservation SET "
+                + "date_reservation  = ?, "   // 1
+                + "prix_reservation  = ?, "   // 2
+                + "etat              = ?, "   // 3
+                + "email             = ?, "   // 4
+                + "num_tel           = ?, "   // 5
+                + "commentaire       = ?, "   // 6
+                + "nombre_personnes  = ?, "   // 7
+                + "num_passeport     = ?, "   // 8
+                + "id_personne       = ?, "   // 9
+                + "id_statut         = ?, "   // 10
+                + "id_voyage         = ?, "   // 11
+                + "id_offre          = ? "    // 12
+                + "WHERE id_reservation = ?"; // 13
 
-        String voyageVal = (r.getId_voyage() != null)
-                ? String.valueOf(r.getId_voyage().getIdVoyage()) : "NULL";
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
 
-        String offreVal = (r.getId_offre() != null)
-                ? String.valueOf(r.getId_offre().getId_offre()) : "NULL";
+            ps.setDate  (1,  r.getDate_reservation() != null
+                    ? new java.sql.Date(r.getDate_reservation().getTime()) : null);
+            ps.setDouble(2,  r.getPrix_reservation());
+            ps.setString(3,  r.getEtat());
+            ps.setString(4,  r.getEmail());           // null-safe — JDBC handles it
+            ps.setString(5,  r.getNum_tel());
+            ps.setString(6,  r.getCommentaire());     // ← was crashing if contained '
+            ps.setInt   (7,  r.getNombre_personnes());
+            ps.setString(8,  r.getNum_passeport());
 
-        String passeportVal = (r.getNum_passeport() != null)
-                ? "'" + r.getNum_passeport().replace("'", "''") + "'"
-                : "NULL";
+            if (r.getId_personne() != null)
+                ps.setInt(9, r.getId_personne().getIdUtilisateur());
+            else
+                ps.setNull(9, Types.INTEGER);
 
-        String req = "UPDATE reservation SET "
-                + "date_reservation='"  + r.getDate_reservation()          + "', "
-                + "prix_reservation="   + r.getPrix_reservation()           + ", "
-                + "etat='"              + r.getEtat()                       + "', "
-                + "email='"             + r.getEmail()                      + "', "
-                + "num_tel='"           + r.getNum_tel()                    + "', "
-                + "commentaire='"       + r.getCommentaire()                + "', "
-                + "nombre_personnes="   + r.getNombre_personnes()           + ", "
-                + "num_passeport="      + passeportVal                      + ", " // ← ajouté
-                + "id_personne="        + personneVal                       + ", "
-                + "id_statut="          + r.getId_statut().getId_statut()   + ", "
-                + "id_voyage="          + voyageVal                         + ", "
-                + "id_offre="           + offreVal
-                + " WHERE id_reservation=" + r.getId_reservation();
+            if (r.getId_statut() != null)
+                ps.setInt(10, r.getId_statut().getId_statut());
+            else
+                ps.setNull(10, Types.INTEGER);
 
-        boolean success = st.executeUpdate(req) > 0;
+            if (r.getId_voyage() != null)
+                ps.setInt(11, r.getId_voyage().getIdVoyage());
+            else
+                ps.setNull(11, Types.INTEGER);
 
-        if(success && r.getEtat().equalsIgnoreCase("acceptée")){
+            if (r.getId_offre() != null)
+                ps.setInt(12, r.getId_offre().getId_offre());
+            else
+                ps.setNull(12, Types.INTEGER);
 
-            ServiceNotification serviceNotification = new ServiceNotification();
+            ps.setInt(13, r.getId_reservation());
 
-            Notification n = new Notification();
-            n.setMessage("Votre réservation a été acceptée");
-            n.setDateNotification(LocalDateTime.now());
-            n.setLu(false);
-            n.setTypeNotification("reservation");
+            boolean success = ps.executeUpdate() > 0;
 
-            n.setIdReservation(r.getId_reservation());
+            // Notification d'acceptation
+            if (success
+                    && r.getEtat() != null
+                    && r.getEtat().equalsIgnoreCase("acceptée")
+                    && r.getId_personne() != null) {
+                try {
+                    ServiceNotification sn = new ServiceNotification();
+                    Notification n = new Notification();
+                    n.setMessage("Votre réservation a été acceptée");
+                    n.setDateNotification(LocalDateTime.now());
+                    n.setLu(false);
+                    n.setTypeNotification("reservation");
+                    n.setIdReservation(r.getId_reservation());
+                    n.setIdUtilisateur(r.getId_personne().getIdUtilisateur());
+                    sn.ajouter(n);
+                } catch (Exception ex) {
+                    System.err.println("Notification non envoyée : " + ex.getMessage());
+                }
+            }
 
-            // notify the client
-            n.setIdUtilisateur(r.getId_personne().getIdUtilisateur());
-
-            serviceNotification.ajouter(n);
+            return success;
         }
-
-        return success;
     }
 
     // ══════════════════════════════════════════════════
@@ -171,9 +186,13 @@ public class ServiceReservation implements IService<Reservation> {
 
     @Override
     public Reservation findbyId(int id) throws SQLException {
-        ResultSet rs = st.executeQuery(
-                "SELECT * FROM reservation WHERE id_reservation=" + id);
-        if (rs.next()) return mapRow(rs);
+        String sql = "SELECT * FROM reservation WHERE id_reservation = ?";
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return mapRow(rs);
+            }
+        }
         return null;
     }
 
@@ -184,9 +203,10 @@ public class ServiceReservation implements IService<Reservation> {
     @Override
     public List<Reservation> readAll() throws SQLException {
         List<Reservation> list = new ArrayList<>();
-        ResultSet rs = st.executeQuery("SELECT * FROM reservation");
-        while (rs.next()) {
-            list.add(mapRow(rs));
+        String sql = "SELECT * FROM reservation";
+        try (PreparedStatement ps = cnx.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) list.add(mapRow(rs));
         }
         return list;
     }
@@ -199,15 +219,15 @@ public class ServiceReservation implements IService<Reservation> {
 
         Reservation r = new Reservation();
 
-        r.setId_reservation(rs.getInt("id_reservation"));
-        r.setDate_reservation(rs.getDate("date_reservation"));
+        r.setId_reservation  (rs.getInt   ("id_reservation"));
+        r.setDate_reservation(rs.getDate  ("date_reservation"));
         r.setPrix_reservation(rs.getDouble("prix_reservation"));
-        r.setEtat(rs.getString("etat"));
-        r.setEmail(rs.getString("email"));
-        r.setNum_tel(rs.getString("num_tel"));
-        r.setCommentaire(rs.getString("commentaire"));
-        r.setNombre_personnes(rs.getInt("nombre_personnes"));
-        r.setNum_passeport(rs.getString("num_passeport"));   // ← lu depuis la BDD
+        r.setEtat            (rs.getString("etat"));
+        r.setEmail           (rs.getString("email"));
+        r.setNum_tel         (rs.getString("num_tel"));
+        r.setCommentaire     (rs.getString("commentaire"));
+        r.setNombre_personnes(rs.getInt   ("nombre_personnes"));
+        r.setNum_passeport   (rs.getString("num_passeport"));
 
         int idPersonne = rs.getInt("id_personne");
         if (!rs.wasNull()) {
@@ -223,9 +243,12 @@ public class ServiceReservation implements IService<Reservation> {
             r.setId_voyage(v);
         }
 
-        StatutReservation s = new StatutReservation();
-        s.setId_statut(rs.getInt("id_statut"));
-        r.setId_statut(s);
+        int idStatut = rs.getInt("id_statut");
+        if (!rs.wasNull()) {
+            StatutReservation s = new StatutReservation();
+            s.setId_statut(idStatut);
+            r.setId_statut(s);
+        }
 
         int idOffre = rs.getInt("id_offre");
         if (!rs.wasNull()) {
