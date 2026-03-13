@@ -28,7 +28,6 @@ public class HomeAdminController implements Initializable {
     @FXML private VBox cardReservations;
     @FXML private VBox cardOffres;
     @FXML private VBox cardVols;
-    @FXML private VBox cardPaiements;
     @FXML private VBox cardNotifications;
 
     // Nom de l'admin connecté (à injecter depuis la page de login)
@@ -59,8 +58,7 @@ public class HomeAdminController implements Initializable {
         // Ajout des effets hover sur les cartes
         VBox[] cards = {
                 cardInscriptions, cardAvis, cardDestinations, cardActivites,
-                cardHotels, cardReservations, cardOffres, cardVols,
-                cardPaiements, cardNotifications
+                cardHotels, cardReservations, cardOffres, cardVols, cardNotifications
         };
 
         for (VBox card : cards) {
@@ -116,10 +114,6 @@ public class HomeAdminController implements Initializable {
         ouvrirFenetre("/VolView.fxml", "Gestion des Vols");
     }
 
-    @FXML
-    private void handlePaiements(MouseEvent e) {
-        ouvrirFenetre("/Paiements.fxml", "Gestion des Paiements");
-    }
 
     @FXML
     private void handleNotifications(MouseEvent e) {
@@ -135,16 +129,21 @@ public class HomeAdminController implements Initializable {
 
     private void ouvrirFenetre(String fxmlPath, String titre) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            System.out.println("Tentative d'ouverture : " + fxmlPath);
+            URL resource = getClass().getResource(fxmlPath);
+
+            if (resource == null) {
+                System.err.println("ERREUR : Le fichier " + fxmlPath + " n'existe pas !");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(resource);
             Parent root = loader.load();
 
             Stage stage = new Stage();
             stage.setTitle("TripEase Admin – " + titre);
             stage.setScene(new Scene(root));
             stage.show();
-
-            // Optionnel : fermer la fenêtre Home (décommenter si souhaité)
-            // ((Stage) adminNameLabel.getScene().getWindow()).close();
 
         } catch (IOException ex) {
             System.err.println("Impossible d'ouvrir : " + fxmlPath);

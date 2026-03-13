@@ -25,15 +25,15 @@ public class DashboardUserController implements Initializable {
     @FXML private Label  lblAvatar;
     @FXML private HBox   hboxBreadcrumb;
     @FXML private VBox   contenuPrincipal;
-
+    @FXML private HBox menuMesVoyages;
+    @FXML private VBox mainContainer;
     @FXML private HBox   menuAccueil;
     @FXML private HBox   menuConfigurerVoyage;
     @FXML private HBox   menuOffres;
-    @FXML private HBox menuMesVoyages;    @FXML private HBox   menuNotifications;
+    @FXML private HBox   menuPaiement;
+    @FXML private HBox   menuNotifications;
     @FXML private HBox   menuAvis;
     @FXML private HBox   menuReservation;
-    @FXML
-    private VBox mainContainer;
 
     // ══ ÉTAT ══════════════════════════════════════════════════════════════════
     private Utilisateur utilisateurConnecte;
@@ -230,8 +230,7 @@ public class DashboardUserController implements Initializable {
                 {"🎁", "Nos offres spéciales",
                         "Découvrez nos promotions exclusives et bons plans du moment.",
                         "Explorer →", "#FFF8EC", "#FFF0D6"},
-                {"💳", "Mes voyages configurés",
-                        "Réglez vos réservations de façon simple, rapide et sécurisée.",
+                {"💳", "Mes voyages configurés",                        "Réglez vos réservations de façon simple, rapide et sécurisée.",
                         "Payer →", "#F0FFF7", "#DCFCEE"},
                 {"🔔", "Mes notifications",
                         "Consultez vos alertes, rappels et messages importants.",
@@ -266,6 +265,8 @@ public class DashboardUserController implements Initializable {
         page.getChildren().addAll(enTete, banniere, titreCartes, grille);
         contenuPrincipal.getChildren().setAll(page);
     }
+
+
 
     // ══ BANNIÈRE ══════════════════════════════════════════════════════════════
     private Pane construireBanniere(String nom) {
@@ -443,7 +444,6 @@ public class DashboardUserController implements Initializable {
         }
     }
 
-
     @FXML
     public void ouvrirOffres() {
         try {
@@ -462,26 +462,11 @@ public class DashboardUserController implements Initializable {
         }
     }
 
-    @FXML
-    public void ouvrirMesVoyages() {
-
-        try {
-
-            FXMLLoader loader =
-                    new FXMLLoader(getClass().getResource("/MesVoyages.fxml"));
-
-            Parent root = loader.load();
-
-            Stage stage = (Stage) menuMesVoyages.getScene().getWindow();
-
-            stage.setScene(new Scene(root));
-            stage.setTitle("Mes voyages");
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            afficherErreur("Impossible d'ouvrir MesVoyage.fxml");
-        }
+    @FXML public void ouvrirPaiement() {
+        activerMenu(menuPaiement);
+        mettreAJourBreadcrumb("Accueil", "Effectuer un paiement");
+        afficherSection("💳", "Effectuer un paiement",
+                "Le module de paiement sécurisé sera disponible très prochainement.");
     }
 
    @FXML
@@ -492,10 +477,10 @@ public class DashboardUserController implements Initializable {
 
         try {
 
-            URL url = localiserFXML("/NotificationClient.fxml");
+            URL url = localiserFXML("/notificationClient.fxml");
 
             if (url == null) {
-                afficherErreur("NotificationClient.fxml introuvable.");
+                afficherErreur("notificationClient.fxml introuvable.");
                 return;
             }
 
@@ -534,6 +519,8 @@ public class DashboardUserController implements Initializable {
                 allerVers("/Login.fxml", "TripEase — Connexion");
         });
     }
+
+
 
     // ══ PAGE "BIENTÔT DISPONIBLE" ═════════════════════════════════════════════
     private void afficherSection(String emoji, String titre, String msg) {
@@ -642,5 +629,28 @@ public class DashboardUserController implements Initializable {
         Alert a = new Alert(Alert.AlertType.ERROR);
         a.setTitle("Erreur"); a.setHeaderText(null); a.setContentText(msg);
         a.showAndWait();
+    }
+
+
+    @FXML
+    public void ouvrirMesVoyages() {
+
+        try {
+
+            FXMLLoader loader =
+                    new FXMLLoader(getClass().getResource("/MesVoyages.fxml"));
+
+            Parent root = loader.load();
+
+            Stage stage = (Stage) menuMesVoyages.getScene().getWindow();
+
+            stage.setScene(new Scene(root));
+            stage.setTitle("Mes voyages");
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            afficherErreur("Impossible d'ouvrir MesVoyage.fxml");
+        }
     }
 }
