@@ -8,7 +8,7 @@ import java.util.List;
 public class ServicePaiement implements IService<Paiement> {
 
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306/gestion_voyage", "root", "");
+        return DriverManager.getConnection("jdbc:mysql://localhost:3306/gestion-voyage", "root", "");
     }
 
     @Override

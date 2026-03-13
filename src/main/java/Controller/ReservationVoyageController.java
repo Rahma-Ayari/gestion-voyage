@@ -108,7 +108,7 @@ public class ReservationVoyageController {
     private double      totalHotel;
     private double      totalActivites;
     private double      totalServices;
-    private double      totalGlobal;   // prix BASE pour 1 personne
+    private double      totalGlobal;  // prix BASE 1 personne
 
     private String  modePaiement    = "CARTE";
     private boolean enCoursDeFormat = false;
@@ -119,6 +119,16 @@ public class ReservationVoyageController {
     private final DateTimeFormatter  fmt                = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private final ServiceReservation serviceReservation = new ServiceReservation();
     private final ServicePaiement    servicePaiement    = new ServicePaiement();
+
+    // ══════════════════════════════════════════════════
+    //  UTILITAIRE — échapper les apostrophes SQL
+    // ══════════════════════════════════════════════════
+
+    /** Échappe les apostrophes pour éviter de casser la requête SQL concaténée */
+    private String esc(String s) {
+        if (s == null) return "";
+        return s.replace("'", "''");
+    }
 
     // ══════════════════════════════════════════════════
     //  INITIALIZE
@@ -219,7 +229,7 @@ public class ReservationVoyageController {
     }
 
     // ══════════════════════════════════════════════════
-    //  ✅ GÉNÉRATION CHAMPS PASSEPORT DYNAMIQUES
+    //  GÉNÉRATION CHAMPS PASSEPORT DYNAMIQUES
     // ══════════════════════════════════════════════════
 
     private void genererChampsPasseport(int nb) {
@@ -238,8 +248,7 @@ public class ReservationVoyageController {
 
             Label lblPersonne = new Label("Personne " + i);
             lblPersonne.setMinWidth(80);
-            lblPersonne.setStyle(
-                    "-fx-font-size:12px;-fx-font-weight:bold;-fx-text-fill:#FF6B35;");
+            lblPersonne.setStyle("-fx-font-size:12px;-fx-font-weight:bold;-fx-text-fill:#FF6B35;");
 
             TextField tf = new TextField();
             tf.setPromptText("ex : AB" + (1000000 + i));
@@ -256,40 +265,33 @@ public class ReservationVoyageController {
 
             HBox row = new HBox(10, badge, lblPersonne, tf);
             row.setAlignment(Pos.CENTER_LEFT);
-
             passeportFieldsBox.getChildren().add(row);
             passeportFields.add(tf);
         }
     }
 
     // ══════════════════════════════════════════════════
-    //  ✅ MISE À JOUR TOTAL SELON NB PERSONNES
+    //  MISE À JOUR TOTAL SELON NB PERSONNES
     // ══════════════════════════════════════════════════
 
     private void mettreAJourTotalPersonnes(int nb) {
-        double vol        = totalVol        * nb;
-        double hotel      = totalHotel      * nb;
-        double activites  = totalActivites  * nb;
-        double services   = totalServices   * nb;
-        double total      = totalGlobal     * nb;
-
-        if (cmdVolLabel       != null) cmdVolLabel.setText(String.format("%.0f TND", vol));
-        if (cmdHotelLabel     != null) cmdHotelLabel.setText(String.format("%.0f TND", hotel));
-        if (cmdActivitesLabel != null) cmdActivitesLabel.setText(String.format("%.0f TND", activites));
-        if (cmdServicesLabel  != null) cmdServicesLabel.setText(String.format("%.0f TND", services));
-        if (cmdTotalLabel     != null) cmdTotalLabel.setText(String.format("%.0f TND", total));
+        if (cmdVolLabel       != null) cmdVolLabel.setText(String.format("%.0f TND", totalVol       * nb));
+        if (cmdHotelLabel     != null) cmdHotelLabel.setText(String.format("%.0f TND", totalHotel   * nb));
+        if (cmdActivitesLabel != null) cmdActivitesLabel.setText(String.format("%.0f TND", totalActivites * nb));
+        if (cmdServicesLabel  != null) cmdServicesLabel.setText(String.format("%.0f TND", totalServices  * nb));
+        if (cmdTotalLabel     != null) cmdTotalLabel.setText(String.format("%.0f TND", totalGlobal   * nb));
 
         long jours = dateDebut != null && dateFin != null
                 ? ChronoUnit.DAYS.between(dateDebut, dateFin) : 0;
         if (cmdParJourLabel != null && jours > 0)
             cmdParJourLabel.setText(String.format(
                     "≈ %.0f TND/jour · %d personne%s · %d jour%s",
-                    total / jours,
+                    (totalGlobal * nb) / jours,
                     nb, nb > 1 ? "s" : "",
                     jours, jours > 1 ? "s" : ""));
     }
 
-    // ✅ Helper : total réel au moment de l'enregistrement
+    /** Total réel = base × nb personnes */
     private double getTotalReel() {
         int nb = nbPersonnesSpinner != null ? nbPersonnesSpinner.getValue() : 1;
         return totalGlobal * nb;
@@ -547,21 +549,24 @@ public class ReservationVoyageController {
 
             Reservation r = new Reservation();
             r.setDate_reservation(Date.valueOf(LocalDate.now()));
-            r.setPrix_reservation(getTotalReel());   // ✅ total × nb personnes
-            r.setEtat(ETAT_RESERVATION);
-            r.setEmail(emailField.getText().trim());
-            r.setNum_tel(telephoneField.getText().trim());
+            r.setPrix_reservation(getTotalReel());
+            r.setEtat(esc(ETAT_RESERVATION));
+            r.setEmail(esc(emailField.getText().trim()));
+            r.setNum_tel(esc(telephoneField.getText().trim()));
             r.setNombre_personnes(nb);
 
-            // ✅ Passeports dynamiques joints
+            // ✅ Passeports dynamiques — apostrophes échappées via esc()
             java.util.List<String> passeports = new java.util.ArrayList<>();
             for (TextField tf : passeportFields) {
                 String val = tf.getText() != null ? tf.getText().trim() : "";
                 if (!val.isEmpty()) passeports.add(val.toUpperCase());
             }
-            r.setNum_passeport(passeports.isEmpty() ? null : String.join(" | ", passeports));
+            r.setNum_passeport(passeports.isEmpty() ? null
+                    : String.join(" | ", passeports));
 
-            String commentaire = prenomField.getText().trim() + " " + nomField.getText().trim()
+            // ✅ Commentaire avec apostrophes échappées — c'est ici que le bug se produisait
+            String commentaire = esc(prenomField.getText().trim())
+                    + " " + esc(nomField.getText().trim())
                     + " | " + nb + " personne" + (nb > 1 ? "s" : "")
                     + " | Paiement: " + modePaiement;
             if ("CARTE".equals(modePaiement) && numCarteField != null) {
@@ -569,7 +574,7 @@ public class ReservationVoyageController {
                 commentaire += " (**** " + (d.length() >= 4 ? d.substring(d.length() - 4) : "****") + ")";
             }
             if (commentaireArea != null && !commentaireArea.getText().isBlank())
-                commentaire += " — " + commentaireArea.getText().trim();
+                commentaire += " — " + esc(commentaireArea.getText().trim());
             r.setCommentaire(commentaire);
 
             StatutReservation statut = new StatutReservation();
@@ -619,7 +624,7 @@ public class ReservationVoyageController {
     private void enregistrerPaiement(int idReservation, String statut) {
         try {
             Paiement p = new Paiement();
-            p.setMontant(getTotalReel());   // ✅ total réel
+            p.setMontant(getTotalReel());
             p.setDatePaiement(LocalDateTime.now());
             p.setStatut(statut);
             p.setIdReservation(idReservation);
@@ -683,7 +688,7 @@ public class ReservationVoyageController {
             surlignerErreur(telephoneField); return false;
         }
 
-        // ✅ Validation passeports dynamiques
+        // Validation passeports dynamiques
         for (int i = 0; i < passeportFields.size(); i++) {
             String val = passeportFields.get(i).getText() != null
                     ? passeportFields.get(i).getText().trim() : "";

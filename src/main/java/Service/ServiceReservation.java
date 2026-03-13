@@ -30,8 +30,15 @@ public class ServiceReservation implements IService<Reservation> {
     //  INSERT
     // ══════════════════════════════════════════════════
 
+    // Remplacer dans ServiceReservation :
+// private Statement st;  ← supprimer l'utilisation pour l'INSERT
+
     @Override
     public boolean ajouter(Reservation r) throws SQLException {
+
+        String passeportVal = (r.getNum_passeport() != null)
+                ? "'" + r.getNum_passeport().replace("'", "''") + "'"
+                : "NULL";
 
         String personneVal = (r.getId_personne() != null)
                 ? String.valueOf(r.getId_personne().getIdUtilisateur()) : "NULL";
@@ -42,53 +49,54 @@ public class ServiceReservation implements IService<Reservation> {
         String offreVal = (r.getId_offre() != null)
                 ? String.valueOf(r.getId_offre().getId_offre()) : "NULL";
 
-        // num_passeport est nullable : si null on insère NULL, sinon la valeur
-        String passeportVal = (r.getNum_passeport() != null)
-                ? "'" + r.getNum_passeport().replace("'", "''") + "'"
-                : "NULL";
-
         String req = "INSERT INTO reservation("
                 + "date_reservation, prix_reservation, etat, email, num_tel, commentaire, "
-                + "nombre_personnes, num_passeport, "          // ← num_passeport ajouté
+                + "nombre_personnes, num_passeport, "
                 + "id_personne, id_statut, id_voyage, id_offre"
                 + ") VALUES ('"
-                + r.getDate_reservation()     + "',"
-                + r.getPrix_reservation()     + ",'"
-                + r.getEtat()                 + "','"
-                + r.getEmail()                + "','"
-                + r.getNum_tel()              + "','"
-                + r.getCommentaire()          + "',"
-                + r.getNombre_personnes()     + ","
-                + passeportVal                + ","            // ← valeur insérée
-                + personneVal                 + ","
-                + r.getId_statut().getId_statut() + ","
-                + voyageVal                   + ","
-                + offreVal                    + ")";
+                + r.getDate_reservation()          + "',"
+                + r.getPrix_reservation()          + ",'"
+                + r.getEtat()                      + "','"
+                + r.getEmail()                     + "','"
+                + r.getNum_tel()                   + "','"
+                + r.getCommentaire()               + "',"
+                + r.getNombre_personnes()          + ","
+                + passeportVal                     + ","
+                + personneVal                      + ","
+                + r.getId_statut().getId_statut()  + ","
+                + voyageVal                        + ","
+                + offreVal                         + ")";
 
-        boolean success = st.executeUpdate(req) > 0;
+        // ✅ Utiliser RETURN_GENERATED_KEYS pour récupérer l'ID
+        try (PreparedStatement ps = cnx.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
+            boolean success = ps.executeUpdate() > 0;
 
-        if(success){
+            if (success) {
+                // ✅ Récupérer l'ID généré et le setter sur r
+                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        r.setId_reservation(generatedKeys.getInt(1));
+                    }
+                }
 
-            ServiceNotification serviceNotification = new ServiceNotification();
-
-            Notification n = new Notification();
-            n.setMessage("Nouvelle réservation effectuée");
-            n.setDateNotification(LocalDateTime.now());
-            n.setLu(false);
-            n.setTypeNotification("reservation");
-
-            // set reservation id
-            n.setIdReservation(r.getId_reservation());
-
-            // notify admin (example id = 1)
-            n.setIdUtilisateur(1);
-
-            serviceNotification.ajouter(n);
+                // ✅ Maintenant r.getId_reservation() est correct
+                try {
+                    ServiceNotification serviceNotification = new ServiceNotification();
+                    Notification n = new Notification();
+                    n.setMessage("Nouvelle réservation effectuée");
+                    n.setDateNotification(LocalDateTime.now());
+                    n.setLu(false);
+                    n.setTypeNotification("reservation");
+                    n.setIdReservation(r.getId_reservation()); // ← ID réel maintenant
+                    n.setIdUtilisateur(1);
+                    serviceNotification.ajouter(n);
+                } catch (Exception ex) {
+                    System.err.println("Notification non envoyée : " + ex.getMessage());
+                }
+            }
+            return success;
         }
-
-        return success;
     }
-
     // ══════════════════════════════════════════════════
     //  DELETE
     // ══════════════════════════════════════════════════
